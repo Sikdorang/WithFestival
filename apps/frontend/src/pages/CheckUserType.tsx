@@ -1,5 +1,5 @@
-import BaseResponsiveLayout from '@/components/common/BaseResponsiveLayout';
-import LoadingView from '@/components/common/LoadingView';
+import LoadingView from '@/components/common/exceptions/LoadingView';
+import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { ROUTES } from '@/constants/routes';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ export default function CheckUserAgent() {
   useEffect(() => {
     const redirectBasedOnDevice = () => {
       const isAdmin = true;
-      const targetRoute = isAdmin ? ROUTES.STORES.DETAIL('12') : ROUTES.LOGIN;
+      const targetRoute = isAdmin ? ROUTES.LOGIN : ROUTES.STORE;
       navigate(targetRoute);
     };
 

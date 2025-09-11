@@ -1,5 +1,5 @@
 import { Component, type ReactNode } from 'react';
-import ErrorView from './ErrorView';
+import ErrorView from './exceptions/ErrorView';
 
 interface Props {
   children: ReactNode;

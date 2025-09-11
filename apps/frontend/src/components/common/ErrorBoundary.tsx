@@ -1,5 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
-import ErrorView from './ErrorView';
+import ErrorView from './exceptions/ErrorView';
 
 export default function ErrorBoundary() {
   const error = useRouteError();
