@@ -15,9 +15,10 @@ interface Order {
 
 interface Props {
   order: Order;
+  isConfirm: boolean;
 }
 
-export function OrderCard({ order }: Props) {
+export function OrderCard({ order, isConfirm = false }: Props) {
   return (
     <div className="space-y-3 rounded-lg bg-white p-4">
       <div className="flex items-center justify-between">
@@ -52,19 +53,32 @@ export function OrderCard({ order }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 pt-2">
-        <button className="rounded-2xl bg-red-500 py-3 font-bold text-white">
-          취소
-        </button>
-        <button className="bg-primary-300 rounded-2xl py-3 font-bold text-black">
-          송금 확인
-        </button>
-      </div>
+      {isConfirm ? (
+        <div className="flex flex-col gap-2">
+          <button className="rounded-2xl bg-gray-100 py-3 text-black">
+            전체 보기
+          </button>
+          <button className="bg-primary-300 rounded-2xl py-3 text-black">
+            조리 완료
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-2 gap-2 pt-2">
+            <button className="rounded-2xl bg-red-500 py-3 font-bold text-white">
+              취소
+            </button>
+            <button className="bg-primary-300 rounded-2xl py-3 font-bold text-black">
+              송금 확인
+            </button>
+          </div>
 
-      <div className="flex items-center gap-4 rounded-xl bg-gray-100 p-3 px-8">
-        <span className="text-sm text-gray-400">입금자명</span>
-        <p className="text-gray-black">{order.depositorName}</p>
-      </div>
+          <div className="flex items-center gap-4 rounded-xl bg-gray-100 p-3 px-8">
+            <span className="text-sm text-gray-400">입금자명</span>
+            <p className="text-gray-black">{order.depositorName}</p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

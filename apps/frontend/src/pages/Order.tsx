@@ -1,7 +1,8 @@
 // src/pages/Order.tsx
 
-import ArrowRightLeftIcon from '@/assets/icons/ic_arrow_right_left.svg?react'; // react-icons 라이브러리 아이콘
 import { OrderCard } from '@/components/pages/order/OrderCard';
+import { TopBar } from '@/components/pages/order/TopBar';
+import { useState } from 'react';
 
 // 임시 데이터 (실제로는 API로 받아옵니다)
 const mockOrders = [
@@ -48,23 +49,22 @@ const mockOrders = [
 ];
 
 export default function Order() {
+  const [orderType, setOrderType] = useState<'new' | 'confirm'>('new');
   return (
     <div className="flex flex-col gap-4 bg-gray-400">
-      
-        <div className="flex w-full items-center bg-white justify-between py-2 px-4 ">
-          <h2 className="text-st-2 text-black">
-            신규 주문{' '}
-            <span className="text-primary-300">{mockOrders.length}</span>
-          </h2>
-          <button className="flex items-center gap-1 rounded-xl bg-gray-400 px-5 py-2 text-c-1 text-white">
-            송금전 <ArrowRightLeftIcon />
-          </button>
-        </div>
-        
-      
+      <TopBar
+        orderCount={mockOrders.length}
+        type={orderType}
+        onTypeChange={setOrderType}
+      />
+
       <div className="flex flex-col gap-4 p-4">
         {mockOrders.map((order) => (
-          <OrderCard key={order.orderNumber} order={order} />
+          <OrderCard
+            key={order.orderNumber}
+            order={order}
+            isConfirm={orderType === 'confirm'}
+          />
         ))}
       </div>
     </div>
