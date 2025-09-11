@@ -1,68 +1,206 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import 'tailwindcss';
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/fonts/PretendardVariable.woff2') format('woff2-variations');
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+@keyframes sheet-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes button-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-leave {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+.animate-sheet-in {
+  animation: sheet-enter 0.2s ease-in-out forwards;
+}
+
+.animate-button-in {
+  animation: button-enter 0.2s ease-out forwards;
+}
+
+.animate-toast-in {
+  animation: toast-enter 0.2s ease-out forwards;
+}
+
+.animate-toast-out {
+  animation: toast-leave 0.2s ease-in forwards;
+}
+
+@theme {
+  /* ================================================ */
+  /* breakpoints(xs(375) - sm(480) - md(768) - lg(1024) - xl(1440)) */
+  /* ================================================ */
+
+  --breakpoint-xs: 23.438rem; /* 375px */
+  --breakpoint-sm: 30rem; /* 480px */
+  --breakpoint-xl: 90rem; /* 1440px */
+
+  --container-xs: 23.438rem; /* 375px */
+
+  /* ================================================ */
+  /* Colors */
+  /* ================================================ */
+
+  /* black */
+  --color-black: #2f3034;
+
+  /* white */
+  --color-white: #ffffff;
+
+  /* Primary */
+  --color-primary-100: #dafbeb;
+  --color-primary-200: #7df2ba;
+  --color-primary-300: #20e988;
+  --color-primary-400: #1ac872;
+  --color-primary-500: #14a35b;
+  --color-primary-600: #108249;
+  --color-primary-700: #0c6b3a;
+  --color-primary-800: #084b2a;
+  --color-primary-900: #042d1a;
+
+  /* Gray Scale */
+  --color-gray-100: #e2e3e5;
+  --color-gray-200: #c8c9cd;
+  --color-gray-300: #92949d;
+  --color-gray-400: #5f616a;
+  --color-gray-500: #4a4c54;
+  --color-gray-600: #3c3e44;
+  --color-gray-700: #2d2f33;
+  --color-gray-800: #1f2022;
+  --color-gray-900: #121314;
+
+  /* Red Scale */
+  --color-red-100: #ffe5e5;
+  --color-red-200: #ffc2c2;
+  --color-red-300: #ff8f8f;
+  --color-red-400: #f05252;
+  --color-red-500: #d94141;
+
+  --shadow-sm: 0px 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0px 8px 32px rgba(0, 0, 0, 0.16);
+  --inner-shadow-sm: inset 0px 0px 5px rgba(0, 0, 0, 0.06);
+}
+
+@layer components {
+  .wrapper {
+    @apply min-w-xs mx-auto max-w-[1440px] px-5;
+  }
+
+  .text-t-1 {
+    @apply text-[1.5rem] font-bold leading-[150%] tracking-[-2%];
+  }
+
+  .text-st-1 {
+    @apply text-[1.25rem] font-semibold leading-[150%] tracking-[-2%];
+  }
+
+  .text-st-2 {
+    @apply text-[1.125rem] font-semibold leading-[150%] tracking-[-2%];
+  }
+
+  .text-b-1 {
+    @apply text-[1rem] font-normal leading-[150%] tracking-[-2%];
+  }
+
+  .text-b-2 {
+    @apply text-[0.875rem] font-normal leading-[150%] tracking-[-2%];
+  }
+
+  .text-c-1 {
+    @apply text-[0.75rem] font-normal leading-[150%] tracking-[-2%];
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  font-family:
+    'Pretendard',
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-family: 'Pretendard', sans-serif;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  @apply cursor-pointer;
 }
