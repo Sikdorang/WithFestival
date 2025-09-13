@@ -12,7 +12,7 @@ export function TabBarLayout() {
   // 현재 경로에 따라 activeTab을 동적으로 결정합니다.
   const getActiveTab = () => {
     switch (location.pathname) {
-      case ROUTES.WAITING: // 예시 경로
+      case ROUTES.MANAGE_WAITING: // 예시 경로
         return 'timer';
       case ROUTES.ORDER: // 예시 경로
         return 'list';
@@ -27,7 +27,7 @@ export function TabBarLayout() {
     // 탭 클릭 시 해당 경로로 이동시킵니다.
     switch (tabName) {
       case 'timer':
-        navigate(ROUTES.WAITING);
+        navigate(ROUTES.MANAGE_WAITING);
         break;
       case 'list':
         navigate(ROUTES.ORDER);

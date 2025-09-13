@@ -1,7 +1,9 @@
-// src/pages/Store.tsx
+import CtaButton from '@/components/common/buttons/CtaButton';
+import TextInput from '@/components/common/inputs/TextInput';
+import { ROUTES } from '@/constants/routes';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-// === 1. 데이터 정의 ===
-// 실제 앱에서는 API를 통해 받아올 메뉴 데이터입니다.
 const mockMenuList = [
   { id: 1, name: '아롱사태 수육', price: 25000 },
   { id: 2, name: '돼지국밥', price: 18000 },
@@ -14,32 +16,52 @@ const mockMenuList = [
   { id: 3, name: '파전', price: 22000 },
 ];
 
-// === 2. UI 섹션별 컴포넌트 ===
-
-// 계좌번호 섹션
 function AccountSection() {
+  const [isWriteAccount, setIsWriteAccount] = useState(false);
+  const [accountNumber, setAccountNumber] = useState('');
+
   return (
     <div className="rounded-lg bg-gray-100 p-4 shadow-sm">
-      <h2 className="text-body-1 font-semibold">계좌번호</h2>
-      <button className="mt-2 w-full rounded-2xl border border-gray-200 bg-white py-3 text-center text-black">
-        등록하기
-      </button>
+      <h2 className="text-body-1 mb-3 font-semibold">계좌번호</h2>
+      {isWriteAccount && (
+        <div className="mb-3">
+          <TextInput
+            placeholder="ex.은행이름 & 계좌번호 (13자리)"
+            value={accountNumber}
+            onChange={(e) => setAccountNumber(e.target.value)}
+            limitHide
+          />
+        </div>
+      )}
+      <CtaButton
+        color={isWriteAccount ? 'green' : 'white'}
+        size="small"
+        radius="xl"
+        text={isWriteAccount ? '등록하기' : '입력완료'}
+        onClick={() => setIsWriteAccount(true)}
+      />
     </div>
   );
 }
 
 // 메뉴 아이템
-function MenuItem({ name, price }: { name: string; price: number }) {
+function MenuItem({
+  name,
+  price,
+  onClick,
+}: {
+  name: string;
+  price: number;
+  onClick: () => void;
+}) {
   return (
-    // 마지막 아이템에는 하단 경계선 제거
-    <div className="flex items-center justify-between py-4">
+    <div className="flex items-center justify-between py-4" onClick={onClick}>
       <div>
         <h3 className="text-body-1 text-gray-black font-semibold">{name}</h3>
         <p className="text-body-1 text-gray-black font-bold">
           {price.toLocaleString()}원
         </p>
       </div>
-      {/* 이미지 썸네일 */}
       <div className="h-30 w-30 rounded-md bg-gray-100" />
     </div>
   );
@@ -47,23 +69,34 @@ function MenuItem({ name, price }: { name: string; price: number }) {
 
 // 메뉴 리스트 섹션
 function MenuList() {
+  const navigate = useNavigate();
   return (
     <div className="rounded-lg bg-white p-4">
       {mockMenuList.map((item) => (
-        <MenuItem key={item.id} name={item.name} price={item.price} />
+        <MenuItem
+          key={item.id}
+          name={item.name}
+          price={item.price}
+          onClick={() => {
+            navigate(ROUTES.MENUS.DETAIL(item.id.toString()));
+          }}
+        />
       ))}
     </div>
   );
 }
 
-// 메뉴 추가 플로팅 버튼
 function AddMenuButton() {
+  const navigate = useNavigate();
   return (
-    // 하단 탭바 높이를 고려하여 bottom-24 설정 (탭바가 없다면 bottom-4)
     <div className="fixed right-4 bottom-24">
-      <button className="bg-primary-300 rounded-2xl px-6 py-3 font-bold text-black shadow-lg">
-        메뉴 추가
-      </button>
+      <CtaButton
+        text="메뉴 추가"
+        radius="xl"
+        onClick={() => {
+          navigate(ROUTES.MENUS.DETAIL('0'));
+        }}
+      />
     </div>
   );
 }

@@ -10,7 +10,8 @@ export const ROUTES = {
     DETAIL: (menuId: string = ':menuId') => `${ROUTES.MENUS.ROOT}/${menuId}`,
   },
   LOGIN: '/login',
-  WAITING: '/waiting',
+  MANAGE_WAITING: '/manage-waiting',
   ORDER: '/order',
   STORE: '/store',
+  WAITING: '/waiting',
 } as const;

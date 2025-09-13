@@ -1,4 +1,6 @@
+import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
 interface OrderItem {
+  id: number;
   name: string;
   price: number;
   quantity: number;
@@ -30,14 +32,17 @@ export function OrderCard({ order, isConfirm = false }: Props) {
 
       <div className="space-y-2 border-b border-gray-200 py-3">
         <p className="text-c-1 text-gray-400">주문내역</p>
-        {order.items.map((item, index) => (
-          <div key={index} className="flex justify-between">
+        {order.items.map((item) => (
+          <div
+            key={`${order.orderNumber}-${item.id}`}
+            className="flex justify-between"
+          >
             <p className="text-gray-black">{item.name} </p>
-            <div className="flex-col items-center gap-1 text-right">
+            <div className="text-right">
               <p className="text-gray-black">
                 {(item.price * item.quantity).toLocaleString()}원
               </p>
-              <span className="text-gray-300">{item.quantity}개</span>
+              <span className="text-sm text-gray-300">{item.quantity}개</span>
             </div>
           </div>
         ))}
@@ -45,9 +50,9 @@ export function OrderCard({ order, isConfirm = false }: Props) {
 
       <div className="flex justify-between font-bold text-black">
         <p>총 금액</p>
-        <div className="flex-col items-center gap-1 text-right">
-          <p>{order.totalAmount.toLocaleString()}원 </p>
-          <span className="font-medium text-gray-400">
+        <div className="text-right">
+          <p>{order.totalAmount.toLocaleString()}원</p>
+          <span className="text-sm font-medium text-gray-400">
             총 {order.totalQuantity}개
           </span>
         </div>
@@ -63,11 +68,18 @@ export function OrderCard({ order, isConfirm = false }: Props) {
           </button>
         </div>
       ) : (
-        <>
+        <div className="flex flex-col gap-2">
           <div className="grid grid-cols-2 gap-2 pt-2">
-            <button className="rounded-2xl bg-red-500 py-3 font-bold text-white">
-              취소
-            </button>
+            <DeleteConfirmModal
+              title={'메뉴 삭제를 할까요 ?'}
+              description={'메뉴 삭제 후에는 복구할 수 없어요.'}
+              cancelButtonText={'취소'}
+              confirmButtonText={'삭제하기'}
+            >
+              <button className="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">
+                취소
+              </button>
+            </DeleteConfirmModal>
             <button className="bg-primary-300 rounded-2xl py-3 font-bold text-black">
               송금 확인
             </button>
@@ -77,7 +89,7 @@ export function OrderCard({ order, isConfirm = false }: Props) {
             <span className="text-sm text-gray-400">입금자명</span>
             <p className="text-gray-black">{order.depositorName}</p>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

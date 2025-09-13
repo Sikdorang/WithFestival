@@ -1,51 +1,47 @@
-// src/pages/Order.tsx
-
 import { OrderCard } from '@/components/pages/order/OrderCard';
 import { TopBar } from '@/components/pages/order/TopBar';
 import { useState } from 'react';
 
-// 임시 데이터 (실제로는 API로 받아옵니다)
 const mockOrders = [
   {
     orderNumber: 15,
     time: '18:50',
     items: [
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 2, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 3, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 4, name: '메뉴 이름', price: 2500, quantity: 1 },
     ],
     totalAmount: 10000,
     totalQuantity: 4,
     depositorName: '이상현',
   },
   {
-    orderNumber: 15,
+    orderNumber: 16,
     time: '18:50',
     items: [
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 2, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 3, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 4, name: '메뉴 이름', price: 2500, quantity: 1 },
     ],
     totalAmount: 10000,
     totalQuantity: 4,
     depositorName: '이상현',
   },
   {
-    orderNumber: 15,
+    orderNumber: 17,
     time: '18:50',
     items: [
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
-      { name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 2, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 3, name: '메뉴 이름', price: 2500, quantity: 1 },
+      { id: 4, name: '메뉴 이름', price: 2500, quantity: 1 },
     ],
     totalAmount: 10000,
     totalQuantity: 4,
     depositorName: '이상현',
   },
-  // ... 다른 주문 데이터
 ];
 
 export default function Order() {
