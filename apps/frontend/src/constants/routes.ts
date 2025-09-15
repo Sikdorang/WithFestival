@@ -28,4 +28,9 @@ export const ROUTES = {
     DETAIL: (menuId: string = ':menuId') =>
       `${ROUTES.MENU_BOARD.ROOT}/${menuId}`,
   },
+  ORDERING: {
+    ROOT: '/ordering',
+    DETAIL: (storeId: string = ':storeId') =>
+      `${ROUTES.ORDERING.ROOT}/${storeId}`,
+  },
 } as const;

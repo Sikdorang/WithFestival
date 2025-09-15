@@ -1,11 +1,14 @@
 import GunImage from '@/assets/images/img_gun.png';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
 import TextInput from '../components/common/inputs/TextInput';
 import TopBar from '../components/common/layouts/TopBar';
 import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 
 export default function Games() {
+  const navigate = useNavigate();
+
   const [chamberCount, setChamberCount] = useState(2);
   const [chambers, setChambers] = useState<boolean[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,8 +32,6 @@ export default function Games() {
     setGameOver(false);
     setMessage('');
     setIsGameStarted(true);
-
-    console.log('총알 위치:', newChambers);
   };
 
   const handleGunClick = () => {
@@ -89,6 +90,13 @@ export default function Games() {
               radius="_2xl"
             />
           </DeleteConfirmModal>
+          <CtaButton
+            text="돌아가기"
+            color="gray"
+            size="small"
+            radius="_2xl"
+            onClick={() => navigate(-1)}
+          />
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4">

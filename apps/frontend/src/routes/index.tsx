@@ -8,8 +8,8 @@ import Login from '@/pages/Login';
 import ManageMenuDetail from '@/pages/ManageMenuDetail';
 import ManageWaiting from '@/pages/ManageWaiting';
 import MenuBoard from '@/pages/MenuBoard';
-import MenuDetail from '@/pages/MenuDetail';
 import Order from '@/pages/Order';
+import Ordering from '@/pages/Ordering';
 import Store from '@/pages/Store';
 import Waiting from '@/pages/Waiting';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -59,13 +59,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
-    path: ROUTES.MENUS.DETAIL(':menuId'),
-    element: <MenuDetail />,
+    path: ROUTES.GAMES.DETAIL(':gameId'),
+    element: <Games />,
     errorElement: <ErrorBoundary />,
   },
   {
-    path: ROUTES.GAMES.DETAIL(':gameId'),
-    element: <Games />,
+    path: ROUTES.ORDERING.DETAIL(':storeId'),
+    element: <Ordering />,
     errorElement: <ErrorBoundary />,
   },
   { path: '*', element: <NotFoundView /> },

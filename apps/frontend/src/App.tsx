@@ -13,6 +13,7 @@ export default function App() {
           containerStyle={{
             bottom: '7rem',
           }}
+          position="bottom-center"
         />
         <Router />
       </QueryClientProvider>
