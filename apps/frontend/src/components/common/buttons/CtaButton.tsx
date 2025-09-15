@@ -9,7 +9,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium' | 'large';
   color?: 'green' | 'gray' | 'red' | 'white' | 'black';
   width?: 'full' | 'fit';
-  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '_3xl' | 'full';
+  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '_2xl' | '_3xl' | 'full';
   className?: string;
   left?: React.ReactNode;
   right?: React.ReactNode;
@@ -47,14 +47,16 @@ export default function CtaButton({
     red: 'text-white',
     white: 'text-gray-700',
     black: 'text-white',
+    disabled: 'text-white',
   };
 
   const backgroundColorStyles = {
-    green: 'bg-primary-400',
+    green: 'bg-primary-300',
     gray: 'bg-gray-100',
     red: 'bg-red-500',
     white: 'bg-white',
     black: 'bg-gray-800',
+    disabled: 'bg-gray-200',
   };
 
   const hoverColorStyles = {
@@ -63,14 +65,16 @@ export default function CtaButton({
     red: 'hover:bg-red-400',
     white: 'hover:bg-gray-100',
     black: 'hover:bg-gray-600',
+    disabled: 'hover:bg-gray-200 cursor-not-allowed',
   };
 
   const borderColorStyles = {
-    green: 'border-primary-400',
+    green: 'border-primary-300',
     gray: 'border-gray-100',
     red: 'border-none',
     white: 'border-gray-200',
     black: 'border-gray-800',
+    disabled: 'border-gray-200',
   };
 
   const radiusStyles = {
@@ -79,6 +83,7 @@ export default function CtaButton({
     md: 'rounded-md',
     lg: 'rounded-lg',
     xl: 'rounded-xl',
+    _2xl: 'rounded-2xl',
     _3xl: 'rounded-3xl',
     full: 'rounded-full',
   };
@@ -88,15 +93,30 @@ export default function CtaButton({
       ? 'inline-flex items-center justify-center'
       : 'flex w-full items-center justify-center';
 
+  const isButtonDisabled = disabled || isLoading;
+
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (disabled || isLoading) return;
+    if (isButtonDisabled) return;
     onClick?.(e);
   };
 
+  const currentBackgroundColor = isButtonDisabled
+    ? backgroundColorStyles.disabled
+    : backgroundColorStyles[color];
+  const currentBorderColor = isButtonDisabled
+    ? borderColorStyles.disabled
+    : borderColorStyles[color];
+  const currentHoverColor = isButtonDisabled
+    ? hoverColorStyles.disabled
+    : hoverColorStyles[color];
+  const currentTextColor = isButtonDisabled
+    ? textColorStyles.disabled
+    : textColorStyles[color];
+
   return (
     <button
-      className={`${backgroundColorStyles[color]} ${borderColorStyles[color]} ${hoverColorStyles[color]} ${radiusStyles[radius]} ${flexStyle} border transition-colors duration-200 disabled:cursor-not-allowed ${sizeStyles[size]} ${className}`}
-      disabled={disabled || isLoading}
+      className={`${currentBackgroundColor} ${currentBorderColor} ${currentHoverColor} ${radiusStyles[radius]} ${flexStyle} border transition-colors duration-200 ${sizeStyles[size]} ${className}`}
+      disabled={isButtonDisabled}
       onClick={handleClick}
       {...props}
     >
@@ -105,10 +125,9 @@ export default function CtaButton({
       ) : (
         <>
           {left && <span className="mr-2 flex items-center">{left}</span>}
-          <span className={`${textSizeStyles[size]} ${textColorStyles[color]}`}>
+          <span className={`${textSizeStyles[size]} ${currentTextColor}`}>
             {text}
           </span>
-
           {right && <span className="ml-2 flex items-center">{right}</span>}
         </>
       )}

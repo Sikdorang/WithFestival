@@ -71,10 +71,10 @@ export function OrderCard({ order, isConfirm = false }: Props) {
         <div className="flex flex-col gap-2">
           <div className="grid grid-cols-2 gap-2 pt-2">
             <DeleteConfirmModal
-              title={'메뉴 삭제를 할까요 ?'}
-              description={'메뉴 삭제 후에는 복구할 수 없어요.'}
-              cancelButtonText={'취소'}
-              confirmButtonText={'삭제하기'}
+              title={'주문을 취소할까요 ?'}
+              description={'주문 취소 후에는 복구할 수 없어요.'}
+              cancelButtonText={'돌아가기'}
+              confirmButtonText={'주문 취소하기'}
             >
               <button className="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">
                 취소

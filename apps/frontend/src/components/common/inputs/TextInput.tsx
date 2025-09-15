@@ -30,21 +30,21 @@ export default function TextInput({
     <div className="w-full">
       {label === '제목' ? undefined : (
         <div className="mb-2 flex items-center gap-2">
-          <div className={`text-mh-1 block text-gray-800 ${labelClassName}`}>
+          <div className={`text-b-2 block text-gray-400 ${labelClassName}`}>
             {label}
           </div>
         </div>
       )}
 
       <div
-        className={`relative flex items-center rounded-2xl border bg-white px-6 py-4 transition-colors ${
+        className={`relative flex items-center rounded-2xl border px-6 py-4 transition-colors ${
           error
-            ? 'border-system-error'
+            ? 'border-red-500'
             : disabled
-              ? 'border-gray-200 bg-gray-50'
+              ? 'bg-primary-100 border-primary-300'
               : value
-                ? 'border-primary-500'
-                : 'focus-within:border-primary-500 border-gray-200'
+                ? 'border-primary-300'
+                : 'focus-within:border-primary-300 border-gray-200'
         }`}
       >
         {!isLoading ? (
@@ -55,7 +55,7 @@ export default function TextInput({
               maxLength={maxLength}
               disabled={disabled}
               placeholder={placeholder}
-              className={`text-mb-2 w-full border-none bg-transparent text-gray-800 outline-none placeholder:text-gray-300 ${disabled ? 'text-gray-300' : ''} `}
+              className={`text-b-2 w-full border-none bg-transparent text-gray-800 outline-none placeholder:text-gray-300 ${disabled ? 'bg-primary-100 text-gray-300' : ''} `}
               {...rest}
             />
             {!disabled && value && (

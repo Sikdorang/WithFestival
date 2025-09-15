@@ -3,7 +3,7 @@
 import { ROUTES } from '@/constants/routes';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { BottomBar } from './BottomBar';
-import { TopBar } from './TopBar';
+import TopBar from './TopBar';
 
 export function TabBarLayout() {
   const navigate = useNavigate();

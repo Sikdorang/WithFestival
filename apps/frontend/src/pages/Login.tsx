@@ -1,7 +1,7 @@
-import LogoImage from '@/assets/images/img_logo.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
+import { Banner } from '@/components/pages/login/Banner';
 import { ROUTES } from '@/constants/routes';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,12 +12,9 @@ export default function Login() {
 
   return (
     <BaseResponsiveLayout>
-      <div className="flex h-full w-full flex-col items-center justify-center">
-        <div className="flex w-full max-w-sm min-w-sm flex-col items-center gap-10 py-40">
-          <div className="mb-14 flex flex-col items-center justify-center gap-4">
-            <LogoImage />
-            <div className="text-st-1 text-primary-400">관리자 로그인</div>
-          </div>
+      <div className="flex h-screen w-full flex-col items-center justify-center">
+        <div className="flex h-full w-full max-w-sm min-w-sm flex-col items-center justify-center gap-8 py-40">
+          <Banner />
 
           <TextInput
             label="인증 번호"
@@ -30,7 +27,7 @@ export default function Login() {
 
           <CtaButton
             text="로그인"
-            radius="xl"
+            radius="_2xl"
             onClick={() => {
               navigate(ROUTES.MANAGE_WAITING);
             }}

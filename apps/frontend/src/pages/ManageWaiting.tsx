@@ -1,4 +1,4 @@
-import { WaitingCard } from '@/components/pages/waiting/WaitingCard';
+import { WaitingCard } from '@/components/pages/manageWaiting/WaitingCard';
 
 // 임시 데이터
 const mockWaitingList = [

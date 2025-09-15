@@ -18,28 +18,53 @@ const mockMenuList = [
 
 function AccountSection() {
   const [isWriteAccount, setIsWriteAccount] = useState(false);
+  const [isWriteStoreName, setIsWriteStoreName] = useState(false);
+
   const [accountNumber, setAccountNumber] = useState('');
+  const [storeName, setStoreName] = useState('');
 
   return (
-    <div className="rounded-lg bg-gray-100 p-4 shadow-sm">
-      <h2 className="text-body-1 mb-3 font-semibold">계좌번호</h2>
-      {isWriteAccount && (
-        <div className="mb-3">
-          <TextInput
-            placeholder="ex.은행이름 & 계좌번호 (13자리)"
-            value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
-            limitHide
-          />
-        </div>
-      )}
-      <CtaButton
-        color={isWriteAccount ? 'green' : 'white'}
-        size="small"
-        radius="xl"
-        text={isWriteAccount ? '등록하기' : '입력완료'}
-        onClick={() => setIsWriteAccount(true)}
-      />
+    <div>
+      <div className="mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
+        <h2 className="text-st-2 mb-3">부스 이름</h2>
+        {isWriteStoreName && (
+          <div className="mb-4">
+            <TextInput
+              placeholder="부스 이름을 입력해주세요."
+              value={storeName}
+              onChange={(e) => setStoreName(e.target.value)}
+              limitHide
+            />
+          </div>
+        )}
+        <CtaButton
+          color={isWriteStoreName ? 'green' : 'white'}
+          size="small"
+          radius="_2xl"
+          text={isWriteStoreName ? '입력완료' : '등록하기'}
+          onClick={() => setIsWriteStoreName(true)}
+        />
+      </div>
+      <div className="rounded-2xl bg-gray-100 p-4 shadow-sm">
+        <h2 className="text-st-2 mb-3">계좌번호</h2>
+        {isWriteAccount && (
+          <div className="mb-4">
+            <TextInput
+              placeholder="ex.은행이름 & 계좌번호 (13자리)"
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
+              limitHide
+            />
+          </div>
+        )}
+        <CtaButton
+          color={isWriteAccount ? 'green' : 'white'}
+          size="small"
+          radius="_2xl"
+          text={isWriteAccount ? '입력완료' : '등록하기'}
+          onClick={() => setIsWriteAccount(true)}
+        />
+      </div>
     </div>
   );
 }
@@ -78,7 +103,7 @@ function MenuList() {
           name={item.name}
           price={item.price}
           onClick={() => {
-            navigate(ROUTES.MENUS.DETAIL(item.id.toString()));
+            navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
           }}
         />
       ))}
@@ -89,12 +114,12 @@ function MenuList() {
 function AddMenuButton() {
   const navigate = useNavigate();
   return (
-    <div className="fixed right-4 bottom-24">
+    <div className="fixed right-4 bottom-24 rounded-xl shadow-lg">
       <CtaButton
         text="메뉴 추가"
         radius="xl"
         onClick={() => {
-          navigate(ROUTES.MENUS.DETAIL('0'));
+          navigate(ROUTES.MANAGE_MENUS.DETAIL('0'));
         }}
       />
     </div>

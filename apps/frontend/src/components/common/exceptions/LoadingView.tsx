@@ -1,8 +1,12 @@
+import Spinner from './Spinner';
+
 export default function LoadingView() {
   return (
     <div className="wrapper flex h-full w-full flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center">
-        <div className="mb-6"></div>
+        <div className="mb-6">
+          <Spinner className="border-primary-400 h-8 w-8" />
+        </div>
         <p className="text-t-1 mb-2.5 text-center text-gray-900">
           잠시만
           <br />
