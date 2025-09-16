@@ -11,7 +11,11 @@ async function bootstrap() {
   app.set('trust proxy', 1);
   // CORS 설정
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'], // 프론트엔드 URL
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://withfestival.site',
+    ], // 프론트엔드 URL
     credentials: true,
   });
 
