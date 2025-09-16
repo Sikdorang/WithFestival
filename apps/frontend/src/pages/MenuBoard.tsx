@@ -5,6 +5,7 @@ import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import BottomSpace from '../components/common/exceptions/BottomSpace';
 import TopBar from '../components/common/layouts/TopBar';
 import { KEYS } from '../constants/storage';
 
@@ -140,6 +141,7 @@ export default function MenuBoard() {
             tableNumber={userData.tableId}
           />
           <MenuList onMenuItemClick={handleMenuItemClick} />
+          <BottomSpace />
         </main>
       </div>
 

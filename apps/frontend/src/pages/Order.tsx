@@ -1,3 +1,4 @@
+import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import { OrderCard } from '@/components/pages/order/OrderCard';
 import { TopBar } from '@/components/pages/order/TopBar';
 import { useState } from 'react';
@@ -63,6 +64,7 @@ export default function Order() {
           />
         ))}
       </div>
+      <BottomSpace />
     </div>
   );
 }

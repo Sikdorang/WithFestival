@@ -9,6 +9,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
+import BottomSpace from '../components/common/exceptions/BottomSpace';
 import TextInput from '../components/common/inputs/TextInput';
 import Navigator from '../components/common/layouts/Navigator';
 import { ROUTES } from '../constants/routes';
@@ -191,6 +192,7 @@ export default function Ordering() {
           <RussianRoulette />
           <h2 className="text-st-2 mt-6 mb-2">주문 내역</h2>
           <MenuList items={orderItems} />
+          <BottomSpace />
         </main>
       </div>
 

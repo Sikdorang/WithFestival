@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 interface WaitingInfo {
   id: number;
   order: number;
@@ -13,6 +14,9 @@ interface Props {
 
 export function WaitingCard({ waitingInfo }: Props) {
   const { order, name, partySize, phone, time } = waitingInfo;
+
+  const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
+  const formattedPhone = useMemo(() => phone.replace(/-/g, ''), [phone]);
 
   const InfoItem = ({
     label,
@@ -39,13 +43,26 @@ export function WaitingCard({ waitingInfo }: Props) {
       <div className="grid grid-cols-3">
         <InfoItem label="예약자 이름" value={name} />
         <InfoItem label="인원" value={`${partySize}명`} />
-        <InfoItem label="전화번호" value={phone} />
+        <div className="flex flex-col items-center justify-center gap-1">
+          <p className="text-c-1 text-gray-300">전화번호</p>
+          <a
+            href={isMobile ? `tel:${formattedPhone}` : undefined}
+            className="text-b-1 text-gray-black"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {phone}
+          </a>
+        </div>
       </div>
 
       <div className="text-b-2 flex gap-2">
-        <button className="text-gray-black flex-1 rounded-3xl bg-gray-100 py-3 font-bold">
+        <a
+          href={isMobile ? `tel:${formattedPhone}` : undefined}
+          className="text-gray-black flex flex-1 items-center justify-center rounded-3xl bg-gray-100 py-3 font-bold"
+          onClick={(e) => e.stopPropagation()}
+        >
           전화하기
-        </button>
+        </a>
         <button className="flex-1 rounded-2xl bg-red-500 py-3 font-bold text-white">
           취소
         </button>

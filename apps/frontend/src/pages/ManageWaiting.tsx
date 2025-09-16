@@ -1,3 +1,4 @@
+import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import { WaitingCard } from '@/components/pages/manageWaiting/WaitingCard';
 
 // 임시 데이터
@@ -114,6 +115,7 @@ export default function ManageWaiting() {
         {mockWaitingList.map((item) => (
           <WaitingCard key={item.id} waitingInfo={item} />
         ))}
+        <BottomSpace />
       </main>
     </div>
   );
