@@ -8,7 +8,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+  app.set('trust proxy', 1);
   // CORS 설정
   app.enableCors({
     origin: ['http://localhost:3000', 'http://localhost:5173'], // 프론트엔드 URL
@@ -22,7 +22,7 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: false, // 개발 환경에서는 false
+        secure: true, // 개발 환경에서는 false
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24시간
         sameSite: 'lax', // CORS 요청에서 쿠키 전송 허용
