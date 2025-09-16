@@ -25,6 +25,7 @@ async function bootstrap() {
         secure: false, // 개발 환경에서는 false
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24시간
+        sameSite: 'lax', // CORS 요청에서 쿠키 전송 허용
       },
     }),
   );
