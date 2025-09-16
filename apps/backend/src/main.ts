@@ -1,10 +1,13 @@
+import { join } from 'path';
+
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as session from 'express-session';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // CORS 설정
   app.enableCors({
@@ -25,6 +28,11 @@ async function bootstrap() {
       },
     }),
   );
+
+  // 정적 파일 서빙 설정 (업로드된 이미지)
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    prefix: '/uploads/',
+  });
 
   // API 프리픽스 설정
   app.setGlobalPrefix('api');
