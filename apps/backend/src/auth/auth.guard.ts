@@ -20,6 +20,7 @@ export class AuthGuard implements CanActivate {
     const session: SessionData = request.session;
 
     console.log(session);
+    console.log('headers.cookie:', request.headers.cookie);
 
     if (!session || !session.isAuthenticated) {
       throw new UnauthorizedException('로그인이 필요합니다.');
