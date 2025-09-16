@@ -6,6 +6,7 @@ import { useState } from 'react';
 const mockOrders = [
   {
     orderNumber: 15,
+    tableNumber: 1,
     time: '18:50',
     items: [
       { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
@@ -19,6 +20,7 @@ const mockOrders = [
   },
   {
     orderNumber: 16,
+    tableNumber: 2,
     time: '18:50',
     items: [
       { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
@@ -32,6 +34,7 @@ const mockOrders = [
   },
   {
     orderNumber: 17,
+    tableNumber: 3,
     time: '18:50',
     items: [
       { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },

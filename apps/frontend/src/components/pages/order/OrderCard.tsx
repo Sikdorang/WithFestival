@@ -12,11 +12,12 @@ interface OrderItem {
 
 export interface Order {
   orderNumber: number;
+  tableNumber: number;
   time: string;
-  items: OrderItem[];
   totalAmount: number;
   totalQuantity: number;
   depositorName: string;
+  items: OrderItem[];
 }
 
 interface Props {
@@ -34,11 +35,25 @@ export function OrderCard({ order, isConfirm = false }: Props) {
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="space-y-3 rounded-lg bg-white p-4">
-        <div className="flex items-center justify-between">
-          <span className="rounded-lg bg-black px-3 py-1 font-bold text-white">
-            {order.orderNumber}번
-          </span>
-          <span className="text-gray-400">{order.time}</span>
+        <div className="flex flex-col">
+          <div className="mb-2 flex items-center gap-1">
+            <span className="text-b-2 text-black">주문번호</span>
+            <span className="text-b-2 text-black">
+              {String(order.orderNumber).padStart(3, '0')}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <div className="flex flex-col">
+              <span className="text-b-2 text-gray-400">테이블 번호</span>
+              <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
+                {order.tableNumber}번
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <span className="text-gray-400">{order.time}</span>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-2 border-b border-gray-200 py-3">

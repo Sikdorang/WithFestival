@@ -12,11 +12,6 @@ const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 export const encryptJson = (jsonObject: object) => {
   if (!jsonObject) return null;
   const jsonString = JSON.stringify(jsonObject);
-
-  console.log(
-    'SECRET_KEY_with result value',
-    CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString(),
-  );
   return CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString();
 };
 

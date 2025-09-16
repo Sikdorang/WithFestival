@@ -53,17 +53,15 @@ export default function MenuDetail({ menuId, onClose }: Props) {
         onLeftPress={onClose}
       />
 
-      <main className="flex flex-grow flex-col gap-2 py-2">
-        <div className="mb-2 flex flex-col items-center gap-2">
-          <div className="relative flex min-w-sm flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 py-2 transition-all duration-200 hover:bg-gray-100">
+      <main className="flex flex-grow flex-col">
+        <div className="mb-2 flex w-full flex-col items-center gap-2 px-8">
+          <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 transition-all duration-200 hover:bg-gray-100">
             {menu.image !== '' ? (
-              <>
-                <img
-                  src={menu.image ?? ''}
-                  alt="미리보기"
-                  className="aspect-square h-full w-full object-cover"
-                />
-              </>
+              <img
+                src={menu.image ?? ''}
+                alt="미리보기"
+                className="aspect-square h-full w-full object-cover"
+              />
             ) : (
               <div className="flex aspect-square w-full flex-col items-center justify-center gap-2 text-gray-400">
                 <EmptyImage className="h-30 w-30" />
@@ -81,7 +79,7 @@ export default function MenuDetail({ menuId, onClose }: Props) {
         </p>
       </main>
 
-      <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
+      <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 px-4 pb-4">
         <Dialog.Close asChild>
           <CtaButton text="담기" radius="_2xl" onClick={handleAddItem} />
         </Dialog.Close>

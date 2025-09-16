@@ -23,24 +23,33 @@ export default function OrderDetail({ order, onClose }: OrderDetailProps) {
         onLeftPress={onClose}
       />
 
-      <main className="flex-grow p-4 pt-20">
-        {/* 주문 번호 및 시간 */}
-        <div className="flex items-center justify-between">
-          <div className="text-b-1 rounded-md bg-black px-2 py-1 font-bold text-white">
-            {order.orderNumber}번
+      <main className="flex-grow p-4">
+        <div className="flex flex-col">
+          <div className="mb-2 flex items-center gap-1">
+            <span className="text-b-2 text-black">주문번호</span>
+            <span className="text-b-2 text-black">
+              {String(order.orderNumber).padStart(3, '0')}
+            </span>
           </div>
-          <span className="text-b-2 text-gray-400">{order.time}</span>
+          <div className="flex justify-between">
+            <div className="flex flex-col">
+              <span className="text-b-2 text-gray-400">테이블 번호</span>
+              <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
+                {order.tableNumber}번
+              </span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <span className="text-gray-400">{order.time}</span>
+            </div>
+          </div>
         </div>
 
-        {/* 주문 내역 */}
         <div className="mt-4">
           <h3 className="text-b-2 text-gray-500">주문내역</h3>
           <div className="mt-2 flex flex-col">
             {order.items.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between border-b border-gray-100 py-3"
-              >
+              <div key={item.id} className="flex justify-between py-3">
                 <div>
                   <p className="text-b-1">{item.name}</p>
                 </div>
@@ -53,8 +62,7 @@ export default function OrderDetail({ order, onClose }: OrderDetailProps) {
           </div>
         </div>
 
-        {/* 총 금액 */}
-        <div className="mt-6 flex items-end justify-between">
+        <div className="mt-6 flex items-end justify-between border-t-2 border-gray-200 pt-3">
           <span className="text-b-1">총 금액</span>
           <div>
             <p className="text-st-1 text-right text-black">

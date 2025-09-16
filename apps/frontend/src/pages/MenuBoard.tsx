@@ -1,4 +1,5 @@
 import BombIcon from '@/assets/icons/ic_bomb.svg?react';
+import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import { ROUTES } from '@/constants/routes';
 import { useOrderStore } from '@/stores/orderStore';
@@ -10,15 +11,15 @@ import TopBar from '../components/common/layouts/TopBar';
 import { KEYS } from '../constants/storage';
 
 const mockMenuList = [
+  { id: 1, name: '아롱사태 수육', price: 25000, image: '' },
+  { id: 2, name: '돼지국밥', price: 18000, image: '' },
+  { id: 3, name: '파전', price: 22000, image: '' },
+  { id: 1, name: '아롱사태 수육', price: 25000, image: '' },
+  { id: 2, name: '돼지국밥', price: 18000, image: '' },
+  { id: 3, name: '파전', price: 22000, image: '' },
   { id: 1, name: '아롱사태 수육', price: 25000 },
-  { id: 2, name: '돼지국밥', price: 18000 },
-  { id: 3, name: '파전', price: 22000 },
-  { id: 1, name: '아롱사태 수육', price: 25000 },
-  { id: 2, name: '돼지국밥', price: 18000 },
-  { id: 3, name: '파전', price: 22000 },
-  { id: 1, name: '아롱사태 수육', price: 25000 },
-  { id: 2, name: '돼지국밥', price: 18000 },
-  { id: 3, name: '파전', price: 22000 },
+  { id: 2, name: '돼지국밥', price: 18000, image: '' },
+  { id: 3, name: '파전', price: 22000, image: '' },
 ];
 
 interface StoreInfoSectionProps {
@@ -65,21 +66,27 @@ function RussianRoulette() {
 function MenuItem({
   name,
   price,
+  image,
   onClick,
 }: {
   name: string;
   price: number;
+  image: string;
   onClick: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between py-4" onClick={onClick}>
-      <div>
-        <h3 className="text-body-1 text-gray-black font-semibold">{name}</h3>
-        <p className="text-body-1 text-gray-black font-bold">
-          {price.toLocaleString()}원
-        </p>
+    <div className="w-fullitems-center flex py-4" onClick={onClick}>
+      <div className="flex-1 text-left">
+        <h3 className="text-b-1 text-gray-400">{name}</h3>
+        <p className="text-st-1 text-gray-800">{price.toLocaleString()}원</p>
       </div>
-      <div className="h-30 w-30 rounded-md bg-gray-100" />
+      {image ? (
+        <img className="h-20 w-20 rounded-md bg-gray-100" src={image} />
+      ) : (
+        <div className="flex aspect-square flex-1 items-center justify-center rounded-3xl bg-gray-100">
+          <EmptyImage />
+        </div>
+      )}
     </div>
   );
 }
@@ -96,6 +103,7 @@ function MenuList({
           key={item.id}
           name={item.name}
           price={item.price}
+          image={item.image ?? ''}
           onClick={() => onMenuItemClick(item.id)}
         />
       ))}
