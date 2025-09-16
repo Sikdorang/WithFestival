@@ -1,3 +1,4 @@
+import { unlink } from 'fs/promises';
 import { extname } from 'path';
 
 import {
@@ -9,6 +10,8 @@ import {
   UploadedFile,
   UseInterceptors,
   UseGuards,
+  Delete,
+  Patch,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -20,6 +23,12 @@ import { MenuService } from './menu.service';
 interface CreateMenuDto {
   menu: string;
   price: number;
+  description?: string;
+}
+
+interface UpdateMenuDto {
+  menu?: string;
+  price?: number;
   description?: string;
 }
 
@@ -140,6 +149,153 @@ export class MenuController {
       return {
         success: false,
         message: '이미지 업로드에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Delete(':menuId/image')
+  @UseGuards(AuthGuard)
+  async deleteImage(@Param('menuId') menuId: string, @CurrentUser() user: any) {
+    try {
+      // 해당 메뉴가 현재 사용자의 것인지 확인
+      const menu = await this.menuService.getMenuById(
+        parseInt(menuId),
+        user.id,
+      );
+
+      if (!menu) {
+        return {
+          success: false,
+          message: '메뉴를 찾을 수 없거나 권한이 없습니다.',
+        };
+      }
+
+      if (!menu.image) {
+        return {
+          success: false,
+          message: '삭제할 이미지가 없습니다.',
+        };
+      }
+
+      // 파일 경로에서 실제 파일명 추출
+      const filename = menu.image.split('/').pop();
+      const filePath = `./uploads/${filename}`;
+
+      try {
+        // 파일 시스템에서 파일 삭제
+        await unlink(filePath);
+      } catch (fileError) {
+        // 파일이 이미 삭제되었거나 없는 경우는 무시
+        console.log('파일 삭제 중 오류 (무시됨):', fileError.message);
+      }
+
+      // 데이터베이스에서 이미지 URL 제거
+      const updatedMenu = await this.menuService.updateMenuImage(
+        parseInt(menuId),
+        null,
+      );
+
+      return {
+        success: true,
+        message: '이미지가 삭제되었습니다.',
+        data: {
+          menu: updatedMenu,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '이미지 삭제에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Delete(':menuId')
+  @UseGuards(AuthGuard)
+  async deleteMenu(@Param('menuId') menuId: string, @CurrentUser() user: any) {
+    try {
+      // 해당 메뉴가 현재 사용자의 것인지 확인
+      const menu = await this.menuService.getMenuById(
+        parseInt(menuId),
+        user.id,
+      );
+
+      if (!menu) {
+        return {
+          success: false,
+          message: '메뉴를 찾을 수 없거나 권한이 없습니다.',
+        };
+      }
+
+      // 이미지가 있는 경우 파일 시스템에서도 삭제
+      if (menu.image) {
+        try {
+          const filename = menu.image.split('/').pop();
+          const filePath = `./uploads/${filename}`;
+          await unlink(filePath);
+        } catch (fileError) {
+          // 파일이 이미 삭제되었거나 없는 경우는 무시
+          console.log('파일 삭제 중 오류 (무시됨):', fileError.message);
+        }
+      }
+
+      // 데이터베이스에서 메뉴 삭제
+      await this.menuService.deleteMenu(parseInt(menuId));
+
+      return {
+        success: true,
+        message: '메뉴가 삭제되었습니다.',
+        data: {
+          deletedMenuId: parseInt(menuId),
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '메뉴 삭제에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Patch(':menuId')
+  @UseGuards(AuthGuard)
+  async updateMenu(
+    @Param('menuId') menuId: string,
+    @Body() updateMenuDto: UpdateMenuDto,
+    @CurrentUser() user: any,
+  ) {
+    try {
+      // 해당 메뉴가 현재 사용자의 것인지 확인
+      const menu = await this.menuService.getMenuById(
+        parseInt(menuId),
+        user.id,
+      );
+
+      if (!menu) {
+        return {
+          success: false,
+          message: '메뉴를 찾을 수 없거나 권한이 없습니다.',
+        };
+      }
+
+      // 메뉴 정보 업데이트
+      const updatedMenu = await this.menuService.updateMenu(
+        parseInt(menuId),
+        updateMenuDto,
+      );
+
+      return {
+        success: true,
+        message: '메뉴가 수정되었습니다.',
+        data: updatedMenu,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '메뉴 수정에 실패했습니다.',
         error: error.message,
       };
     }

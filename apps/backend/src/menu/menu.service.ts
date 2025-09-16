@@ -9,6 +9,12 @@ interface CreateMenuDto {
   userId: number;
 }
 
+interface UpdateMenuDto {
+  menu?: string;
+  price?: number;
+  description?: string;
+}
+
 @Injectable()
 export class MenuService {
   constructor(private prisma: PrismaService) {}
@@ -45,10 +51,36 @@ export class MenuService {
     });
   }
 
-  async updateMenuImage(menuId: number, imageUrl: string) {
+  async updateMenuImage(menuId: number, imageUrl: string | null) {
     return this.prisma.menu.update({
       where: { id: menuId },
       data: { image: imageUrl },
+    });
+  }
+
+  async deleteMenu(menuId: number) {
+    return this.prisma.menu.delete({
+      where: { id: menuId },
+    });
+  }
+
+  async updateMenu(menuId: number, data: UpdateMenuDto) {
+    // 전달된 필드만 업데이트하도록 필터링
+    const updateData: any = {};
+
+    if (data.menu !== undefined) {
+      updateData.menu = data.menu;
+    }
+    if (data.price !== undefined) {
+      updateData.price = data.price;
+    }
+    if (data.description !== undefined) {
+      updateData.description = data.description;
+    }
+
+    return this.prisma.menu.update({
+      where: { id: menuId },
+      data: updateData,
     });
   }
 }
