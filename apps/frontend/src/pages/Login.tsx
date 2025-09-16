@@ -11,7 +11,6 @@ export default function Login() {
   const [code, setCode] = useState('');
 
   const handleDelete = () => {
-    // 1. 세션 스토리지에서 삭제
     sessionStorage.removeItem('userData');
 
     console.log('데이터가 삭제되었습니다.');
@@ -20,7 +19,7 @@ export default function Login() {
   return (
     <BaseResponsiveLayout>
       <div className="flex h-screen w-full flex-col items-center justify-center">
-        <div className="flex h-full w-full max-w-sm min-w-sm flex-col items-center justify-center gap-8 py-40">
+        <div className="flex h-full w-full max-w-sm min-w-sm flex-col items-center justify-center gap-8 px-6 py-40">
           <Banner />
 
           <TextInput

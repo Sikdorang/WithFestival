@@ -3,6 +3,7 @@ import BombIcon from '@/assets/icons/ic_bomb.svg?react';
 import CancelIcon from '@/assets/icons/ic_cancel.svg?react';
 import CopyIcon from '@/assets/icons/ic_copy.svg?react';
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
+import { SUCCESS_MESSAGES } from '@/constants/message';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
@@ -46,7 +47,7 @@ function RemitStep({
   onNext: () => void;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center pt-70 text-center">
+    <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
       <div className="flex flex-col gap-8">
         <div className="text-t-1">
           {totalAmount.toLocaleString()}원을
@@ -64,14 +65,14 @@ function RemitStep({
             <CopyIcon
               onClick={() => {
                 navigator.clipboard.writeText('3333271896702');
-                toast.success('계좌번호가 복사되었습니다.');
+                toast.success(SUCCESS_MESSAGES.accountCopySuccess);
               }}
             />
           </div>
         </div>
       </div>
       <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 bg-white p-4">
-        <CtaButton text="송금 완료" onClick={onNext} />
+        <CtaButton text="송금 완료" onClick={onNext} radius="_2xl" />
       </footer>
     </div>
   );
@@ -80,7 +81,7 @@ function RemitStep({
 function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
   const { depositorName, setDepositorName } = useOrderStore();
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center text-center">
+    <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
       <div className="flex w-full flex-col items-center gap-4 px-8">
         <div className="text-t-1 mb-2">
           입금하신 분의
@@ -100,6 +101,7 @@ function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
           text="입력 완료"
           onClick={onSubmit}
           disabled={depositorName.trim() === ''}
+          radius="_2xl"
         />
       </footer>
     </div>
@@ -116,7 +118,7 @@ function MenuItem({
   image: string;
 }) {
   return (
-    <div className="flex items-center justify-between py-4">
+    <div className="flex justify-between py-4">
       {image ? (
         <img className="h-20 w-20 rounded-md bg-gray-100" src={image} />
       ) : (
@@ -125,9 +127,11 @@ function MenuItem({
         </div>
       )}
 
-      <div className="flex-1 text-right">
-        <h3 className="text-b-1 text-gray-400">{name}</h3>
-        <p className="text-st-1 text-gray-800">{price.toLocaleString()}원</p>
+      <div className="flex-1 pl-4 text-left">
+        <div className="text-b-1 text-gray-400">{name}</div>
+        <div className="text-st-1 text-gray-800">
+          {price.toLocaleString()}원
+        </div>
       </div>
     </div>
   );
@@ -142,7 +146,7 @@ function MenuList({ items }: { items: OrderItem[] }) {
           <MenuItem name={item.name} price={item.price} image={item.image} />
           <button
             onClick={() => removeItem(item.id)}
-            className="absolute top-6 right-6"
+            className="absolute top-5 right-2"
           >
             <CancelIcon />
           </button>
@@ -168,7 +172,7 @@ export default function Ordering() {
   const handleFinalSubmit = () => {
     setDepositorName(depositorName);
 
-    toast.success('주문이 완료되었습니다.');
+    toast.success(SUCCESS_MESSAGES.orderCompleteSuccess);
     navigate(ROUTES.MENU_BOARD);
 
     clearOrder();
@@ -182,13 +186,13 @@ export default function Ordering() {
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <div className="relative min-h-screen space-y-4 bg-white p-4">
+      <div className="relative min-h-screen bg-white px-4">
         <Navigator
           left={<GoBackIcon />}
           onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
           center={<div className="text-st-1">주문하기</div>}
         />
-        <main className="pt-12 pb-24">
+        <main className="pb-24">
           <RussianRoulette />
           <h2 className="text-st-2 mt-6 mb-2">주문 내역</h2>
           <MenuList items={orderItems} />
@@ -211,7 +215,7 @@ export default function Ordering() {
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed inset-0 z-50 bg-white">
+        <Dialog.Content className="fixed inset-0 z-50 flex flex-col bg-white">
           <Navigator
             left={<GoBackIcon />}
             onLeftPress={() => {

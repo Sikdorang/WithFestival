@@ -5,6 +5,7 @@ import { ROUTES } from '@/constants/routes';
 import { decryptJson } from '@/utils/crypto';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { KEYS } from '../constants/storage';
 
 export default function CheckUserType() {
   const navigate = useNavigate();
@@ -30,7 +31,8 @@ export default function CheckUserType() {
       sessionStorage.setItem('userData', JSON.stringify(decryptedData));
 
       if ('tableId' in decryptedData) {
-        navigate('/board', {
+        localStorage.setItem(KEYS.IS_PREVIEW, '0');
+        navigate(ROUTES.MENU_BOARD, {
           replace: true,
           state: { userData: decryptedData },
         });

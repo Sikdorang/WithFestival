@@ -13,15 +13,26 @@ export default defineConfig({
     svgr(),
     tailwindcss(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       injectRegister: false,
-
+      strategies: 'injectManifest',
+      filename: 'sw.ts',
       manifest: {
         name: 'WithFestival',
         short_name: 'WithFestival',
         description: 'with festival web-app',
         theme_color: '#ffffff',
-
+        lang: 'ko',
+        start_url: '/',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#ffffff',
+        scope: '/',
+        id: '/',
+        prefer_related_applications: false,
+        related_applications: [],
+        shortcuts: [],
+        screenshots: [],
         icons: [
           {
             src: '/icons/android-icon-36x36.png',
@@ -60,6 +71,11 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
+      },
+
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
 
       devOptions: {
