@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      Int     @id @default(autoincrement())
+  code    String  @unique @db.VarChar(6) // 인증번호
+  name    String  @db.VarChar(50)        // 이름
+  account String? @db.VarChar(100)       // 계좌
+
+  @@map("users")
+}
+
+model Menu {
+  id          Int     @id @default(autoincrement())
+  menu        String  @db.VarChar(100)   // 메뉴 이름
+  price       Int                        // 가격
+  image       String? @db.VarChar(255)   // 이미지
+  description String? @db.Text           // 설명
+  userid      Int?                       // 유저 아이디 (외래키 안함)
+
+  @@map("menus")
+}
+
+model Waiting {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(50)    // 예약자 이름
+  people      Int                        // 인원
+  phoneNumber String  @db.VarChar(20)    // 전화번호
+  time        DateTime                   // 시간
+  processed   Boolean @default(false)    // 처리된
+  userid      Int?                       // 유저 아이디 (외래키 안함)
+
+  @@map("waitings")
+}
+
+model Order {
+  id          Int     @id @default(autoincrement())
+  time        DateTime                   // 주문 시간
+  money       Boolean @default(false)    // 송금여부
+  cooked      Boolean @default(false)    // 조리여부
+  totalPrice  Int                        // 총액
+  name        String  @db.VarChar(50)    // 입금자명
+  tableNumber String  @db.VarChar(10)    // 테이블번호
+  userid      Int?                       // userid (외래키 없이)
+
+  @@map("orders")
+}
+
+model OrderUser {
+  id      Int    @id @default(autoincrement())
+  menu    String @db.VarChar(100)        // 메뉴 명
+  price   Int                            // 가격
+  count   Int                            // 갯수
+  orderId Int                            // 주문 아이디
+
+  @@map("order_users")
+}
