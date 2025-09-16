@@ -4,11 +4,12 @@ import MenuDetail from '@/components/pages/board/MenuDetail';
 import { ROUTES } from '@/constants/routes';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BottomSpace from '../components/common/exceptions/BottomSpace';
 import TopBar from '../components/common/layouts/TopBar';
 import { KEYS } from '../constants/storage';
+import { useMenu } from '../hooks/useMenu';
 
 const mockMenuList = [
   { id: 1, name: '아롱사태 수육', price: 25000, image: '' },
@@ -96,12 +97,18 @@ function MenuList({
 }: {
   onMenuItemClick: (id: number) => void;
 }) {
+  const { menus, isLoading, fetchMenu } = useMenu();
+
+  useEffect(() => {
+    fetchMenu();
+  }, [fetchMenu]);
+
   return (
     <div className="rounded-lg bg-white">
-      {mockMenuList.map((item) => (
+      {menus.map((item) => (
         <MenuItem
           key={item.id}
-          name={item.name}
+          name={item.menu}
           price={item.price}
           image={item.image ?? ''}
           onClick={() => onMenuItemClick(item.id)}

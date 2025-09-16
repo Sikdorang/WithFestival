@@ -1,4 +1,4 @@
-import socket from '@/apis/socket';
+//import socket from '@/apis/socket';
 import LoadingView from '@/components/common/exceptions/LoadingView';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { ROUTES } from '@/constants/routes';
@@ -12,7 +12,7 @@ export default function CheckUserType() {
   const params = useParams();
   const encryptedPath = params['*'];
 
-  console.log(socket);
+  //console.log(socket);
 
   useEffect(() => {
     const timer = setTimeout(() => {

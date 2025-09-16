@@ -1,6 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import svgr from 'vite-plugin-svgr';
@@ -15,8 +14,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: false,
-      strategies: 'injectManifest',
-      filename: 'sw.ts',
+
       manifest: {
         name: 'WithFestival',
         short_name: 'WithFestival',
@@ -30,9 +28,7 @@ export default defineConfig({
         scope: '/',
         id: '/',
         prefer_related_applications: false,
-        related_applications: [],
-        shortcuts: [],
-        screenshots: [],
+
         icons: [
           {
             src: '/icons/android-icon-36x36.png',
@@ -71,11 +67,6 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
-      },
-
-      injectManifest: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
-        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
       },
 
       devOptions: {
