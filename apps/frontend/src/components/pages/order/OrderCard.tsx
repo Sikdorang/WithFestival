@@ -73,7 +73,7 @@ export function OrderCard({ order, isConfirm = false }: Props) {
           <div className="flex flex-col gap-2">
             <button
               className="rounded-2xl bg-gray-100 py-3 text-black"
-              onClick={() => handleOrderCardClick(order)}
+              onClick={() => handleOrderCardClick()}
             >
               전체 보기
             </button>

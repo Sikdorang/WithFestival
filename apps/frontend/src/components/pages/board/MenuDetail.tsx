@@ -40,6 +40,7 @@ export default function MenuDetail({ menuId, onClose }: Props) {
       id: menu.id,
       name: menu.name,
       price: menu.price,
+      image: menu.image,
     });
     onClose();
   };

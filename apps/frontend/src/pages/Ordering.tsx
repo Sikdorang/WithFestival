@@ -7,7 +7,7 @@ import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
 import TextInput from '../components/common/inputs/TextInput';
 import Navigator from '../components/common/layouts/Navigator';
@@ -152,7 +152,7 @@ function MenuList({ items }: { items: OrderItem[] }) {
 }
 
 export default function Ordering() {
-  const storeId = useParams().storeId;
+  const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
   const navigate = useNavigate();
   const { orderItems, depositorName, clearOrder, setDepositorName } =
     useOrderStore();
@@ -168,19 +168,23 @@ export default function Ordering() {
     setDepositorName(depositorName);
 
     toast.success('주문이 완료되었습니다.');
-    navigate(ROUTES.MENU_BOARD.DETAIL(storeId));
+    navigate(ROUTES.MENU_BOARD);
 
     clearOrder();
     setIsModalOpen(false);
     setModalStep('remit');
   };
 
+  if (userData.userId === undefined) {
+    return <Navigate to={ROUTES.NOT_FOUND} replace />;
+  }
+
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="relative min-h-screen space-y-4 bg-white p-4">
         <Navigator
           left={<GoBackIcon />}
-          onLeftPress={() => navigate(ROUTES.MENU_BOARD.DETAIL(storeId))}
+          onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
           center={<div className="text-st-1">주문하기</div>}
         />
         <main className="pt-12 pb-24">

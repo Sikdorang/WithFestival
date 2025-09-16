@@ -23,14 +23,7 @@ export const ROUTES = {
   ORDER: '/order',
   STORE: '/store',
   WAITING: '/waiting',
-  MENU_BOARD: {
-    ROOT: '/board',
-    DETAIL: (menuId: string = ':menuId') =>
-      `${ROUTES.MENU_BOARD.ROOT}/${menuId}`,
-  },
-  ORDERING: {
-    ROOT: '/ordering',
-    DETAIL: (storeId: string = ':storeId') =>
-      `${ROUTES.ORDERING.ROOT}/${storeId}`,
-  },
+  MENU_BOARD: '/board',
+  NOT_FOUND: '/not-found',
+  ORDERING: '/ordering',
 } as const;

@@ -30,7 +30,7 @@ export default function JoinWaitlistFinish({
     });
 
     localStorage.setItem(KEYS.IS_PREVIEW, '1');
-    navigate(ROUTES.MENU_BOARD.DETAIL('1'));
+    navigate(ROUTES.MENU_BOARD);
   };
 
   return (

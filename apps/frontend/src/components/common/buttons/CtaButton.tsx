@@ -72,7 +72,7 @@ export default function CtaButton({
     green: 'border-primary-300',
     gray: 'border-gray-100',
     red: 'border-none',
-    white: 'border-gray-200',
+    white: 'border-white',
     black: 'border-gray-800',
     disabled: 'border-gray-200',
   };

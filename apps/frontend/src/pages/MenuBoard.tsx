@@ -1,11 +1,10 @@
 import BombIcon from '@/assets/icons/ic_bomb.svg?react';
-import WarningIcon from '@/assets/icons/ic_warning.svg?react';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import { ROUTES } from '@/constants/routes';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import TopBar from '../components/common/layouts/TopBar';
 import { KEYS } from '../constants/storage';
 
@@ -35,9 +34,8 @@ function StoreInfoSection({ isPreview, tableNumber }: StoreInfoSectionProps) {
           {isPreview ? '메뉴판 미리보기' : `테이블 번호 ${tableNumber}`}
         </div>
         {isPreview ? (
-          <div className="text-c-1 flex text-red-500">
-            <WarningIcon />
-            주문은 테이블 착석후에 가능해요.
+          <div className="text-c-1 flex text-gray-200">
+            웨이팅을 기다리며 메뉴를 미리 볼 수 있어요.
           </div>
         ) : (
           <RussianRoulette />
@@ -106,37 +104,45 @@ function MenuList({
 
 export default function MenuBoard() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const { storeId } = useParams();
   const { orderItems } = useOrderStore();
   const isPreview = localStorage.getItem(KEYS.IS_PREVIEW);
 
-  // 1. 모달의 열림/닫힘 상태와 선택된 메뉴 ID를 관리합니다.
+  const userData =
+    location.state?.userData ||
+    JSON.parse(sessionStorage.getItem('userData') || '{}');
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
 
-  // 2. 메뉴 아이템 클릭 시 실행될 핸들러
   const handleMenuItemClick = (id: number) => {
     setSelectedMenuId(id);
     setIsModalOpen(true);
   };
 
-  const totalAmount = orderItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
+  // const totalAmount = orderItems.reduce(
+  //   (sum, item) => sum + item.price * item.quantity,
+  //   0,
+  // );
+
+  if (userData.userId === undefined) {
+    return <Navigate to={ROUTES.NOT_FOUND} replace />;
+  }
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="relative min-h-screen space-y-4 bg-white p-4">
         <TopBar />
         <main className="pt-12 pb-24">
-          <StoreInfoSection isPreview={isPreview === '1'} tableNumber={3} />
+          <StoreInfoSection
+            isPreview={isPreview === '1'}
+            tableNumber={userData.tableId}
+          />
           <MenuList onMenuItemClick={handleMenuItemClick} />
         </main>
       </div>
 
-      {/* 4. 모달 콘텐츠 영역 */}
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/30" />
         <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
@@ -152,7 +158,7 @@ export default function MenuBoard() {
       {orderItems.length > 0 && (
         <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 p-4">
           <button
-            onClick={() => navigate(ROUTES.ORDERING.DETAIL(storeId))}
+            onClick={() => navigate(ROUTES.ORDERING)}
             className="bg-primary-300 flex w-full flex-1 items-center justify-between rounded-2xl px-6 py-4 text-black"
           >
             <div className="flex w-full items-center justify-center gap-2">

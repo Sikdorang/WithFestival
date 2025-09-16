@@ -27,7 +27,7 @@ export default function DeleteConfirmModal({
 
         <Dialog.Content className="data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-lg duration-300 ease-out">
           <Dialog.Title className="text-lg font-bold">{title}</Dialog.Title>
-          <Dialog.Description className="mt-6 text-sm text-gray-500">
+          <Dialog.Description className="mt-6 text-center text-sm text-gray-500">
             {description}
           </Dialog.Description>
 

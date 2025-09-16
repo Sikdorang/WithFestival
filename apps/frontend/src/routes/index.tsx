@@ -16,7 +16,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
   {
-    path: ROUTES.ROOT,
+    path: '/*',
     element: <CheckUserType />,
     errorElement: <ErrorBoundary />,
   },
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
-    path: ROUTES.MENU_BOARD.DETAIL(':menuId'),
+    path: ROUTES.MENU_BOARD,
     element: <MenuBoard />,
     errorElement: <ErrorBoundary />,
   },
@@ -64,9 +64,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
-    path: ROUTES.ORDERING.DETAIL(':storeId'),
+    path: ROUTES.ORDERING,
     element: <Ordering />,
     errorElement: <ErrorBoundary />,
+  },
+  {
+    path: '/not-found',
+    element: <NotFoundView />,
   },
   { path: '*', element: <NotFoundView /> },
 ]);

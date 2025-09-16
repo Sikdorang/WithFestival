@@ -22,6 +22,7 @@ export default function Banner({
           <div className="text-st-2 text-gray-400">웨이팅 등록 완료 !</div>
         </div>
       )}
+      <div className="text-c-1">어흥부스</div>
       <div>
         현재 대기팀{' '}
         <span className="text-primary-300">{waitingListLength}</span>

@@ -1,23 +1,49 @@
+import socket from '@/apis/socket';
 import LoadingView from '@/components/common/exceptions/LoadingView';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { ROUTES } from '@/constants/routes';
+import { decryptJson } from '@/utils/crypto';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function CheckUserAgent() {
+export default function CheckUserType() {
   const navigate = useNavigate();
+  const params = useParams();
+  const encryptedPath = params['*'];
+
+  console.log(socket);
 
   useEffect(() => {
-    const redirectBasedOnDevice = () => {
-      const isAdmin = true;
-      const targetRoute = isAdmin ? ROUTES.LOGIN : ROUTES.STORE;
-      navigate(targetRoute);
-    };
+    const timer = setTimeout(() => {
+      if (!encryptedPath) {
+        navigate(ROUTES.LOGIN, { replace: true });
+        return;
+      }
 
-    const timer = setTimeout(redirectBasedOnDevice, 1000);
+      const decryptedData = decryptJson(encryptedPath);
+
+      if (!decryptedData || !decryptedData.userId) {
+        navigate('/not-found', { replace: true });
+        return;
+      }
+
+      sessionStorage.setItem('userData', JSON.stringify(decryptedData));
+
+      if ('tableId' in decryptedData) {
+        navigate('/board', {
+          replace: true,
+          state: { userData: decryptedData },
+        });
+      } else {
+        navigate(ROUTES.WAITING, {
+          replace: true,
+          state: { userData: decryptedData },
+        });
+      }
+    }, 500);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [navigate, encryptedPath]);
 
   return (
     <BaseResponsiveLayout>

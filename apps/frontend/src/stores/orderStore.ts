@@ -5,6 +5,7 @@ interface OrderItem {
   name: string;
   price: number;
   quantity: number;
+  image: string;
 }
 
 interface OrderState {
