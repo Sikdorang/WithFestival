@@ -2,18 +2,24 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { Banner } from '@/components/pages/login/Banner';
-import { ROUTES } from '@/constants/routes';
+import { useLogin } from '@/hooks/useLogin';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useLogin();
+
   const [code, setCode] = useState('');
 
   const handleDelete = () => {
     sessionStorage.removeItem('userData');
 
     console.log('데이터가 삭제되었습니다.');
+  };
+
+  const handleLogin = () => {
+    login(code);
   };
 
   return (
@@ -31,13 +37,7 @@ export default function Login() {
             limitHide
           />
 
-          <CtaButton
-            text="로그인"
-            radius="_2xl"
-            onClick={() => {
-              navigate(ROUTES.MANAGE_WAITING);
-            }}
-          />
+          <CtaButton text="로그인" radius="_2xl" onClick={handleLogin} />
         </div>
         <CtaButton
           text="Table Id: 1, user Id 1: 테스트 라우팅"

@@ -4,14 +4,17 @@ import CameraIcon from '@/assets/images/img_camera.svg?react';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
-import { ROUTES } from '@/constants/routes';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
 import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
+import { ROUTES } from '../constants/routes';
+import { useMenu } from '../hooks/useMenu';
 
 export default function ManageMenuDetail() {
   const navigate = useNavigate();
+  const { createMenu } = useMenu();
+
   const { menuId } = useParams();
   const isEditMode = menuId !== '0';
   const [isEditingMode, setIsEditingMode] = useState(false);
@@ -57,6 +60,15 @@ export default function ManageMenuDetail() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const handleCreateMenu = () => {
+    createMenu({
+      menu,
+      description,
+      price: Number(price),
+    });
+    navigate(ROUTES.STORE);
   };
 
   if (isEditMode) {
@@ -276,7 +288,7 @@ export default function ManageMenuDetail() {
             text="메뉴 추가하기"
             radius="xl"
             onClick={() => {
-              navigate(ROUTES.MANAGE_WAITING);
+              handleCreateMenu();
             }}
           />
         </div>

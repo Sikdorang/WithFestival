@@ -11,12 +11,12 @@ export const useLogin = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const login = async (authCode: string) => {
+  const login = async (code: string) => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      await authAPI.login(authCode);
+      await authAPI.login(code);
       toast.success(SUCCESS_MESSAGES.loginSuccess);
       navigate(ROUTES.MANAGE_WAITING);
       return true;
