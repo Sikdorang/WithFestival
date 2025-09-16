@@ -20,16 +20,18 @@ async function bootstrap() {
   });
 
   // 세션 설정
+  const isProduction = process.env.NODE_ENV === 'production';
+
   app.use(
     session({
       secret: process.env.SESSION_SECRET || 'your-secret-key-change-this',
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: true, // 개발 환경에서는 false
+        secure: isProduction, // 프로덕션에서는 true, 개발에서는 false
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 24시간
-        sameSite: 'lax', // CORS 요청에서 쿠키 전송 허용
+        sameSite: isProduction ? 'none' : 'lax', // 프로덕션에서는 none, 개발에서는 lax
       },
     }),
   );

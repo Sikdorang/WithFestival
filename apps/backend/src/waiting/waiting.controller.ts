@@ -101,4 +101,26 @@ export class WaitingController {
       };
     }
   }
+
+  @Get('unprocessed')
+  @UseGuards(AuthGuard)
+  async getUnprocessedWaitings(@CurrentUser() user: any) {
+    try {
+      const waitings = await this.waitingService.getUnprocessedWaitings(
+        user.id,
+      );
+
+      return {
+        success: true,
+        data: waitings,
+        count: waitings.length,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '대기 목록 조회에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
 }

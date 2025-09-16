@@ -71,4 +71,16 @@ export class WaitingService {
       data: { processed: true },
     });
   }
+
+  async getUnprocessedWaitings(userId: number) {
+    return this.prisma.waiting.findMany({
+      where: {
+        userid: userId,
+        processed: false,
+      },
+      orderBy: {
+        time: 'asc', // 등록 시간 순으로 정렬
+      },
+    });
+  }
 }
