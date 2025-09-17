@@ -87,8 +87,9 @@ export const useMenu = () => {
 
     try {
       const response = await menuAPI.getMenuByUserId(userId);
-      setMenus(response.data);
       console.log(response.data);
+      setMenus(response.data);
+
       return true;
     } catch (error) {
       handelError(error);

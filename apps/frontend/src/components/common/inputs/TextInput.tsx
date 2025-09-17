@@ -58,7 +58,7 @@ export default function TextInput({
               className={`text-b-2 w-full border-none bg-transparent text-gray-800 outline-none placeholder:text-gray-300 ${disabled ? 'bg-primary-100 text-gray-300' : ''} `}
               {...rest}
             />
-            {!disabled && value && (
+            {!disabled && value && onClear && (
               <button
                 type="button"
                 onClick={onClear}

@@ -18,6 +18,7 @@ export const useWaiting = () => {
     try {
       const response = await waitingAPI.getWaiting();
       setWaitingList(response.data);
+      console.log(response);
       return true;
     } catch (error) {
       handelError(error);
@@ -33,6 +34,7 @@ export const useWaiting = () => {
 
     try {
       const response = await waitingAPI.getWaitingByUserId(userId);
+
       return response.data;
     } catch (error) {
       handelError(error);
@@ -47,25 +49,9 @@ export const useWaiting = () => {
     setLoginError(null);
 
     try {
-      await waitingAPI.createWaiting(waiting);
+      const response = await waitingAPI.createWaiting(waiting);
       toast.success(SUCCESS_MESSAGES.loginSuccess);
-      return true;
-    } catch (error) {
-      handelError(error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateWaiting = async (waiting: WaitingDTO) => {
-    setIsLoading(true);
-    setLoginError(null);
-
-    try {
-      await waitingAPI.updateWaiting(waiting);
-      toast.success(SUCCESS_MESSAGES.loginSuccess);
-      return true;
+      return response.data;
     } catch (error) {
       handelError(error);
       return false;
@@ -90,11 +76,27 @@ export const useWaiting = () => {
     }
   };
 
+  const setWaitingProcessed = async (waitingId: number) => {
+    setIsLoading(true);
+    setLoginError(null);
+
+    try {
+      await waitingAPI.setWaitingProcessed(waitingId);
+      await Promise.all([fetchWaiting()]);
+      return true;
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     fetchWaiting,
     waitingList,
     createWaiting,
-    updateWaiting,
+    setWaitingProcessed,
     deleteWaiting,
     getWaitingByUserId,
     isLoading,

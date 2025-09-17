@@ -6,6 +6,7 @@ import { useWaiting } from '@/hooks/useWaiting';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
+import { IWaitingListItem } from '../../../types/global';
 
 const waitlistSchema = z.object({
   name: z.string().min(1, '예약자 이름은 필수입니다.'),
@@ -14,8 +15,6 @@ const waitlistSchema = z.object({
     .regex(/^010-\d{3,4}-\d{4}$/, '올바른 전화번호 형식이 아닙니다.'),
   partySize: z.number().gt(0, '입장 인원은 1명 이상이어야 합니다.'),
 });
-
-const waitingNumber = 1;
 
 export default function JoinWaitlistForm() {
   const { createWaiting, getWaitingByUserId } = useWaiting();
@@ -43,6 +42,7 @@ export default function JoinWaitlistForm() {
     phone: '010-',
     partySize: '',
   });
+  const [waitingResult, setWaitingResult] = useState<IWaitingListItem>();
 
   useEffect(() => {
     const validationData = {
@@ -68,25 +68,23 @@ export default function JoinWaitlistForm() {
     setFormData((prev) => ({ ...prev, phone: formatted }));
   };
 
-  const handleSubmit = () => {
-    console.log({
-      ...formData,
-      partySize: Number(formData.partySize),
-    });
-    createWaiting({
+  const handleSubmit = async () => {
+    const waitingResult: IWaitingListItem = await createWaiting({
       name: formData.name,
       phoneNumber: formData.phone,
       people: Number(formData.partySize),
+      userId: userData.userId,
     });
+    setWaitingResult(waitingResult);
     setIsFinishJoinWaitlist(true);
   };
 
   if (isFinishJoinWaitlist) {
     return (
       <JoinWaitlistFinish
-        boothName={waitingInfos?.name ?? ''}
+        boothName={waitingResult?.name ?? ''}
         waitingListNumber={waitingInfos?.waitingCount ?? 0}
-        waitingNumber={waitingNumber}
+        waitingNumber={waitingResult?.id ?? 0}
         name={formData.name}
         phone={formData.phone}
         partySize={Number(formData.partySize)}

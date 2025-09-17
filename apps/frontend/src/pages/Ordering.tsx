@@ -4,6 +4,7 @@ import CancelIcon from '@/assets/icons/ic_cancel.svg?react';
 import CopyIcon from '@/assets/icons/ic_copy.svg?react';
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import { SUCCESS_MESSAGES } from '@/constants/message';
+import { useOrder } from '@/hooks/useOrder';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
@@ -79,7 +80,8 @@ function RemitStep({
 }
 
 function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
-  const { depositorName, setDepositorName } = useOrderStore();
+  const { setDepositorName } = useOrderStore();
+  const [depositorNameInput, setDepositorNameInput] = useState('');
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
       <div className="flex w-full flex-col items-center gap-4 px-8">
@@ -90,8 +92,8 @@ function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
         </div>
         <TextInput
           placeholder="입금자명을 입력해주세요."
-          value={depositorName}
-          onChange={(e) => setDepositorName(e.target.value)}
+          value={depositorNameInput}
+          onChange={(e) => setDepositorNameInput(e.target.value)}
           limitHide
         />
       </div>
@@ -99,8 +101,12 @@ function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
       <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 bg-white p-4">
         <CtaButton
           text="입력 완료"
-          onClick={onSubmit}
-          disabled={depositorName.trim() === ''}
+          onClick={() => {
+            setDepositorName(depositorNameInput);
+            setDepositorNameInput('');
+            onSubmit();
+          }}
+          disabled={depositorNameInput.trim() === ''}
           radius="_2xl"
         />
       </footer>
@@ -159,8 +165,8 @@ function MenuList({ items }: { items: OrderItem[] }) {
 export default function Ordering() {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
   const navigate = useNavigate();
-  const { orderItems, depositorName, clearOrder, setDepositorName } =
-    useOrderStore();
+  const { orderItems, clearOrder } = useOrderStore();
+  const { createOrder } = useOrder();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<'remit' | 'depositor'>('remit');
 
@@ -169,15 +175,17 @@ export default function Ordering() {
     0,
   );
 
-  const handleFinalSubmit = () => {
-    setDepositorName(depositorName);
+  const handleFinalSubmit = async () => {
+    // 훅에 있는 createOrder 함수를 호출하고 결과를 기다립니다.
+    const success = await createOrder();
 
-    toast.success(SUCCESS_MESSAGES.orderCompleteSuccess);
-    navigate(ROUTES.MENU_BOARD);
-
-    clearOrder();
-    setIsModalOpen(false);
-    setModalStep('remit');
+    // API 호출이 성공했을 때만 후속 처리를 합니다.
+    if (success) {
+      clearOrder(); // Zustand 스토어의 장바구니 비우기
+      setIsModalOpen(false); // 모달 닫기
+      setModalStep('remit'); // 모달 스텝 초기화
+      navigate(ROUTES.MENU_BOARD); // 주문 완료 후 메뉴판으로 이동
+    }
   };
 
   if (userData.userId === undefined) {
@@ -216,6 +224,12 @@ export default function Ordering() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
         <Dialog.Content className="fixed inset-0 z-50 flex flex-col bg-white">
+          <Dialog.Title className="sr-only">
+            송금하기 또는 입금자명 입력
+          </Dialog.Title>
+          <Dialog.Description className="sr-only">
+            송금하기 또는 입금자명 입력
+          </Dialog.Description>
           <Navigator
             left={<GoBackIcon />}
             onLeftPress={() => {

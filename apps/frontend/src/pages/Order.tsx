@@ -1,73 +1,73 @@
+import EmptyImage from '@/assets/icons/ic_circle_plus.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import { OrderCard } from '@/components/pages/order/OrderCard';
 import { TopBar } from '@/components/pages/order/TopBar';
-import { useState } from 'react';
-
-const mockOrders = [
-  {
-    orderNumber: 15,
-    tableNumber: 1,
-    time: '18:50',
-    items: [
-      { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 2, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 3, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 4, name: '메뉴 이름', price: 2500, quantity: 1 },
-    ],
-    totalAmount: 10000,
-    totalQuantity: 4,
-    depositorName: '이상현',
-  },
-  {
-    orderNumber: 16,
-    tableNumber: 2,
-    time: '18:50',
-    items: [
-      { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 2, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 3, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 4, name: '메뉴 이름', price: 2500, quantity: 1 },
-    ],
-    totalAmount: 10000,
-    totalQuantity: 4,
-    depositorName: '이상현',
-  },
-  {
-    orderNumber: 17,
-    tableNumber: 3,
-    time: '18:50',
-    items: [
-      { id: 1, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 2, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 3, name: '메뉴 이름', price: 2500, quantity: 1 },
-      { id: 4, name: '메뉴 이름', price: 2500, quantity: 1 },
-    ],
-    totalAmount: 10000,
-    totalQuantity: 4,
-    depositorName: '이상현',
-  },
-];
+import { useOrder } from '@/hooks/useOrder';
+import { useEffect, useState } from 'react';
 
 export default function Order() {
-  const [orderType, setOrderType] = useState<'new' | 'confirm'>('new');
+  const [orderType, setOrderType] = useState<'pending' | 'sent'>('pending');
+
+  const {
+    getPendingOrders,
+    getSentOrders,
+    pendingOrders,
+    sentOrders,
+    setOrderSent,
+    setOrderCooked,
+  } = useOrder();
+
+  useEffect(() => {
+    getPendingOrders();
+    getSentOrders();
+  }, []);
+
   return (
-    <div className="flex flex-col gap-4 bg-gray-400">
+    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-400">
       <TopBar
-        orderCount={mockOrders.length}
+        orderCount={
+          orderType === 'pending'
+            ? pendingOrders?.count || 0
+            : sentOrders?.count || 0
+        }
         type={orderType}
         onTypeChange={setOrderType}
       />
 
-      <div className="flex flex-col gap-4 p-4">
-        {mockOrders.map((order) => (
-          <OrderCard
-            key={order.orderNumber}
-            order={order}
-            isConfirm={orderType === 'confirm'}
-          />
-        ))}
+      <div className="relative flex flex-1 flex-col gap-4 p-4">
+        {orderType === 'pending' ? (
+          pendingOrders?.count && pendingOrders.count > 0 ? (
+            pendingOrders.data.map((order) => (
+              <OrderCard
+                key={order.id}
+                order={order}
+                setOrderSent={setOrderSent}
+                setOrderCooked={setOrderCooked}
+              />
+            ))
+          ) : (
+            <div className="absolute top-2/5 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4 text-white">
+              <EmptyImage color="white" />
+              <div className="text-st-2">신규 주문이 없습니다.</div>
+            </div>
+          )
+        ) : sentOrders?.count && sentOrders.count > 0 ? (
+          sentOrders.data.map((order) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              setOrderSent={setOrderSent}
+              setOrderCooked={setOrderCooked}
+            />
+          ))
+        ) : (
+          <div className="absolute top-2/5 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4 text-white">
+            <EmptyImage color="white" />
+            <div className="text-st-2">송금 완료된 주문이 없습니다.</div>
+          </div>
+        )}
+        <BottomSpace />
       </div>
-      <BottomSpace />
     </div>
   );
 }

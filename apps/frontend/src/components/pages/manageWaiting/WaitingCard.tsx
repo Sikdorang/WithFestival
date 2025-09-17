@@ -1,10 +1,13 @@
+import { SUCCESS_MESSAGES } from '@/constants/message';
 import { IWaitingListItem } from '@/types/global';
 import { useMemo } from 'react';
+import toast from 'react-hot-toast';
 interface Props {
   waitingInfo: IWaitingListItem;
+  setWaitingProcessed: (waitingId: number) => void;
 }
 
-export function WaitingCard({ waitingInfo }: Props) {
+export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
   const { name, people, phoneNumber, time } = waitingInfo;
 
   const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
@@ -58,10 +61,22 @@ export function WaitingCard({ waitingInfo }: Props) {
         >
           전화하기
         </a>
-        <button className="flex-1 rounded-2xl bg-red-500 py-3 font-bold text-white">
+        <button
+          className="flex-1 rounded-2xl bg-red-500 py-3 font-bold text-white"
+          onClick={() => {
+            setWaitingProcessed(waitingInfo.id);
+            toast.success(SUCCESS_MESSAGES.waitingCancelSuccess);
+          }}
+        >
           취소
         </button>
-        <button className="bg-primary-300 flex-1 rounded-2xl py-3 font-bold text-black">
+        <button
+          className="bg-primary-300 flex-1 rounded-2xl py-3 font-bold text-black"
+          onClick={() => {
+            setWaitingProcessed(waitingInfo.id);
+            toast.success(SUCCESS_MESSAGES.waitingSuccess);
+          }}
+        >
           착석
         </button>
       </div>

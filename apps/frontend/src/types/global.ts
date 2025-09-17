@@ -31,3 +31,38 @@ export interface StoreInfo {
   name: string;
   account: string;
 }
+
+export interface OrderedListItem {
+  id: number;
+  menu: string;
+  price: number;
+  count: number;
+  orderId: number;
+}
+
+export interface orderUsers {
+  id: number;
+  menu: string;
+  price: number;
+  count: number;
+  orderId: number;
+}
+
+export interface OrderSummary {
+  id: number;
+  time: string;
+  send: boolean;
+  cooked: boolean;
+  totalPrice: number;
+  name: string;
+  tableNumber: string;
+  userid: number;
+  orderUsers: orderUsers[];
+}
+
+export interface OrderListApiResponse {
+  success: boolean;
+  message: string;
+  data: OrderSummary[];
+  count: number;
+}

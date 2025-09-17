@@ -1,8 +1,8 @@
 import axiosInstance from '.';
 
 export const storeAPI = {
-  getStoreInfo: async () => {
-    const response = await axiosInstance.get('/store');
+  getUserInfo: async () => {
+    const response = await axiosInstance.get('/menu/user-info');
     return response.data;
   },
 
