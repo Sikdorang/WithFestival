@@ -109,11 +109,16 @@ export class OrderService {
     return null;
   }
 
-  async getOrdersBySendStatus(userId: number, sendStatus: boolean) {
+  async getOrdersBySendStatus(
+    userId: number,
+    sendStatus: boolean,
+    cookedStatus: boolean,
+  ) {
     const orders = await this.prisma.order.findMany({
       where: {
         userid: userId,
         send: sendStatus,
+        cooked: cookedStatus,
       },
       orderBy: {
         time: 'desc',
@@ -121,5 +126,43 @@ export class OrderService {
     });
 
     return orders;
+  }
+
+  async updateOrderSend(orderId: number, userId: number) {
+    // 해당 주문이 현재 사용자의 것인지 확인
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+        userid: userId,
+      },
+    });
+
+    if (!order) {
+      throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
+    }
+
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { send: true },
+    });
+  }
+
+  async updateOrderCooked(orderId: number, userId: number) {
+    // 해당 주문이 현재 사용자의 것인지 확인
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+        userid: userId,
+      },
+    });
+
+    if (!order) {
+      throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
+    }
+
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { cooked: true },
+    });
   }
 }

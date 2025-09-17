@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  UseGuards,
+  Patch,
+} from '@nestjs/common';
 
 import { CurrentUser } from '../auth/auth.decorator';
 import { AuthGuard } from '../auth/auth.guard';
@@ -70,6 +78,7 @@ export class OrderController {
       const orders = await this.orderService.getOrdersBySendStatus(
         user.id,
         false,
+        false,
       );
       return {
         success: true,
@@ -93,6 +102,7 @@ export class OrderController {
       const orders = await this.orderService.getOrdersBySendStatus(
         user.id,
         true,
+        false,
       );
 
       return {
@@ -134,6 +144,58 @@ export class OrderController {
       return {
         success: false,
         message: '주문 조회에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Patch(':orderId/send')
+  @UseGuards(AuthGuard)
+  async updateOrderSend(
+    @Param('orderId') orderId: string,
+    @CurrentUser() user: any,
+  ) {
+    try {
+      const updatedOrder = await this.orderService.updateOrderSend(
+        parseInt(orderId),
+        user.id,
+      );
+
+      return {
+        success: true,
+        message: '송금 상태가 변경되었습니다.',
+        data: updatedOrder,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '송금 상태 변경에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Patch(':orderId/cooked')
+  @UseGuards(AuthGuard)
+  async updateOrderCooked(
+    @Param('orderId') orderId: string,
+    @CurrentUser() user: any,
+  ) {
+    try {
+      const updatedOrder = await this.orderService.updateOrderCooked(
+        parseInt(orderId),
+        user.id,
+      );
+
+      return {
+        success: true,
+        message: '조리 상태가 변경되었습니다.',
+        data: updatedOrder,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '조리 상태 변경에 실패했습니다.',
         error: error.message,
       };
     }
