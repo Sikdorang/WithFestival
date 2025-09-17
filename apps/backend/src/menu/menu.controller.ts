@@ -57,7 +57,7 @@ export class MenuController {
   async getMenusByUserId(@Param('userId') userId: string) {
     try {
       const menus = await this.menuService.getMenusByUserId(parseInt(userId));
-
+      
       return {
         success: true,
         data: menus,
@@ -66,6 +66,35 @@ export class MenuController {
       return {
         success: false,
         message: '메뉴 조회에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Get('user-info')
+  @UseGuards(AuthGuard)
+  async getUserInfo(@CurrentUser() user: any) {
+    try {
+      const userInfo = await this.menuService.getUserInfo(user.id);
+      
+      if (!userInfo) {
+        return {
+          success: false,
+          message: '사용자 정보를 찾을 수 없습니다.',
+        };
+      }
+
+      return {
+        success: true,
+        data: {
+          name: userInfo.name,
+          account: userInfo.account,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '사용자 정보 조회에 실패했습니다.',
         error: error.message,
       };
     }

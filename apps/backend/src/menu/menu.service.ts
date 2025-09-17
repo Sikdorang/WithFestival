@@ -67,7 +67,7 @@ export class MenuService {
   async updateMenu(menuId: number, data: UpdateMenuDto) {
     // 전달된 필드만 업데이트하도록 필터링
     const updateData: any = {};
-
+    
     if (data.menu !== undefined) {
       updateData.menu = data.menu;
     }
@@ -81,6 +81,16 @@ export class MenuService {
     return this.prisma.menu.update({
       where: { id: menuId },
       data: updateData,
+    });
+  }
+
+  async getUserInfo(userId: number) {
+    return this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        name: true,
+        account: true,
+      },
     });
   }
 }
