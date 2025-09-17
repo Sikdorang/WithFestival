@@ -12,15 +12,20 @@ import { KEYS } from '../constants/storage';
 import { useMenu } from '../hooks/useMenu';
 
 interface StoreInfoSectionProps {
+  boothName: string;
   isPreview: boolean;
   tableNumber?: number;
 }
 
-function StoreInfoSection({ isPreview, tableNumber }: StoreInfoSectionProps) {
+function StoreInfoSection({
+  boothName,
+  isPreview,
+  tableNumber,
+}: StoreInfoSectionProps) {
   return (
     <div>
       <div className="flex flex-col gap-2">
-        <div className="text-b-2 text-gray-300">이상현 부스</div>
+        <div className="text-b-2 text-gray-300">{boothName}</div>
         <div className="text-st-2 text-black">
           {isPreview ? '메뉴판 미리보기' : `테이블 번호 ${tableNumber}`}
         </div>
@@ -122,6 +127,7 @@ export default function MenuBoard() {
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
 
+  console.log(userData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
 
@@ -145,6 +151,7 @@ export default function MenuBoard() {
         <TopBar />
         <main className="pt-12 pb-24">
           <StoreInfoSection
+            boothName={'이상현 부스'}
             isPreview={isPreview === '1'}
             tableNumber={userData.tableId}
           />

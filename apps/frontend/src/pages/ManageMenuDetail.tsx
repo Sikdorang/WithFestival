@@ -14,7 +14,7 @@ import { useMenu } from '../hooks/useMenu';
 
 export default function ManageMenuDetail() {
   const navigate = useNavigate();
-  const { createMenu, deleteMenu } = useMenu();
+  const { createMenu, deleteMenu, updateMenu } = useMenu();
 
   const menuId = Number(useParams().menuId);
   const isEditMode = menuId !== 0;
@@ -97,14 +97,41 @@ export default function ManageMenuDetail() {
               )}
             </div>
           </div>
+          {!isEditingMode ? (
+            <>
+              <h1 className="text-st-2 px-10">{menu}</h1>
 
-          <h1 className="text-st-2 px-10">{menu}</h1>
+              <p className="text-b-1 mb-2 px-10 text-gray-400">{description}</p>
 
-          <p className="text-b-1 mb-2 px-10 text-gray-400">{description}</p>
-
-          <p className="text-st-2 px-10 text-black">
-            {Number(price).toLocaleString()}원
-          </p>
+              <p className="text-st-2 px-10 text-black">
+                {Number(price).toLocaleString()}원
+              </p>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2 px-8">
+              <TextInput
+                label="메뉴"
+                placeholder="메뉴 이름을 입력해주세요."
+                limitHide
+                value={menu}
+                onChange={(e) => setMenu(e.target.value)}
+              />
+              <TextInput
+                label="설명"
+                placeholder="메뉴 설명을 입력해주세요."
+                limitHide
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <TextInput
+                label="가격"
+                placeholder="메뉴 가격을 입력해주세요."
+                limitHide
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            </div>
+          )}
         </main>
 
         <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
@@ -127,6 +154,11 @@ export default function ManageMenuDetail() {
               onClick={() => {
                 if (isEditingMode) {
                   setIsEditingMode(false);
+                  updateMenu(menuId, {
+                    menu,
+                    description,
+                    price: Number(price),
+                  });
                 } else {
                   setIsEditingMode(true);
                 }

@@ -39,19 +39,11 @@ export default function Login() {
 
           <CtaButton text="로그인" radius="_2xl" onClick={handleLogin} />
         </div>
-        <CtaButton
-          text="Table Id: 1, user Id 1: 테스트 라우팅"
-          onClick={() =>
-            navigate(
-              '/U2FsdGVkX18XfbGNvHYA/3XWAWUR0UeF7/VN470df9IHqlFOCPTubX6tFWsuJoac',
-            )
-          }
-        />
 
         <CtaButton
-          text="user Id 1: 테스트 라우팅"
+          text="테스트 라우팅"
           onClick={() =>
-            navigate('/U2FsdGVkX19KwR/LOqsPAIcJfOYT3lD+rmLWYlB/HYM=')
+            navigate(`/check/U2FsdGVkX1%2BBUhhtRtvUZ6ua4oYsOwl89zsHYQnByTU%3D`)
           }
         />
         <button onClick={handleDelete}>데이터 삭제하기</button>

@@ -17,8 +17,8 @@ export const menuAPI = {
     return response.data;
   },
 
-  updateMenu: async (menu: CreateMenuDto) => {
-    const response = await axiosInstance.patch('/menu', menu);
+  updateMenu: async (menuId: number, menu: CreateMenuDto) => {
+    const response = await axiosInstance.patch(`/menu/${menuId}`, menu);
     return response.data;
   },
 

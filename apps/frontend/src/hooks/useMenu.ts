@@ -46,12 +46,14 @@ export const useMenu = () => {
     }
   };
 
-  const updateMenu = async (menu: Menu) => {
+  const updateMenu = async (menuId: number, menu: CreateMenuDto) => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      await menuAPI.updateMenu(menu);
+      await menuAPI.updateMenu(menuId, menu);
+      toast.success(SUCCESS_MESSAGES.loginSuccess);
+
       return true;
     } catch (error) {
       handelError(error);
