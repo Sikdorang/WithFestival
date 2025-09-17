@@ -1,4 +1,3 @@
-//import socket from '@/apis/socket';
 import LoadingView from '@/components/common/exceptions/LoadingView';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { ROUTES } from '@/constants/routes';
@@ -9,43 +8,47 @@ import { KEYS } from '../constants/storage';
 
 export default function CheckUserType() {
   const navigate = useNavigate();
-  const params = useParams();
-  const encryptedPath = params['*'];
-
-  //console.log(socket);
+  const { encryptedParam } = useParams();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!encryptedPath) {
+    const processPath = () => {
+      if (!encryptedParam) {
         navigate(ROUTES.LOGIN, { replace: true });
         return;
       }
 
-      const decryptedData = decryptJson(encryptedPath);
+      try {
+        const decodedParam = decodeURIComponent(encryptedParam);
+        const decryptedData = decryptJson(decodedParam);
 
-      if (!decryptedData || !decryptedData.userId) {
+        if (!decryptedData || !decryptedData.userId) {
+          navigate('/not-found', { replace: true });
+          return;
+        }
+
+        sessionStorage.setItem('userData', JSON.stringify(decryptedData));
+
+        if ('tableId' in decryptedData) {
+          localStorage.setItem(KEYS.IS_PREVIEW, '0');
+          navigate(ROUTES.MENU_BOARD, {
+            replace: true,
+            state: { userData: decryptedData },
+          });
+        } else {
+          navigate(ROUTES.WAITING, {
+            replace: true,
+            state: { userData: decryptedData },
+          });
+        }
+      } catch (error) {
+        console.error('Failed to decode or decrypt path:', error);
         navigate('/not-found', { replace: true });
-        return;
       }
+    };
 
-      sessionStorage.setItem('userData', JSON.stringify(decryptedData));
-
-      if ('tableId' in decryptedData) {
-        localStorage.setItem(KEYS.IS_PREVIEW, '0');
-        navigate(ROUTES.MENU_BOARD, {
-          replace: true,
-          state: { userData: decryptedData },
-        });
-      } else {
-        navigate(ROUTES.WAITING, {
-          replace: true,
-          state: { userData: decryptedData },
-        });
-      }
-    }, 500);
-
+    const timer = setTimeout(processPath, 500);
     return () => clearTimeout(timer);
-  }, [navigate, encryptedPath]);
+  }, [navigate, encryptedParam]);
 
   return (
     <BaseResponsiveLayout>

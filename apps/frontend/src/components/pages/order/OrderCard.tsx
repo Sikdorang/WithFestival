@@ -27,6 +27,7 @@ interface Props {
 
 export function OrderCard({ order, isConfirm = false }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const notification = new Audio('/sounds/effect_notification.mp3');
 
   const handleOrderCardClick = () => {
     setIsModalOpen(true);
@@ -113,6 +114,7 @@ export function OrderCard({ order, isConfirm = false }: Props) {
                 className="bg-primary-300 rounded-2xl py-3 font-bold text-black"
                 onClick={() => {
                   toast.success('송금이 확인되었습니다. 조리를 시작하세요 !');
+                  notification.play();
                 }}
               >
                 송금 확인

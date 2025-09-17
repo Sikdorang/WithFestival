@@ -16,7 +16,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
   {
-    path: '/*',
+    path: '/check/:encryptedParam?',
     element: <CheckUserType />,
     errorElement: <ErrorBoundary />,
   },

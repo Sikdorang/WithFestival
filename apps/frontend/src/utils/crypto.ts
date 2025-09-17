@@ -1,7 +1,4 @@
 import CryptoJS from 'crypto-js';
-
-// ⚠️ 이 비밀키는 클라이언트 코드에 포함되므로 소스 보기로 노출될 수 있습니다.
-// 서버와 통신하는 민감 정보 암호화에는 적합하지 않습니다.
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 
 /**
@@ -23,8 +20,12 @@ export const encryptJson = (jsonObject: object) => {
 export const decryptJson = (encryptedString: string) => {
   if (!encryptedString) return null;
   try {
+    console.log('SECRET_KEY', SECRET_KEY);
+    console.log('encryptedString', encryptedString);
     const bytes = CryptoJS.AES.decrypt(encryptedString, SECRET_KEY);
+    console.log('bytes', bytes);
     const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
+    console.log('decryptedString', decryptedString);
     return JSON.parse(decryptedString);
   } catch (error) {
     console.error('복호화에 실패했습니다:', error);

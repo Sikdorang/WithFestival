@@ -15,6 +15,8 @@ interface Props {
 export default function MenuDetail({ menuId, onClose }: Props) {
   const { addItem } = useOrderStore();
 
+  const isPreview = localStorage.getItem('isPreview') === '1';
+
   const [menu, setMenu] = useState({
     id: 0,
     name: '',
@@ -78,12 +80,13 @@ export default function MenuDetail({ menuId, onClose }: Props) {
           {Number(menu.price).toLocaleString()}원
         </p>
       </main>
-
-      <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 px-4 pb-4">
-        <Dialog.Close asChild>
-          <CtaButton text="담기" radius="_2xl" onClick={handleAddItem} />
-        </Dialog.Close>
-      </footer>
+      {isPreview && (
+        <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 px-4 pb-4">
+          <Dialog.Close asChild>
+            <CtaButton text="담기" radius="_2xl" onClick={handleAddItem} />
+          </Dialog.Close>
+        </footer>
+      )}
     </BaseResponsiveLayout>
   );
 }
