@@ -17,6 +17,7 @@ interface CreateOrderDto {
   name: string;
   tableNumber: string;
   totalPrice: number;
+  userId: number;
 }
 
 @Controller('order')
@@ -24,18 +25,9 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
-  async createOrder(
-    @Body() createOrderDto: CreateOrderDto,
-    @CurrentUser() user: any,
-  ) {
+  async createOrder(@Body() createOrderDto: CreateOrderDto) {
     try {
-      const orderData = {
-        ...createOrderDto,
-        userId: user.id,
-      };
-
-      const result = await this.orderService.createOrder(orderData);
+      const result = await this.orderService.createOrder(createOrderDto);
 
       return {
         success: true,
