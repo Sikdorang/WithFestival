@@ -44,14 +44,14 @@ model Waiting {
 
 model Order {
   id          Int     @id @default(autoincrement())
-  time        DateTime                   // 주문 시간
-  money       Boolean @default(false)    // 송금여부
+  time        String  @db.VarChar(10)    // 주문 시간 (시:분)
+  send        Boolean @default(false)    // 송금여부
   cooked      Boolean @default(false)    // 조리여부
   totalPrice  Int                        // 총액
   name        String  @db.VarChar(50)    // 입금자명
   tableNumber String  @db.VarChar(10)    // 테이블번호
   userid      Int?                       // userid (외래키 없이)
-
+  
   @@map("orders")
 }
 

@@ -57,7 +57,7 @@ export class MenuController {
   async getMenusByUserId(@Param('userId') userId: string) {
     try {
       const menus = await this.menuService.getMenusByUserId(parseInt(userId));
-      
+
       return {
         success: true,
         data: menus,
@@ -76,7 +76,7 @@ export class MenuController {
   async getUserInfo(@CurrentUser() user: any) {
     try {
       const userInfo = await this.menuService.getUserInfo(user.id);
-      
+
       if (!userInfo) {
         return {
           success: false,
