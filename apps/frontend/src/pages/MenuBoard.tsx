@@ -11,18 +11,6 @@ import TopBar from '../components/common/layouts/TopBar';
 import { KEYS } from '../constants/storage';
 import { useMenu } from '../hooks/useMenu';
 
-const mockMenuList = [
-  { id: 1, name: '아롱사태 수육', price: 25000, image: '' },
-  { id: 2, name: '돼지국밥', price: 18000, image: '' },
-  { id: 3, name: '파전', price: 22000, image: '' },
-  { id: 1, name: '아롱사태 수육', price: 25000, image: '' },
-  { id: 2, name: '돼지국밥', price: 18000, image: '' },
-  { id: 3, name: '파전', price: 22000, image: '' },
-  { id: 1, name: '아롱사태 수육', price: 25000 },
-  { id: 2, name: '돼지국밥', price: 18000, image: '' },
-  { id: 3, name: '파전', price: 22000, image: '' },
-];
-
 interface StoreInfoSectionProps {
   isPreview: boolean;
   tableNumber?: number;
@@ -97,11 +85,16 @@ function MenuList({
 }: {
   onMenuItemClick: (id: number) => void;
 }) {
-  const { menus, isLoading, fetchMenu } = useMenu();
+  const { menus, getMenuByUserId } = useMenu();
+  const location = useLocation();
+
+  const userData =
+    location.state?.userData ||
+    JSON.parse(sessionStorage.getItem('userData') || '{}');
 
   useEffect(() => {
-    fetchMenu();
-  }, [fetchMenu]);
+    getMenuByUserId(userData.userId);
+  }, []);
 
   return (
     <div className="rounded-lg bg-white">

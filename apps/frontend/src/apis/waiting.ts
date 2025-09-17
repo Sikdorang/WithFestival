@@ -1,13 +1,24 @@
 import axiosInstance from '.';
+import { WaitingDTO } from '../types/payload/waiting';
 
 export const waitingAPI = {
   getWaiting: async () => {
-    const response = await axiosInstance.get('/waiting');
+    const response = await axiosInstance.get('/waiting/unprocessed');
     return response.data;
   },
 
-  createWaiting: async (waiting: Waiting) => {
+  getWaitingByUserId: async (userId: number) => {
+    const response = await axiosInstance.get(`/waiting/user/${userId}`);
+    return response.data;
+  },
+
+  createWaiting: async (waiting: WaitingDTO) => {
     const response = await axiosInstance.post('/waiting', waiting);
+    return response.data;
+  },
+
+  updateWaiting: async (waiting: WaitingDTO) => {
+    const response = await axiosInstance.patch('/waiting', waiting);
     return response.data;
   },
 

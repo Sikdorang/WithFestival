@@ -3,13 +3,11 @@ import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayo
 import TopBar from '@/components/common/layouts/TopBar';
 import JoinWaitlistForm from '@/components/pages/waiting/JoinWaitlistForm';
 
-const mockWaitingListNumber = 20;
-
 export default function Waiting() {
   return (
     <BaseResponsiveLayout>
       <TopBar />
-      <JoinWaitlistForm waitingListNumber={mockWaitingListNumber} />
+      <JoinWaitlistForm />
       <BottomSpace />
     </BaseResponsiveLayout>
   );

@@ -13,3 +13,21 @@ export interface Order {
   description: string;
   image: string;
 }
+
+export interface WaitingDTO {
+  name: string;
+  phoneNumber: string;
+  people: number;
+}
+
+export interface IWaitingListItem extends WaitingDTO {
+  id: number;
+  time: string;
+  processed: boolean;
+  userId: number;
+}
+
+export interface StoreInfo {
+  name: string;
+  account: string;
+}

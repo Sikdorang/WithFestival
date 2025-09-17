@@ -1,6 +1,6 @@
 import { authAPI } from '@/apis/auth';
 import { handelError } from '@/apis/errorhandler';
-import { SUCCESS_MESSAGES } from '@/constants/message';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '@/constants/message';
 import { ROUTES } from '@/constants/routes';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -16,7 +16,13 @@ export const useLogin = () => {
     setLoginError(null);
 
     try {
-      await authAPI.login(code);
+      const response = await authAPI.login(code);
+
+      if (!response.success) {
+        toast.error(ERROR_MESSAGES.invalidCodeError);
+        return false;
+      }
+
       toast.success(SUCCESS_MESSAGES.loginSuccess);
       navigate(ROUTES.MANAGE_WAITING);
       return true;
