@@ -88,14 +88,13 @@ export class OrderService {
   }
 
   async getOrderById(orderId: number, userId: number) {
-    const order = await this.prisma.order.findFirst({
+    const order = await this.prisma.order.findUnique({
       where: {
         id: orderId,
-        userid: userId,
       },
     });
 
-    if (!order) {
+    if (!order || order.userid !== userId) {
       return null;
     }
 
@@ -107,5 +106,20 @@ export class OrderService {
       ...order,
       orderUsers,
     };
+    return null;
+  }
+
+  async getOrdersBySendStatus(userId: number, sendStatus: boolean) {
+    const orders = await this.prisma.order.findMany({
+      where: {
+        userid: userId,
+        send: sendStatus,
+      },
+      orderBy: {
+        time: 'desc',
+      },
+    });
+
+    return orders;
   }
 }
