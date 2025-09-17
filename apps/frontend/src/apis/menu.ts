@@ -7,17 +7,22 @@ export const menuAPI = {
     return response.data;
   },
 
+  getMenuByUserId: async (userId: number) => {
+    const response = await axiosInstance.get(`/menu/user/${userId}`);
+    return response.data;
+  },
+
   createMenu: async (menu: CreateMenuDto) => {
     const response = await axiosInstance.post('/menu', menu);
     return response.data;
   },
 
-  updateMenu: async (menu: Menu) => {
+  updateMenu: async (menu: CreateMenuDto) => {
     const response = await axiosInstance.patch('/menu', menu);
     return response.data;
   },
 
-  deleteMenu: async (menuId: string) => {
+  deleteMenu: async (menuId: number) => {
     const response = await axiosInstance.delete(`/menu/${menuId}`);
     return response.data;
   },

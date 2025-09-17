@@ -1,6 +1,7 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import CancelIcon from '@/assets/icons/ic_circle_cancel.svg?react';
 import CameraIcon from '@/assets/images/img_camera.svg?react';
+import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
@@ -13,16 +14,16 @@ import { useMenu } from '../hooks/useMenu';
 
 export default function ManageMenuDetail() {
   const navigate = useNavigate();
-  const { createMenu } = useMenu();
+  const { createMenu, deleteMenu } = useMenu();
 
-  const { menuId } = useParams();
-  const isEditMode = menuId !== '0';
+  const menuId = Number(useParams().menuId);
+  const isEditMode = menuId !== 0;
   const [isEditingMode, setIsEditingMode] = useState(false);
 
   const [menu, setMenu] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number | string>('');
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function ManageMenuDetail() {
       setMenu('메뉴 이름 예시');
       setDescription('메뉴 설명 예시');
       setPrice(25000);
-      setImagePreview('https://via.placeholder.com/400');
+      setImage('https://via.placeholder.com/400');
     }
   }, [isEditMode, menuId]);
 
@@ -40,7 +41,7 @@ export default function ManageMenuDetail() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
+        setImage(reader.result as string);
       };
       reader.readAsDataURL(file);
 
@@ -56,7 +57,7 @@ export default function ManageMenuDetail() {
 
   const handleImageCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    setImagePreview(null);
+    setImage(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -80,91 +81,30 @@ export default function ManageMenuDetail() {
           title="메뉴 상세"
         />
 
-        <main className="flex-grow p-4">
-          {!isEditingMode ? (
-            <div className="h-80 w-full">
-              <img
-                src={imagePreview || ''}
-                alt={menu}
-                className="h-full w-full rounded-2xl object-cover"
-              />
-            </div>
-          ) : (
-            <div className="relative h-80 w-full">
-              {imagePreview ? (
-                <>
-                  <img
-                    src={imagePreview}
-                    alt="미리보기"
-                    className="h-full w-full rounded-2xl object-cover"
-                  />
-                  <CtaButton
-                    onClick={handleButtonClick}
-                    className="absolute right-4 bottom-4 shadow-md"
-                    color="white"
-                    width="fit"
-                    size="small"
-                    radius="xl"
-                    text="이미지 변경"
-                  />
-                  <button
-                    onClick={handleImageCancel}
-                    className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full"
-                  >
-                    <CancelIcon />
-                  </button>
-                </>
+        <main className="flex flex-grow flex-col">
+          <div className="mb-2 flex w-full flex-col items-center gap-2 px-8">
+            <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 transition-all duration-200 hover:bg-gray-100">
+              {image !== '' ? (
+                <img
+                  src={image ?? ''}
+                  alt="미리보기"
+                  className="aspect-square h-full w-full object-cover"
+                />
               ) : (
-                <div className="flex w-full justify-center">
-                  <button
-                    onClick={handleButtonClick}
-                    className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-gray-200 px-6 py-2 transition-all duration-200 hover:bg-gray-100"
-                  >
-                    <CameraIcon className="text-gray-300" />
-                    <span className="text-gray-400">0/1</span>
-                  </button>
+                <div className="flex aspect-square w-full flex-col items-center justify-center gap-2 text-gray-400">
+                  <EmptyImage className="h-30 w-30" />
                 </div>
               )}
             </div>
-          )}
-
-          <div className="space-y-2">
-            {isEditingMode ? (
-              <TextInput
-                label="메뉴"
-                placeholder="메뉴 이름을 입력해주세요."
-                limitHide
-                value={menu}
-                onChange={(e) => setMenu(e.target.value)}
-              />
-            ) : (
-              <h1 className="text-title">{menu}</h1>
-            )}
-            {isEditingMode ? (
-              <TextInput
-                label="설명"
-                placeholder="메뉴 설명을 입력해주세요."
-                limitHide
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            ) : (
-              <p className="text-body-2 text-gray-500">{description}</p>
-            )}
-            {isEditingMode ? (
-              <TextInput
-                label="가격"
-                placeholder="메뉴 가격을 입력해주세요."
-                limitHide
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-              />
-            ) : (
-              <p className="text-title pt-2">
-                {Number(price).toLocaleString()}원
-              </p>
-            )}
           </div>
+
+          <h1 className="text-st-2 px-10">{menu}</h1>
+
+          <p className="text-b-1 mb-2 px-10 text-gray-400">{description}</p>
+
+          <p className="text-st-2 px-10 text-black">
+            {Number(price).toLocaleString()}원
+          </p>
         </main>
 
         <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
@@ -173,6 +113,9 @@ export default function ManageMenuDetail() {
             description={'메뉴 삭제 후에는 복구할 수 없어요.'}
             cancelButtonText={'취소'}
             confirmButtonText={'삭제하기'}
+            onConfirm={() => {
+              deleteMenu(menuId);
+            }}
           >
             <CtaButton text="삭제하기" radius="xl" color="red" width="fit" />
           </DeleteConfirmModal>
@@ -214,10 +157,10 @@ export default function ManageMenuDetail() {
       <main className="flex-grow space-y-6 p-4">
         <div className="flex flex-col items-center gap-2">
           <div className="relative flex max-w-sm flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 px-6 py-2 transition-all duration-200 hover:bg-gray-100">
-            {imagePreview ? (
+            {image ? (
               <>
                 <img
-                  src={imagePreview}
+                  src={image}
                   alt="미리보기"
                   className="h-full w-full rounded-2xl object-cover"
                 />

@@ -1,12 +1,13 @@
 import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import Banner from '@/components/pages/waiting/Banner';
+import { ROUTES } from '@/constants/routes';
 import { KEYS } from '@/constants/storage';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../constants/routes';
 
 interface Props {
   waitingNumber: number;
+  boothName: string;
   name: string;
   phone: string;
   partySize: number;
@@ -15,6 +16,7 @@ interface Props {
 
 export default function JoinWaitlistFinish({
   waitingNumber,
+  boothName,
   name,
   phone,
   partySize,
@@ -37,6 +39,7 @@ export default function JoinWaitlistFinish({
     <>
       <main className="flex flex-col items-center justify-center gap-6 p-4">
         <Banner
+          boothName={boothName}
           waitingListLength={waitingListNumber}
           isFinishJoinWaitlist={true}
         />

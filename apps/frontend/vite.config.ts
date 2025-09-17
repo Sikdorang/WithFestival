@@ -77,4 +77,13 @@ export default defineConfig({
       },
     }),
   ],
+
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://withfestival.site',
+        changeOrigin: true,
+      },
+    },
+  },
 });

@@ -1,10 +1,13 @@
 import { handelError } from '@/apis/errorhandler';
 import { waitingAPI } from '@/apis/waiting';
 import { SUCCESS_MESSAGES } from '@/constants/message';
+import { IWaitingListItem } from '@/types/global';
+import { WaitingDTO } from '@/types/payload/waiting';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-export const useLogin = () => {
+export const useWaiting = () => {
+  const [waitingList, setWaitingList] = useState<IWaitingListItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
@@ -13,8 +16,8 @@ export const useLogin = () => {
     setLoginError(null);
 
     try {
-      await waitingAPI.getWaiting();
-      toast.success(SUCCESS_MESSAGES.loginSuccess);
+      const response = await waitingAPI.getWaiting();
+      setWaitingList(response.data);
       return true;
     } catch (error) {
       handelError(error);
@@ -24,7 +27,22 @@ export const useLogin = () => {
     }
   };
 
-  const createWaiting = async (waiting: Waiting) => {
+  const getWaitingByUserId = async (userId: number) => {
+    setIsLoading(true);
+    setLoginError(null);
+
+    try {
+      const response = await waitingAPI.getWaitingByUserId(userId);
+      return response.data;
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const createWaiting = async (waiting: WaitingDTO) => {
     setIsLoading(true);
     setLoginError(null);
 
@@ -40,7 +58,7 @@ export const useLogin = () => {
     }
   };
 
-  const updateWaiting = async (waiting: Waiting) => {
+  const updateWaiting = async (waiting: WaitingDTO) => {
     setIsLoading(true);
     setLoginError(null);
 
@@ -74,9 +92,11 @@ export const useLogin = () => {
 
   return {
     fetchWaiting,
+    waitingList,
     createWaiting,
     updateWaiting,
     deleteWaiting,
+    getWaitingByUserId,
     isLoading,
     setIsLoading,
     loginError,

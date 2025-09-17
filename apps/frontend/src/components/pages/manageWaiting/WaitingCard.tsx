@@ -1,22 +1,17 @@
+import { IWaitingListItem } from '@/types/global';
 import { useMemo } from 'react';
-interface WaitingInfo {
-  id: number;
-  order: number;
-  name: string;
-  partySize: number;
-  phone: string;
-  time: string;
-}
-
 interface Props {
-  waitingInfo: WaitingInfo;
+  waitingInfo: IWaitingListItem;
 }
 
 export function WaitingCard({ waitingInfo }: Props) {
-  const { order, name, partySize, phone, time } = waitingInfo;
+  const { name, people, phoneNumber, time } = waitingInfo;
 
   const isMobile = useMemo(() => /Mobi/i.test(window.navigator.userAgent), []);
-  const formattedPhone = useMemo(() => phone.replace(/-/g, ''), [phone]);
+  const formattedPhone = useMemo(
+    () => phoneNumber.replace(/-/g, ''),
+    [phoneNumber],
+  );
 
   const InfoItem = ({
     label,
@@ -35,14 +30,14 @@ export function WaitingCard({ waitingInfo }: Props) {
     <div className="space-y-4 rounded-xl bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <span className="rounded-full bg-black px-3 py-1 text-sm font-bold text-white">
-          {order}번
+          {0}번
         </span>
         <span className="font-medium text-gray-400">{time}</span>
       </div>
 
       <div className="grid grid-cols-3">
         <InfoItem label="예약자 이름" value={name} />
-        <InfoItem label="인원" value={`${partySize}명`} />
+        <InfoItem label="인원" value={`${people}명`} />
         <div className="flex flex-col items-center justify-center gap-1">
           <p className="text-c-1 text-gray-300">전화번호</p>
           <a
@@ -50,7 +45,7 @@ export function WaitingCard({ waitingInfo }: Props) {
             className="text-b-1 text-gray-black"
             onClick={(e) => e.stopPropagation()}
           >
-            {phone}
+            {phoneNumber}
           </a>
         </div>
       </div>

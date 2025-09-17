@@ -2,7 +2,9 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import Banner from '@/components/pages/waiting/Banner';
 import JoinWaitlistFinish from '@/components/pages/waiting/JoinWaitlistFinish';
+import { useWaiting } from '@/hooks/useWaiting';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
 
 const waitlistSchema = z.object({
@@ -13,13 +15,27 @@ const waitlistSchema = z.object({
   partySize: z.number().gt(0, '입장 인원은 1명 이상이어야 합니다.'),
 });
 
-interface Props {
-  waitingListNumber: number;
-}
-
 const waitingNumber = 1;
 
-export default function JoinWaitlistForm({ waitingListNumber }: Props) {
+export default function JoinWaitlistForm() {
+  const { createWaiting, getWaitingByUserId } = useWaiting();
+  const location = useLocation();
+  const userData =
+    location.state?.userData ||
+    JSON.parse(sessionStorage.getItem('userData') || '{}');
+
+  useEffect(() => {
+    const fetchWaitingInfos = async () => {
+      const waitingInfos = await getWaitingByUserId(userData.userId);
+      setWaitingInfos(waitingInfos);
+    };
+    fetchWaitingInfos();
+  }, []);
+
+  const [waitingInfos, setWaitingInfos] = useState<{
+    name: string;
+    waitingCount: number;
+  }>();
   const [isFinishJoinWaitlist, setIsFinishJoinWaitlist] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState({
@@ -57,13 +73,19 @@ export default function JoinWaitlistForm({ waitingListNumber }: Props) {
       ...formData,
       partySize: Number(formData.partySize),
     });
+    createWaiting({
+      name: formData.name,
+      phoneNumber: formData.phone,
+      people: Number(formData.partySize),
+    });
     setIsFinishJoinWaitlist(true);
   };
 
   if (isFinishJoinWaitlist) {
     return (
       <JoinWaitlistFinish
-        waitingListNumber={waitingListNumber}
+        boothName={waitingInfos?.name ?? ''}
+        waitingListNumber={waitingInfos?.waitingCount ?? 0}
         waitingNumber={waitingNumber}
         name={formData.name}
         phone={formData.phone}
@@ -76,7 +98,8 @@ export default function JoinWaitlistForm({ waitingListNumber }: Props) {
     <>
       <main className="flex flex-col items-center justify-center gap-6 p-4">
         <Banner
-          waitingListLength={waitingListNumber}
+          boothName={waitingInfos?.name ?? ''}
+          waitingListLength={waitingInfos?.waitingCount ?? 0}
           isFinishJoinWaitlist={false}
         />
 
