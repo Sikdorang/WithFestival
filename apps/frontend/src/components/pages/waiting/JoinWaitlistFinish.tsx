@@ -24,13 +24,7 @@ export default function JoinWaitlistFinish({
 }: Props) {
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    console.log({
-      name,
-      phone,
-      partySize: Number(partySize),
-    });
-
+  const handlePreview = () => {
     localStorage.setItem(KEYS.IS_PREVIEW, '1');
     navigate(ROUTES.MENU_BOARD);
   };
@@ -40,7 +34,7 @@ export default function JoinWaitlistFinish({
       <main className="flex flex-col items-center justify-center gap-6 p-4">
         <Banner
           boothName={boothName}
-          waitingListLength={waitingListNumber}
+          waitingListLength={waitingListNumber + 1}
           isFinishJoinWaitlist={true}
         />
         <TextInput
@@ -78,7 +72,7 @@ export default function JoinWaitlistFinish({
         <CtaButton
           text="메뉴판 미리보기"
           radius="_2xl"
-          onClick={handleSubmit}
+          onClick={handlePreview}
         />
       </footer>
     </>

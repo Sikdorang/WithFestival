@@ -4,45 +4,24 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
 import { useOrderStore } from '@/stores/orderStore';
+import { Menu } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useEffect, useState } from 'react';
-
 interface Props {
-  menuId: number;
+  menu: Menu;
   onClose: () => void;
 }
 
-export default function MenuDetail({ menuId, onClose }: Props) {
+export default function MenuDetail({ menu, onClose }: Props) {
   const { addItem } = useOrderStore();
 
-  const isPreview = localStorage.getItem('isPreview') === '1';
-
-  const [menu, setMenu] = useState({
-    id: 0,
-    name: '',
-    description: '',
-    price: 0,
-    image: '',
-  });
-
-  useEffect(() => {
-    if (menuId) {
-      setMenu({
-        id: menuId,
-        name: `메뉴 ID: ${menuId} 이름 예시`,
-        description: '메뉴 설명 예시',
-        price: 25000,
-        image: '',
-      });
-    }
-  }, [menuId]);
+  const isPreview = localStorage.getItem('preview') === '1';
 
   const handleAddItem = () => {
     addItem({
       id: menu.id,
-      name: menu.name,
+      name: menu.menu,
       price: menu.price,
-      image: menu.image,
+      image: menu.image || '',
     });
     onClose();
   };
@@ -58,7 +37,7 @@ export default function MenuDetail({ menuId, onClose }: Props) {
       <main className="flex flex-grow flex-col">
         <div className="mb-2 flex w-full flex-col items-center gap-2 px-8">
           <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 transition-all duration-200 hover:bg-gray-100">
-            {menu.image !== '' ? (
+            {menu.image ? (
               <img
                 src={menu.image ?? ''}
                 alt="미리보기"
@@ -72,15 +51,18 @@ export default function MenuDetail({ menuId, onClose }: Props) {
           </div>
         </div>
 
-        <h1 className="text-st-2 px-10">{menu.name}</h1>
+        <h1 className="text-st-2 px-10">{menu.menu}</h1>
 
-        <p className="text-b-1 mb-2 px-10 text-gray-400">{menu.description}</p>
+        <p className="text-b-1 mb-2 px-10 text-gray-400">
+          {menu.description || ''}
+        </p>
 
         <p className="text-st-2 px-10 text-black">
           {Number(menu.price).toLocaleString()}원
         </p>
       </main>
-      {isPreview && (
+
+      {!isPreview && (
         <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 px-4 pb-4">
           <Dialog.Close asChild>
             <CtaButton text="담기" radius="_2xl" onClick={handleAddItem} />

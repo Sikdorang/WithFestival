@@ -10,14 +10,15 @@ export const useStore = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const getStoreInfo = async () => {
+  const getUserInfo = async () => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      const response = await storeAPI.getStoreInfo();
+      const response = await storeAPI.getUserInfo();
       setName(response.data.name);
       setAccount(response.data.account);
+      console.log(response.data);
     } catch (error) {
       handelError(error);
       return false;
@@ -63,7 +64,7 @@ export const useStore = () => {
   return {
     name,
     account,
-    getStoreInfo,
+    getUserInfo,
     updateStoreAccount,
     updateStoreName,
     isLoading,

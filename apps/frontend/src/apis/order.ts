@@ -1,18 +1,32 @@
+import { CreateOrderDto } from '@/types/payload/order';
+import axiosInstance from '.';
+interface CreateOrderPayload extends CreateOrderDto {
+  userId: number;
+}
+
 export const orderAPI = {
-  // getOrder: async () => {
-  //   const response = await axiosInstance.get('/order');
-  //   return response.data;
-  // },
-  // createOrder: async (order: Order) => {
-  //   const response = await axiosInstance.post('/order', order);
-  //   return response.data;
-  // },
-  // updateOrder: async (order: Order) => {
-  //   const response = await axiosInstance.patch('/order', order);
-  //   return response.data;
-  // },
-  // deleteOrder: async (orderId: string) => {
-  //   const response = await axiosInstance.delete(`/order/${orderId}`);
-  //   return response.data;
-  // },
+  createOrder: async (payload: CreateOrderPayload) => {
+    const response = await axiosInstance.post('/order', payload);
+    return response.data;
+  },
+
+  getPendingOrders: async () => {
+    const response = await axiosInstance.get('/order/pending');
+    return response.data;
+  },
+
+  getSentOrders: async () => {
+    const response = await axiosInstance.get('/order/sent');
+    return response.data;
+  },
+
+  setOrderSent: async (orderId: number) => {
+    const response = await axiosInstance.patch(`/order/${orderId}/send`);
+    return response.data;
+  },
+
+  setOrderCooked: async (orderId: number) => {
+    const response = await axiosInstance.patch(`/order/${orderId}/cooked`);
+    return response.data;
+  },
 };

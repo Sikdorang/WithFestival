@@ -3,6 +3,7 @@ import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import { ROUTES } from '@/constants/routes';
 import { useOrderStore } from '@/stores/orderStore';
+import { Menu } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
@@ -88,7 +89,7 @@ function MenuItem({
 function MenuList({
   onMenuItemClick,
 }: {
-  onMenuItemClick: (id: number) => void;
+  onMenuItemClick: (item: Menu) => void;
 }) {
   const { menus, getMenuByUserId } = useMenu();
   const location = useLocation();
@@ -109,7 +110,7 @@ function MenuList({
           name={item.menu}
           price={item.price}
           image={item.image ?? ''}
-          onClick={() => onMenuItemClick(item.id)}
+          onClick={() => onMenuItemClick(item)}
         />
       ))}
     </div>
@@ -127,12 +128,11 @@ export default function MenuBoard() {
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
 
-  console.log(userData);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
+  const [selectedMenu, setSelectedMenu] = useState<Menu | null>(null);
 
-  const handleMenuItemClick = (id: number) => {
-    setSelectedMenuId(id);
+  const handleMenuItemClick = (menu: Menu) => {
+    setSelectedMenu(menu);
     setIsModalOpen(true);
   };
 
@@ -163,9 +163,13 @@ export default function MenuBoard() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/30" />
         <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
-          {selectedMenuId && (
+          <Dialog.Title className="sr-only">메뉴 상세 정보</Dialog.Title>
+          <Dialog.Description className="sr-only">
+            선택한 메뉴의 상세 정보를 보고 장바구니에 담을 수 있습니다.
+          </Dialog.Description>
+          {selectedMenu && (
             <MenuDetail
-              menuId={selectedMenuId}
+              menu={selectedMenu}
               onClose={() => setIsModalOpen(false)}
             />
           )}

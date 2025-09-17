@@ -1,31 +1,16 @@
 import DeleteConfirmModal from '@/components/common/modals/DeleteConfirmModal';
+import { OrderSummary } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import OrderDetail from './OrderDetail';
-interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export interface Order {
-  orderNumber: number;
-  tableNumber: number;
-  time: string;
-  totalAmount: number;
-  totalQuantity: number;
-  depositorName: string;
-  items: OrderItem[];
-}
-
 interface Props {
-  order: Order;
-  isConfirm: boolean;
+  order: OrderSummary;
+  setOrderSent: (orderId: number) => void;
+  setOrderCooked: (orderId: number) => void;
 }
 
-export function OrderCard({ order, isConfirm = false }: Props) {
+export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const notification = new Audio('/sounds/effect_notification.mp3');
 
@@ -40,7 +25,7 @@ export function OrderCard({ order, isConfirm = false }: Props) {
           <div className="mb-2 flex items-center gap-1">
             <span className="text-b-2 text-black">주문번호</span>
             <span className="text-b-2 text-black">
-              {String(order.orderNumber).padStart(3, '0')}
+              {String(order.id).padStart(3, '0')}
             </span>
           </div>
           <div className="flex justify-between">
@@ -57,35 +42,36 @@ export function OrderCard({ order, isConfirm = false }: Props) {
           </div>
         </div>
 
+        {/* 
         <div className="space-y-2 border-b border-gray-200 py-3">
           <p className="text-c-1 text-gray-400">주문내역</p>
-          {order.items.map((item) => (
+          {order.orderUsers.map((item) => (
             <div
-              key={`${order.orderNumber}-${item.id}`}
+              key={`${order.id}-${item.id}`}
               className="flex justify-between"
             >
-              <p className="text-gray-black">{item.name} </p>
+              <p className="text-gray-black">{item.menu} </p>
               <div className="text-right">
                 <p className="text-gray-black">
-                  {(item.price * item.quantity).toLocaleString()}원
+                  {(item.price * item.count).toLocaleString()}원
                 </p>
-                <span className="text-sm text-gray-300">{item.quantity}개</span>
+                <span className="text-sm text-gray-300">{item.count}개</span>
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
         <div className="flex justify-between font-bold text-black">
           <p>총 금액</p>
           <div className="text-right">
-            <p>{order.totalAmount.toLocaleString()}원</p>
+            <p>{order.totalPrice.toLocaleString()}원</p>
             <span className="text-sm font-medium text-gray-400">
-              총 {order.totalQuantity}개
+              {/* 총 {order.orderUsers.reduce((acc, item) => acc + item.count, 0)}개 */}
             </span>
           </div>
         </div>
 
-        {isConfirm ? (
+        {order.send ? (
           <div className="flex flex-col gap-2">
             <button
               className="rounded-2xl bg-gray-100 py-3 text-black"
@@ -93,7 +79,12 @@ export function OrderCard({ order, isConfirm = false }: Props) {
             >
               전체 보기
             </button>
-            <button className="bg-primary-300 rounded-2xl py-3 text-black">
+            <button
+              className="bg-primary-300 rounded-2xl py-3 text-black"
+              onClick={() => {
+                setOrderCooked(order.id);
+              }}
+            >
               조리 완료
             </button>
           </div>
@@ -105,6 +96,9 @@ export function OrderCard({ order, isConfirm = false }: Props) {
                 description={'주문 취소 후에는 복구할 수 없어요.'}
                 cancelButtonText={'돌아가기'}
                 confirmButtonText={'주문 취소하기'}
+                onConfirm={() => {
+                  setOrderCooked(order.id);
+                }}
               >
                 <button className="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">
                   취소
@@ -115,6 +109,7 @@ export function OrderCard({ order, isConfirm = false }: Props) {
                 onClick={() => {
                   toast.success('송금이 확인되었습니다. 조리를 시작하세요 !');
                   notification.play();
+                  setOrderSent(order.id);
                 }}
               >
                 송금 확인
@@ -123,7 +118,7 @@ export function OrderCard({ order, isConfirm = false }: Props) {
 
             <div className="flex items-center gap-4 rounded-xl bg-gray-100 p-3 px-8">
               <span className="text-sm text-gray-400">입금자명</span>
-              <p className="text-gray-black">{order.depositorName}</p>
+              <p className="text-gray-black">{order.name}</p>
             </div>
           </div>
         )}

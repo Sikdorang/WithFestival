@@ -17,8 +17,8 @@ export const waitingAPI = {
     return response.data;
   },
 
-  updateWaiting: async (waiting: WaitingDTO) => {
-    const response = await axiosInstance.patch('/waiting', waiting);
+  setWaitingProcessed: async (waitingId: number) => {
+    const response = await axiosInstance.patch(`/waiting/${waitingId}/process`);
     return response.data;
   },
 

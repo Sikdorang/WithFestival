@@ -43,7 +43,9 @@ export default function Login() {
         <CtaButton
           text="테스트 라우팅"
           onClick={() =>
-            navigate(`/check/U2FsdGVkX1%2BBUhhtRtvUZ6ua4oYsOwl89zsHYQnByTU%3D`)
+            navigate(
+              `/check/U2FsdGVkX1%2Bmf0I043%2BaNqWly%2B4bcB1LGJQ4ja0WQyp6wTvZGDRpYFvJuWs6flzR`,
+            )
           }
         />
         <button onClick={handleDelete}>데이터 삭제하기</button>

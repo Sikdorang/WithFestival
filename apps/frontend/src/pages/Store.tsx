@@ -8,19 +8,30 @@ import { useMenu } from '../hooks/useMenu';
 import { useStore } from '../hooks/useStore';
 
 function AccountSection() {
-  const { updateStoreName, updateStoreAccount } = useStore();
+  const { updateStoreName, updateStoreAccount, getUserInfo, account, name } =
+    useStore();
 
   const [isWriteAccount, setIsWriteAccount] = useState(false);
   const [isWriteStoreName, setIsWriteStoreName] = useState(false);
 
-  const [accountNumber, setAccountNumber] = useState('');
-  const [storeName, setStoreName] = useState('');
+  const [storeNameInput, setStoreNameInput] = useState('');
+  const [accountInput, setAccountInput] = useState('');
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  useEffect(() => {
+    setStoreNameInput(name);
+    setAccountInput(account);
+  }, [name, account]);
 
   const handleWriteStoreName = () => {
     setIsWriteStoreName(true);
 
     if (isWriteStoreName) {
-      updateStoreName(storeName);
+      updateStoreName(storeNameInput);
+      setIsWriteStoreName(false);
     }
   };
 
@@ -28,51 +39,92 @@ function AccountSection() {
     setIsWriteAccount(true);
 
     if (isWriteAccount) {
-      updateStoreAccount(accountNumber);
+      updateStoreAccount(accountInput);
+      setIsWriteAccount(false);
     }
   };
 
   return (
     <div>
-      <div className="mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
+      <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
         <h2 className="text-st-2 mb-3">부스 이름</h2>
         {isWriteStoreName && (
           <div className="mb-4">
             <TextInput
               placeholder="부스 이름을 입력해주세요."
-              value={storeName}
-              onChange={(e) => setStoreName(e.target.value)}
+              value={storeNameInput}
+              onChange={(e) => setStoreNameInput(e.target.value)}
               limitHide
             />
           </div>
         )}
-        <CtaButton
-          color={isWriteStoreName ? 'green' : 'white'}
-          size="small"
-          radius="_2xl"
-          text={isWriteStoreName ? '입력완료' : '등록하기'}
-          onClick={handleWriteStoreName}
-        />
+
+        {!name ||
+          (isWriteStoreName && (
+            <CtaButton
+              color={isWriteStoreName ? 'green' : 'white'}
+              size="small"
+              radius="_2xl"
+              text={isWriteStoreName ? '입력완료' : '등록하기'}
+              onClick={handleWriteStoreName}
+            />
+          ))}
+
+        {name && !isWriteStoreName && (
+          <>
+            <div className="text-b-1">{name}</div>
+            <div className="absolute top-3 right-4">
+              <CtaButton
+                color="white"
+                size="small"
+                width="fit"
+                radius="_2xl"
+                text="수정하기"
+                onClick={() => setIsWriteStoreName(true)}
+              />
+            </div>
+          </>
+        )}
       </div>
-      <div className="rounded-2xl bg-gray-100 p-4 shadow-sm">
+
+      <div className="relative rounded-2xl bg-gray-100 p-4 shadow-sm">
         <h2 className="text-st-2 mb-3">계좌번호</h2>
         {isWriteAccount && (
           <div className="mb-4">
             <TextInput
               placeholder="ex.은행이름 & 계좌번호 (13자리)"
-              value={accountNumber}
-              onChange={(e) => setAccountNumber(e.target.value)}
+              value={accountInput}
+              onChange={(e) => setAccountInput(e.target.value)}
               limitHide
             />
           </div>
         )}
-        <CtaButton
-          color={isWriteAccount ? 'green' : 'white'}
-          size="small"
-          radius="_2xl"
-          text={isWriteAccount ? '입력완료' : '등록하기'}
-          onClick={handleWriteAccount}
-        />
+        {!account ||
+          (isWriteAccount && (
+            <CtaButton
+              color={isWriteAccount ? 'green' : 'white'}
+              size="small"
+              radius="_2xl"
+              text={isWriteAccount ? '입력완료' : '등록하기'}
+              onClick={handleWriteAccount}
+            />
+          ))}
+
+        {account && !isWriteAccount && (
+          <>
+            <div className="text-b-1">{account}</div>
+            <div className="absolute top-3 right-4">
+              <CtaButton
+                color="white"
+                size="small"
+                width="fit"
+                radius="_2xl"
+                text="수정하기"
+                onClick={() => setIsWriteAccount(true)}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
