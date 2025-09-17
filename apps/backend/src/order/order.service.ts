@@ -125,7 +125,19 @@ export class OrderService {
       },
     });
 
-    return orders;
+    // 각 주문에 대한 상세 항목들 조회
+    const ordersWithDetails = await Promise.all(
+      orders.map(async (order) => {
+        const orderUsers = await this.prisma.orderUser.findMany({
+          where: { orderId: order.id },
+        });
+        return {
+          ...order,
+          orderUsers,
+        };
+      }),
+    );
+    return ordersWithDetails;
   }
 
   async updateOrderSend(orderId: number, userId: number) {
