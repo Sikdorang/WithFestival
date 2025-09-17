@@ -73,7 +73,7 @@ export class WaitingService {
   }
 
   async getUnprocessedWaitings(userId: number) {
-    return this.prisma.waiting.findMany({
+    const waitings = await this.prisma.waiting.findMany({
       where: {
         userid: userId,
         processed: false,
@@ -82,5 +82,11 @@ export class WaitingService {
         time: 'asc', // 등록 시간 순으로 정렬
       },
     });
+
+    // time 값을 시간:분 형식으로 가공
+    return waitings.map((waiting) => ({
+      ...waiting,
+      time: `${waiting.time.getHours().toString().padStart(2, '0')}:${waiting.time.getMinutes().toString().padStart(2, '0')}`,
+    }));
   }
 }
