@@ -53,6 +53,24 @@ const multerOptions = {
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
+  @Get('menus')
+  @UseGuards(AuthGuard)
+  async getMenus() {
+    try {
+      const menus = await this.menuService.getMenus();
+      return {
+        success: true,
+        data: menus,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '메뉴 조회에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
   @Get('user/:userId')
   async getMenusByUserId(@Param('userId') userId: string) {
     try {

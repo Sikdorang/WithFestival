@@ -8,6 +8,7 @@ import { OrderModule } from './order/order.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { WaitingModule } from './waiting/waiting.module';
+import { WebSocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { WaitingModule } from './waiting/waiting.module';
     MenuModule,
     UserModule,
     OrderModule,
+    WebSocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
