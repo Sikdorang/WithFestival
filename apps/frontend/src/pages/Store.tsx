@@ -59,16 +59,15 @@ function AccountSection() {
           </div>
         )}
 
-        {!name ||
-          (isWriteStoreName && (
-            <CtaButton
-              color={isWriteStoreName ? 'green' : 'white'}
-              size="small"
-              radius="_2xl"
-              text={isWriteStoreName ? '입력완료' : '등록하기'}
-              onClick={handleWriteStoreName}
-            />
-          ))}
+        {!name && (
+          <CtaButton
+            color={isWriteStoreName ? 'green' : 'white'}
+            size="small"
+            radius="_2xl"
+            text={isWriteStoreName ? '입력완료' : '등록하기'}
+            onClick={handleWriteStoreName}
+          />
+        )}
 
         {name && !isWriteStoreName && (
           <>
@@ -99,16 +98,15 @@ function AccountSection() {
             />
           </div>
         )}
-        {!account ||
-          (isWriteAccount && (
-            <CtaButton
-              color={isWriteAccount ? 'green' : 'white'}
-              size="small"
-              radius="_2xl"
-              text={isWriteAccount ? '입력완료' : '등록하기'}
-              onClick={handleWriteAccount}
-            />
-          ))}
+        {!account && (
+          <CtaButton
+            color={isWriteAccount ? 'green' : 'white'}
+            size="small"
+            radius="_2xl"
+            text={isWriteAccount ? '입력완료' : '등록하기'}
+            onClick={handleWriteAccount}
+          />
+        )}
 
         {account && !isWriteAccount && (
           <>
