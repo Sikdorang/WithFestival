@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { OrderGateway } from '../websocket/order.gateway';
 
 interface CreateWaitingDto {
   name: string;
@@ -11,10 +12,14 @@ interface CreateWaitingDto {
 
 @Injectable()
 export class WaitingService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => OrderGateway))
+    private orderGateway: OrderGateway,
+  ) {}
 
   async createWaiting(data: CreateWaitingDto) {
-    return this.prisma.waiting.create({
+    const waiting = await this.prisma.waiting.create({
       data: {
         name: data.name,
         people: data.people,
@@ -24,6 +29,17 @@ export class WaitingService {
         processed: false,
       },
     });
+
+    // WebSocket 이벤트 발송
+    if (this.orderGateway) {
+      this.orderGateway.server.emit('waitingCreated', {
+        roomId: `user_${data.userId}`,
+        waitingData: waiting,
+      });
+      this.orderGateway.server.emit('refreshScreen');
+    }
+
+    return waiting;
   }
 
   async getUserWaitingInfo(userId: number) {
@@ -66,10 +82,21 @@ export class WaitingService {
     }
 
     // processed를 true로 업데이트
-    return this.prisma.waiting.update({
+    const updatedWaiting = await this.prisma.waiting.update({
       where: { id: waitingId },
       data: { processed: true },
     });
+
+    // WebSocket 이벤트 발송
+    if (this.orderGateway) {
+      this.orderGateway.server.emit('waitingProcessed', {
+        roomId: `user_${userId}`,
+        waitingId: waitingId,
+      });
+      this.orderGateway.server.emit('refreshScreen');
+    }
+
+    return updatedWaiting;
   }
 
   async getUnprocessedWaitings(userId: number) {
