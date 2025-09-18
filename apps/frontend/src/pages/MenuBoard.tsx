@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import BottomSpace from '../components/common/exceptions/BottomSpace';
 import TopBar from '../components/common/layouts/TopBar';
+import MenuItemSkeleton from '../components/common/skeletons/MenuItemSkeleton';
 import { KEYS } from '../constants/storage';
 import { useMenu } from '../hooks/useMenu';
 
@@ -91,7 +92,7 @@ function MenuList({
 }: {
   onMenuItemClick: (item: Menu) => void;
 }) {
-  const { menus, getMenuByUserId } = useMenu();
+  const { menus, getMenuByUserId, isLoading } = useMenu();
   const location = useLocation();
 
   const userData =
@@ -104,15 +105,23 @@ function MenuList({
 
   return (
     <div className="rounded-lg bg-white">
-      {menus.map((item) => (
-        <MenuItem
-          key={item.id}
-          name={item.menu}
-          price={item.price}
-          image={item.image ?? ''}
-          onClick={() => onMenuItemClick(item)}
-        />
-      ))}
+      {isLoading ? (
+        <div>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <MenuItemSkeleton key={index} />
+          ))}
+        </div>
+      ) : (
+        menus.map((item) => (
+          <MenuItem
+            key={item.id}
+            name={item.menu}
+            price={item.price}
+            image={item.image ?? ''}
+            onClick={() => onMenuItemClick(item)}
+          />
+        ))
+      )}
     </div>
   );
 }

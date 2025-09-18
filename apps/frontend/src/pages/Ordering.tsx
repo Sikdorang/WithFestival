@@ -176,15 +176,13 @@ export default function Ordering() {
   );
 
   const handleFinalSubmit = async () => {
-    // 훅에 있는 createOrder 함수를 호출하고 결과를 기다립니다.
     const success = await createOrder();
 
-    // API 호출이 성공했을 때만 후속 처리를 합니다.
     if (success) {
-      clearOrder(); // Zustand 스토어의 장바구니 비우기
-      setIsModalOpen(false); // 모달 닫기
-      setModalStep('remit'); // 모달 스텝 초기화
-      navigate(ROUTES.MENU_BOARD); // 주문 완료 후 메뉴판으로 이동
+      clearOrder();
+      setIsModalOpen(false);
+      setModalStep('remit');
+      navigate(ROUTES.MENU_BOARD);
     }
   };
 

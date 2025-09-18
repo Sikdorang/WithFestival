@@ -3,7 +3,7 @@ import { CreateMenuDto } from '../types/payload/menu';
 
 export const menuAPI = {
   getMenu: async () => {
-    const response = await axiosInstance.get('/menu');
+    const response = await axiosInstance.get('/menu/menus');
     return response.data;
   },
 
@@ -14,6 +14,26 @@ export const menuAPI = {
 
   createMenu: async (menu: CreateMenuDto) => {
     const response = await axiosInstance.post('/menu', menu);
+    return response.data;
+  },
+
+  uploadMenuImage: async (menuId: number, imageFile: File) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+    const response = await axiosInstance.post(
+      `/menu/${menuId}/image`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+    return response.data;
+  },
+
+  deleteMenuImage: async (menuId: number) => {
+    const response = await axiosInstance.delete(`/menu/${menuId}/image`);
     return response.data;
   },
 

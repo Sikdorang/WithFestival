@@ -89,7 +89,7 @@ export const useOrder = () => {
   const setOrderSent = async (orderId: number) => {
     try {
       await orderAPI.setOrderSent(orderId);
-      await Promise.all([getPendingOrders()]);
+      await Promise.all([getPendingOrders(), getSentOrders()]);
       toast.success(SUCCESS_MESSAGES.orderConfirmSuccess);
     } catch (error) {
       handelError(error);
@@ -99,7 +99,7 @@ export const useOrder = () => {
   const setOrderCooked = async (orderId: number) => {
     try {
       await orderAPI.setOrderCooked(orderId);
-      await Promise.all([getSentOrders(), getPendingOrders()]);
+      await Promise.all([getPendingOrders(), getSentOrders()]);
       toast.success(SUCCESS_MESSAGES.orderCookingComplete);
     } catch (error) {
       handelError(error);

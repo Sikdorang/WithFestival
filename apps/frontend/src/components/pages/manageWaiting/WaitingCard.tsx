@@ -33,7 +33,7 @@ export function WaitingCard({ waitingInfo, setWaitingProcessed }: Props) {
     <div className="space-y-4 rounded-xl bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <span className="rounded-full bg-black px-3 py-1 text-sm font-bold text-white">
-          {0}번
+          {waitingInfo.id}번
         </span>
         <span className="font-medium text-gray-400">{time}</span>
       </div>

@@ -3,7 +3,7 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import { ROUTES } from '@/constants/routes';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMenu } from '../hooks/useMenu';
 import { useStore } from '../hooks/useStore';
 
@@ -162,14 +162,10 @@ function MenuItem({
 // 메뉴 리스트 섹션
 function MenuList() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { menus, getMenuByUserId } = useMenu();
-  const userData =
-    location.state?.userData ||
-    JSON.parse(sessionStorage.getItem('userData') || '{}');
+  const { menus, fetchMenu } = useMenu();
 
   useEffect(() => {
-    getMenuByUserId(userData.userId);
+    fetchMenu();
   }, []);
   return (
     <div className="rounded-lg bg-white p-4">
