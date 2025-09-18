@@ -7,7 +7,7 @@ import { SUCCESS_MESSAGES } from '@/constants/message';
 import { useOrder } from '@/hooks/useOrder';
 import { useOrderStore } from '@/stores/orderStore';
 import * as Dialog from '@radix-ui/react-dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Navigate, useNavigate } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
@@ -15,6 +15,7 @@ import BottomSpace from '../components/common/exceptions/BottomSpace';
 import TextInput from '../components/common/inputs/TextInput';
 import Navigator from '../components/common/layouts/Navigator';
 import { ROUTES } from '../constants/routes';
+import { useStore } from '../hooks/useStore';
 
 interface OrderItem {
   id: number;
@@ -47,6 +48,14 @@ function RemitStep({
   totalAmount: number;
   onNext: () => void;
 }) {
+  const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+
+  const { getUserInfoByUserId, account } = useStore();
+
+  useEffect(() => {
+    getUserInfoByUserId(userData.userId);
+  }, []);
+
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
       <div className="flex flex-col gap-8">
@@ -60,9 +69,7 @@ function RemitStep({
             계좌번호
           </span>
           <div className="flex items-center gap-2">
-            <span className="text-b-1 text-gray-700">
-              카카오뱅크 3333-27-1896702
-            </span>
+            <span className="text-b-1 text-gray-700">{account}</span>
             <CopyIcon
               onClick={() => {
                 navigator.clipboard.writeText('3333271896702');
@@ -79,9 +86,15 @@ function RemitStep({
   );
 }
 
-function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
-  const { setDepositorName } = useOrderStore();
-  const [depositorNameInput, setDepositorNameInput] = useState('');
+function DepositorStep({
+  onSubmit,
+  depositorName,
+  setDepositorName,
+}: {
+  onSubmit: () => void;
+  depositorName: string;
+  setDepositorName: (name: string) => void;
+}) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
       <div className="flex w-full flex-col items-center gap-4 px-8">
@@ -92,8 +105,8 @@ function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
         </div>
         <TextInput
           placeholder="입금자명을 입력해주세요."
-          value={depositorNameInput}
-          onChange={(e) => setDepositorNameInput(e.target.value)}
+          value={depositorName}
+          onChange={(e) => setDepositorName(e.target.value)}
           limitHide
         />
       </div>
@@ -102,11 +115,11 @@ function DepositorStep({ onSubmit }: { onSubmit: () => void }) {
         <CtaButton
           text="입력 완료"
           onClick={() => {
-            setDepositorName(depositorNameInput);
-            setDepositorNameInput('');
+            setDepositorName(depositorName);
+            setDepositorName('');
             onSubmit();
           }}
-          disabled={depositorNameInput.trim() === ''}
+          disabled={depositorName.trim() === ''}
           radius="_2xl"
         />
       </footer>
@@ -118,10 +131,12 @@ function MenuItem({
   name,
   price,
   image,
+  quantity,
 }: {
   name: string;
   price: number;
   image: string;
+  quantity: number;
 }) {
   return (
     <div className="flex justify-between py-4">
@@ -138,20 +153,27 @@ function MenuItem({
         <div className="text-st-1 text-gray-800">
           {price.toLocaleString()}원
         </div>
+        <div className="text-st-1 text-gray-800">{quantity}개</div>
       </div>
     </div>
   );
 }
 
 function MenuList({ items }: { items: OrderItem[] }) {
-  const { removeItem } = useOrderStore();
+  const { decreaseItemQuantity } = useOrderStore();
   return (
     <div className="rounded-lg bg-white">
       {items.map((item) => (
         <div key={item.id} className="relative pr-10">
-          <MenuItem name={item.name} price={item.price} image={item.image} />
+          <MenuItem
+            key={item.id}
+            name={item.name}
+            price={item.price}
+            image={item.image}
+            quantity={item.quantity}
+          />
           <button
-            onClick={() => removeItem(item.id)}
+            onClick={() => decreaseItemQuantity(item.id)}
             className="absolute top-5 right-2"
           >
             <CancelIcon />
@@ -169,6 +191,7 @@ export default function Ordering() {
   const { createOrder } = useOrder();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<'remit' | 'depositor'>('remit');
+  const [depositorName, setDepositorName] = useState('');
 
   const totalAmount = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -176,7 +199,7 @@ export default function Ordering() {
   );
 
   const handleFinalSubmit = async () => {
-    const success = await createOrder();
+    const success = await createOrder(depositorName);
 
     if (success) {
       clearOrder();
@@ -234,7 +257,11 @@ export default function Ordering() {
               if (modalStep === 'depositor') setModalStep('remit');
               else setIsModalOpen(false);
             }}
-            center={modalStep === 'remit' ? '송금하기' : '입금자명 입력'}
+            center={
+              <div className="text-st-1">
+                {modalStep === 'remit' ? '송금하기' : '입금자명 입력'}
+              </div>
+            }
           />
           {modalStep === 'remit' ? (
             <RemitStep
@@ -242,7 +269,11 @@ export default function Ordering() {
               onNext={() => setModalStep('depositor')}
             />
           ) : (
-            <DepositorStep onSubmit={handleFinalSubmit} />
+            <DepositorStep
+              onSubmit={handleFinalSubmit}
+              depositorName={depositorName}
+              setDepositorName={setDepositorName}
+            />
           )}
         </Dialog.Content>
       </Dialog.Portal>

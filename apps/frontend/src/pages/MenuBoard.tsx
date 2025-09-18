@@ -12,6 +12,7 @@ import TopBar from '../components/common/layouts/TopBar';
 import MenuItemSkeleton from '../components/common/skeletons/MenuItemSkeleton';
 import { KEYS } from '../constants/storage';
 import { useMenu } from '../hooks/useMenu';
+import { useStore } from '../hooks/useStore';
 
 interface StoreInfoSectionProps {
   boothName: string;
@@ -129,6 +130,7 @@ function MenuList({
 export default function MenuBoard() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { getUserInfoByUserId, name } = useStore();
 
   const { orderItems } = useOrderStore();
   const isPreview = localStorage.getItem(KEYS.IS_PREVIEW);
@@ -145,14 +147,18 @@ export default function MenuBoard() {
     setIsModalOpen(true);
   };
 
-  // const totalAmount = orderItems.reduce(
-  //   (sum, item) => sum + item.price * item.quantity,
-  //   0,
-  // );
+  const totalQuantity = orderItems.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
 
   if (userData.userId === undefined) {
     return <Navigate to={ROUTES.NOT_FOUND} replace />;
   }
+
+  useEffect(() => {
+    getUserInfoByUserId(userData.userId);
+  }, []);
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -160,7 +166,7 @@ export default function MenuBoard() {
         <TopBar />
         <main className="pt-12 pb-24">
           <StoreInfoSection
-            boothName={'이상현 부스'}
+            boothName={name}
             isPreview={isPreview === '1'}
             tableNumber={userData.tableId}
           />
@@ -194,7 +200,7 @@ export default function MenuBoard() {
             <div className="flex w-full items-center justify-center gap-2">
               <div className="text-b-1">주문하기</div>
               <div className="text-c-1 flex h-6 w-6 items-center justify-center rounded-full bg-black text-white">
-                {orderItems.length}
+                {totalQuantity}
               </div>
             </div>
           </button>

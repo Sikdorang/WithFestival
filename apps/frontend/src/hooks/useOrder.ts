@@ -19,7 +19,7 @@ export const useOrder = () => {
 
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
 
-  const createOrder = async () => {
+  const createOrder = async (depositorName: string) => {
     setIsLoading(true);
     setOrderError(null);
 

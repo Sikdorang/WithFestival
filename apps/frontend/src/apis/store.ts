@@ -6,13 +6,18 @@ export const storeAPI = {
     return response.data;
   },
 
+  getUserInfoByUserId: async (userId: number) => {
+    const response = await axiosInstance.get(`/order/user/${userId}/info`);
+    return response.data;
+  },
+
   updateStoreInfo: async (account: string) => {
-    const response = await axiosInstance.patch('/user/account', account);
+    const response = await axiosInstance.patch('/user/account', { account });
     return response.data;
   },
 
   updateStoreName: async (name: string) => {
-    const response = await axiosInstance.patch('/user/name', name);
+    const response = await axiosInstance.patch('/user/name', { name });
     return response.data;
   },
 };
