@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id      Int     @id @default(autoincrement())
-  code    String  @unique @db.VarChar(6) // 인증번호
+  code    String  @unique @db.VarChar(100) // 인증번호
   name    String  @db.VarChar(50)        // 이름
   account String? @db.VarChar(100)       // 계좌
 
