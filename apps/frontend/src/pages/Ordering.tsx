@@ -74,7 +74,7 @@ function RemitStep({
             <span className="text-b-1 text-gray-700">{account}</span>
             <CopyIcon
               onClick={() => {
-                navigator.clipboard.writeText('3333271896702');
+                navigator.clipboard.writeText(account);
                 toast.success(SUCCESS_MESSAGES.accountCopySuccess);
               }}
             />
