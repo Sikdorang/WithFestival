@@ -18,7 +18,6 @@ export const useStore = () => {
       const response = await storeAPI.getUserInfo();
       setName(response.data.name);
       setAccount(response.data.account);
-      console.log(response.data);
     } catch (error) {
       handelError(error);
       return false;
@@ -34,7 +33,6 @@ export const useStore = () => {
       const response = await storeAPI.getUserInfoByUserId(userId);
       setName(response.data.name);
       setAccount(response.data.account);
-      console.log(response.data);
     } catch (error) {
       handelError(error);
       return false;

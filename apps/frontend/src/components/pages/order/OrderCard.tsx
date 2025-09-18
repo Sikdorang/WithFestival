@@ -9,9 +9,15 @@ interface Props {
   order: OrderSummary;
   setOrderSent: (orderId: number) => void;
   setOrderCooked: (orderId: number) => void;
+  deleteOrder: (orderId: number) => void;
 }
 
-export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
+export function OrderCard({
+  order,
+  setOrderSent,
+  setOrderCooked,
+  deleteOrder,
+}: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const notification = new Audio('/sounds/effect_notification_2.mp3');
 
@@ -98,7 +104,7 @@ export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
                 cancelButtonText={'돌아가기'}
                 confirmButtonText={'주문 취소하기'}
                 onConfirm={() => {
-                  setOrderCooked(order.id);
+                  deleteOrder(order.id);
                   toast.success(SUCCESS_MESSAGES.orderCancelSuccess);
                 }}
               >

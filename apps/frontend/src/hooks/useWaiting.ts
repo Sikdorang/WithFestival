@@ -18,7 +18,6 @@ export const useWaiting = () => {
     try {
       const response = await waitingAPI.getWaiting();
       setWaitingList(response.data);
-      console.log(response);
       return true;
     } catch (error) {
       handelError(error);

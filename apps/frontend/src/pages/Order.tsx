@@ -15,6 +15,7 @@ export default function Order() {
     sentOrders,
     setOrderSent,
     setOrderCooked,
+    deleteOrder,
   } = useOrder();
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function Order() {
                 order={order}
                 setOrderSent={setOrderSent}
                 setOrderCooked={setOrderCooked}
+                deleteOrder={deleteOrder}
               />
             ))
           ) : (
@@ -58,6 +60,7 @@ export default function Order() {
               order={order}
               setOrderSent={setOrderSent}
               setOrderCooked={setOrderCooked}
+              deleteOrder={deleteOrder}
             />
           ))
         ) : (

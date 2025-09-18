@@ -14,6 +14,7 @@ import CtaButton from '../components/common/buttons/CtaButton';
 import BottomSpace from '../components/common/exceptions/BottomSpace';
 import TextInput from '../components/common/inputs/TextInput';
 import Navigator from '../components/common/layouts/Navigator';
+import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 import { ROUTES } from '../constants/routes';
 import { useStore } from '../hooks/useStore';
 
@@ -82,7 +83,15 @@ function RemitStep({
         </div>
       </div>
       <footer className="fixed right-0 bottom-0 left-0 z-10 flex items-center gap-4 bg-white p-4">
-        <CtaButton text="송금 완료" onClick={onNext} radius="_2xl" />
+        <DeleteConfirmModal
+          title={'송금을 완료하셨나요 ?'}
+          description={'송금하지 않고 넘어가면 주문이 취소될 수 있어요 !'}
+          cancelButtonText={'돌아가기'}
+          confirmButtonText={'완료했어요 !'}
+          onConfirm={onNext}
+        >
+          <CtaButton text="송금 완료" radius="_2xl" />
+        </DeleteConfirmModal>
       </footer>
     </div>
   );
@@ -239,6 +248,7 @@ export default function Ordering() {
           <span className="text-st-2 text-black">
             총 {totalAmount.toLocaleString()}원
           </span>
+
           <Dialog.Trigger asChild>
             <button className="bg-primary-300 text-b-1 flex-1 rounded-2xl py-4 text-center text-black">
               송금하기

@@ -75,6 +75,14 @@ export const useOrder = () => {
     }
   }, []);
 
+  const deleteOrder = useCallback(async (orderId: number) => {
+    try {
+      await orderAPI.deleteOrder(orderId);
+    } catch (error) {
+      handelError(error);
+    }
+  }, []);
+
   const getPendingOrders = useCallback(async () => {
     try {
       const response = await orderAPI.getPendingOrders();
@@ -121,6 +129,7 @@ export const useOrder = () => {
     getSentOrders,
     setOrderSent,
     setOrderCooked,
+    deleteOrder,
     isLoading,
     error: orderError,
   };

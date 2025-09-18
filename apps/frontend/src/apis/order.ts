@@ -15,6 +15,11 @@ export const orderAPI = {
     return response.data;
   },
 
+  deleteOrder: async (orderId: number) => {
+    const response = await axiosInstance.delete(`/order/${orderId}`);
+    return response.data;
+  },
+
   getPendingOrders: async () => {
     const response = await axiosInstance.get('/order/pending');
     return response.data;
