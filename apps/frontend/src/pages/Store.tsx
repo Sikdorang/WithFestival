@@ -21,7 +21,7 @@ function AccountSection() {
 
   useEffect(() => {
     getUserInfo();
-  }, [getUserInfo]);
+  }, []);
 
   useEffect(() => {
     if (name) setStoreNameInput(name);
