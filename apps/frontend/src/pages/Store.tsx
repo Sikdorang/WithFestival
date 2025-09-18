@@ -21,116 +21,124 @@ function AccountSection() {
 
   useEffect(() => {
     getUserInfo();
-  }, []);
+  }, [getUserInfo]);
 
   useEffect(() => {
-    setStoreNameInput(name);
-    setAccountInput(account);
+    if (name) setStoreNameInput(name);
+    if (account) setAccountInput(account);
   }, [name, account]);
 
-  const handleWriteStoreName = () => {
-    setIsWriteStoreName(true);
-
-    if (isWriteStoreName) {
-      updateStoreName(storeNameInput);
-      setIsWriteStoreName(false);
-    }
+  const handleSaveName = () => {
+    updateStoreName(storeNameInput);
+    setIsWriteStoreName(false);
   };
 
-  const handleWriteAccount = () => {
-    setIsWriteAccount(true);
+  const handleCancelName = () => {
+    setStoreNameInput(name);
+    setIsWriteStoreName(false);
+  };
 
-    if (isWriteAccount) {
-      updateStoreAccount(accountInput);
-      setIsWriteAccount(false);
-    }
+  const handleSaveAccount = () => {
+    updateStoreAccount(accountInput);
+    setIsWriteAccount(false);
+  };
+
+  const handleCancelAccount = () => {
+    setAccountInput(account);
+    setIsWriteAccount(false);
   };
 
   return (
     <div>
       <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
         <h2 className="text-st-2 mb-3">부스 이름</h2>
-        {isWriteStoreName && (
-          <div className="mb-4">
+
+        {isWriteStoreName ? (
+          <div className="space-y-3">
             <TextInput
               placeholder="부스 이름을 입력해주세요."
               value={storeNameInput}
               onChange={(e) => setStoreNameInput(e.target.value)}
               limitHide
             />
+            <div className="flex justify-end gap-2">
+              <CtaButton
+                text="취소"
+                color="white"
+                size="small"
+                onClick={handleCancelName}
+              />
+              <CtaButton
+                text="저장"
+                color="green"
+                size="small"
+                onClick={handleSaveName}
+              />
+            </div>
           </div>
-        )}
-
-        {!name && (
-          <CtaButton
-            color={isWriteStoreName ? 'green' : 'white'}
-            size="small"
-            radius="_2xl"
-            text={isWriteStoreName ? '입력완료' : '등록하기'}
-            onClick={handleWriteStoreName}
-          />
-        )}
-
-        {name && !isWriteStoreName && (
-          <>
-            <div className="text-b-1">{name}</div>
+        ) : (
+          <div>
+            <div className="text-b-1">{name || '등록된 이름이 없습니다.'}</div>
             <div className="absolute top-3 right-4">
               <CtaButton
+                text={name ? '수정하기' : '등록하기'}
                 color="white"
                 size="small"
                 width="fit"
-                radius="_2xl"
-                text="수정하기"
                 onClick={() => setIsWriteStoreName(true)}
               />
             </div>
-          </>
+          </div>
         )}
       </div>
 
       <div className="relative rounded-2xl bg-gray-100 p-4 shadow-sm">
         <h2 className="text-st-2 mb-3">계좌번호</h2>
-        {isWriteAccount && (
-          <div className="mb-4">
+
+        {isWriteAccount ? (
+          <div className="space-y-3">
             <TextInput
-              placeholder="ex.은행이름 & 계좌번호 (13자리)"
+              placeholder="ex. 은행이름 계좌번호"
               value={accountInput}
               onChange={(e) => setAccountInput(e.target.value)}
               limitHide
             />
+            <div className="flex justify-end gap-2">
+              <CtaButton
+                text="취소"
+                color="white"
+                size="small"
+                onClick={handleCancelAccount}
+              />
+              <CtaButton
+                text="저장"
+                color="green"
+                size="small"
+                onClick={handleSaveAccount}
+              />
+            </div>
           </div>
-        )}
-        {!account && (
-          <CtaButton
-            color={isWriteAccount ? 'green' : 'white'}
-            size="small"
-            radius="_2xl"
-            text={isWriteAccount ? '입력완료' : '등록하기'}
-            onClick={handleWriteAccount}
-          />
-        )}
-
-        {account && !isWriteAccount && (
-          <>
-            <div className="text-b-1">{account}</div>
+        ) : (
+          <div>
+            <div className="text-b-1">
+              {account || '등록된 계좌가 없습니다.'}
+            </div>
             <div className="absolute top-3 right-4">
               <CtaButton
+                text={account ? '수정하기' : '등록하기'}
                 color="white"
                 size="small"
                 width="fit"
-                radius="_2xl"
-                text="수정하기"
                 onClick={() => setIsWriteAccount(true)}
               />
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
   );
 }
 
-// 메뉴 아이템
 function MenuItem({
   name,
   price,

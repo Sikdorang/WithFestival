@@ -8,7 +8,6 @@ import Navigator from '@/components/common/layouts/Navigator';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
-import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 import { ROUTES } from '../constants/routes';
 import { useMenu } from '../hooks/useMenu';
 
@@ -16,19 +15,12 @@ const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 export default function ManageMenuDetail() {
   const navigate = useNavigate();
-  const {
-    menus,
-    createMenu,
-    deleteMenu,
-    updateMenu,
-    uploadMenuImage,
-    deleteMenuImage,
-    fetchMenu,
-  } = useMenu();
+  const { menus, createMenu, uploadMenuImage, deleteMenuImage, fetchMenu } =
+    useMenu();
 
   const menuId = Number(useParams().menuId);
   const isEditMode = menuId !== 0;
-  const [isEditingMode, setIsEditingMode] = useState(false);
+  const [isEditingMode] = useState(false);
 
   const [menu, setMenu] = useState<string>(
     menus.find((menu) => menu.id === menuId)?.menu ?? '',
@@ -75,45 +67,42 @@ export default function ManageMenuDetail() {
     }
   };
 
-  // 1. 이미지 표시 로직 수정: 미리보기 이미지가 있으면 그것을 먼저 보여줍니다.
   const currentImage = imagePreview || image;
 
-  const handleUpdateMenu = async () => {
-    // 1. 텍스트 정보를 먼저 업데이트합니다.
-    await updateMenu(menuId, {
-      menu,
-      description,
-      price: Number(price),
-    });
+  // const handleUpdateMenu = async () => {
+  //   await updateMenu(menuId, {
+  //     menu,
+  //     description,
+  //     price: Number(price),
+  //   });
 
-    // 2. 새로운 이미지 파일이 선택되었는지 확인합니다.
-    if (imageFile) {
-      // 2-1. (요청사항) 기존 이미지를 먼저 삭제합니다.
-      //       오류가 발생해도 다음 로직이 실행되도록 try-catch를 사용할 수 있습니다.
-      try {
-        await deleteMenuImage(menuId);
-      } catch (error) {
-        // 여기서 사용자에게 알림을 주거나 로직을 중단할 수 있습니다.
-      }
+  //   // 2. 새로운 이미지 파일이 선택되었는지 확인합니다.
+  //   if (imageFile) {
+  //     // 2-1. (요청사항) 기존 이미지를 먼저 삭제합니다.
+  //     //       오류가 발생해도 다음 로직이 실행되도록 try-catch를 사용할 수 있습니다.
+  //     try {
+  //       await deleteMenuImage(menuId);
+  //     } catch (error) {
+  //       // 여기서 사용자에게 알림을 주거나 로직을 중단할 수 있습니다.
+  //     }
 
-      // 2-2. 새로운 이미지를 업로드합니다.
-      await uploadMenuImage(menuId, imageFile);
-    }
+  //     // 2-2. 새로운 이미지를 업로드합니다.
+  //     await uploadMenuImage(menuId, imageFile);
+  //   }
 
-    // 3. 모든 과정이 끝난 후, 최신 정보로 UI를 동기화합니다.
-    await fetchMenu();
+  //   // 3. 모든 과정이 끝난 후, 최신 정보로 UI를 동기화합니다.
+  //   await fetchMenu();
 
-    // 4. 수정 모드를 종료하고, 파일 상태를 초기화합니다.
-    setIsEditingMode(false);
-    setImageFile(null);
-    setImagePreview(null);
-  };
+  //   // 4. 수정 모드를 종료하고, 파일 상태를 초기화합니다.
+  //   setIsEditingMode(false);
+  //   setImageFile(null);
+  //   setImagePreview(null);
+  // };
   // 2. 이미지 삭제 핸들러 수정: API 호출 후 상태를 직접 업데이트합니다.
   const handleDeleteImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const success = await deleteMenuImage(menuId);
     if (success) {
-      // 미리보기와 원본 이미지 상태를 모두 제거하여 즉시 UI에 반영
       setImagePreview(null);
       setImage(null);
       if (fileInputRef.current) {
@@ -250,7 +239,7 @@ export default function ManageMenuDetail() {
           )}
         </main>
 
-        <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
+        {/* <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
           <DeleteConfirmModal
             title={'메뉴 삭제를 할까요 ?'}
             description={'메뉴 삭제 후에는 복구할 수 없어요.'}
@@ -277,7 +266,7 @@ export default function ManageMenuDetail() {
               }}
             />
           </div>
-        </footer>
+        </footer> */}
       </BaseResponsiveLayout>
     );
   }
