@@ -1,6 +1,5 @@
 import { handelError } from '@/apis/errorhandler';
 import { orderAPI } from '@/apis/order';
-import { SUCCESS_MESSAGES } from '@/constants/message';
 import { ROUTES } from '@/constants/routes';
 import { useOrderStore } from '@/stores/orderStore';
 import { OrderListApiResponse } from '@/types/global';
@@ -90,7 +89,6 @@ export const useOrder = () => {
     try {
       await orderAPI.setOrderSent(orderId);
       await Promise.all([getPendingOrders(), getSentOrders()]);
-      toast.success(SUCCESS_MESSAGES.orderConfirmSuccess);
     } catch (error) {
       handelError(error);
     }
@@ -100,7 +98,6 @@ export const useOrder = () => {
     try {
       await orderAPI.setOrderCooked(orderId);
       await Promise.all([getPendingOrders(), getSentOrders()]);
-      toast.success(SUCCESS_MESSAGES.orderCookingComplete);
     } catch (error) {
       handelError(error);
     }

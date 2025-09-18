@@ -50,7 +50,7 @@ export const useWaiting = () => {
 
     try {
       const response = await waitingAPI.createWaiting(waiting);
-      toast.success(SUCCESS_MESSAGES.loginSuccess);
+      toast.success(SUCCESS_MESSAGES.waitingCreateSuccess);
       return response.data;
     } catch (error) {
       handelError(error);
@@ -66,7 +66,7 @@ export const useWaiting = () => {
 
     try {
       await waitingAPI.deleteWaiting(waitingId);
-      toast.success(SUCCESS_MESSAGES.loginSuccess);
+      toast.success(SUCCESS_MESSAGES.waitingCancelSuccess);
       return true;
     } catch (error) {
       handelError(error);

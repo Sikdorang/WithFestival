@@ -3,6 +3,7 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import Navigator from '@/components/common/layouts/Navigator';
 import { OrderSummary } from '@/types/global';
 import toast from 'react-hot-toast';
+import { SUCCESS_MESSAGES } from '../../../constants/message';
 
 interface OrderDetailProps {
   order: OrderSummary | null;
@@ -79,7 +80,7 @@ export default function OrderDetail({ order, onClose }: OrderDetailProps) {
           text="조리 완료"
           onClick={() => {
             onClose();
-            toast.success('조리가 완료되었습니다.');
+            toast.success(SUCCESS_MESSAGES.orderCookingComplete);
           }}
           radius="_2xl"
         />

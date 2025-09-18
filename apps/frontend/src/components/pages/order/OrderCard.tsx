@@ -3,6 +3,7 @@ import { OrderSummary } from '@/types/global';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { SUCCESS_MESSAGES } from '../../../constants/message';
 import OrderDetail from './OrderDetail';
 interface Props {
   order: OrderSummary;
@@ -82,6 +83,7 @@ export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
               className="bg-primary-300 rounded-2xl py-3 text-black"
               onClick={() => {
                 setOrderCooked(order.id);
+                toast.success(SUCCESS_MESSAGES.orderCookingComplete);
               }}
             >
               조리 완료
@@ -97,6 +99,7 @@ export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
                 confirmButtonText={'주문 취소하기'}
                 onConfirm={() => {
                   setOrderCooked(order.id);
+                  toast.success(SUCCESS_MESSAGES.orderCancelSuccess);
                 }}
               >
                 <button className="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">

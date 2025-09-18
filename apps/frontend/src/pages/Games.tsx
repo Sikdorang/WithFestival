@@ -155,7 +155,7 @@ export default function Games() {
                 limitHide
               />
               <DeleteConfirmModal
-                title={'더 즐거운 플레이를 위해 소리를 크게 키워주세요 !'}
+                title={`더 즐거운 플레이를 위해 소리를 키워주세요 !`}
                 description={'🥹 🔫'}
                 cancelButtonText={'좀 쫄려요...'}
                 confirmButtonText={'확인했어요!'}

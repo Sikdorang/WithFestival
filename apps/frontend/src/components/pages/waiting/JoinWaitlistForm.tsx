@@ -82,7 +82,7 @@ export default function JoinWaitlistForm() {
   if (isFinishJoinWaitlist) {
     return (
       <JoinWaitlistFinish
-        boothName={waitingResult?.name ?? ''}
+        boothName={waitingInfos?.name ?? ''}
         waitingListNumber={waitingInfos?.waitingCount ?? 0}
         waitingNumber={waitingResult?.id ?? 0}
         name={formData.name}
