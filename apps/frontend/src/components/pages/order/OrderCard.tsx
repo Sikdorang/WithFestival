@@ -12,7 +12,7 @@ interface Props {
 
 export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const notification = new Audio('/sounds/effect_notification.mp3');
+  const notification = new Audio('/sounds/effect_notification_2.mp3');
 
   const handleOrderCardClick = () => {
     setIsModalOpen(true);
@@ -42,7 +42,6 @@ export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
           </div>
         </div>
 
-        {/* 
         <div className="space-y-2 border-b border-gray-200 py-3">
           <p className="text-c-1 text-gray-400">주문내역</p>
           {order.orderUsers.map((item) => (
@@ -59,7 +58,7 @@ export function OrderCard({ order, setOrderSent, setOrderCooked }: Props) {
               </div>
             </div>
           ))}
-        </div> */}
+        </div>
 
         <div className="flex justify-between font-bold text-black">
           <p>총 금액</p>

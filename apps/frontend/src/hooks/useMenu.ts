@@ -31,12 +31,42 @@ export const useMenu = () => {
     }
   };
 
-  const createMenu = async (menu: CreateMenuDto) => {
+  const createMenu = async (menu: CreateMenuDto): Promise<Menu | null> => {
     setIsLoading(true);
     setLoginError(null);
 
     try {
-      await menuAPI.createMenu(menu);
+      const response = await menuAPI.createMenu(menu);
+      toast.success(SUCCESS_MESSAGES.createMenuSuccess);
+      return response.data;
+    } catch (error) {
+      handelError(error);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const uploadMenuImage = async (menuId: number, imageFile: File) => {
+    setIsLoading(true);
+    setLoginError(null);
+
+    try {
+      await menuAPI.uploadMenuImage(menuId, imageFile);
+
+      return true;
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteMenuImage = async (menuId: number) => {
+    try {
+      await menuAPI.deleteMenuImage(menuId);
+      toast.success(SUCCESS_MESSAGES.deleteMenuImageSuccess);
       return true;
     } catch (error) {
       handelError(error);
@@ -52,7 +82,7 @@ export const useMenu = () => {
 
     try {
       await menuAPI.updateMenu(menuId, menu);
-      toast.success(SUCCESS_MESSAGES.loginSuccess);
+      toast.success(SUCCESS_MESSAGES.updateMenuSuccess);
 
       return true;
     } catch (error) {
@@ -71,7 +101,7 @@ export const useMenu = () => {
       await menuAPI.deleteMenu(menuId);
 
       navigate(ROUTES.STORE);
-      toast.success(SUCCESS_MESSAGES.loginSuccess);
+      toast.success(SUCCESS_MESSAGES.deleteMenuSuccess);
       return true;
     } catch (error) {
       handelError(error);
@@ -103,6 +133,8 @@ export const useMenu = () => {
     menus,
     fetchMenu,
     createMenu,
+    uploadMenuImage,
+    deleteMenuImage,
     updateMenu,
     deleteMenu,
     getMenuByUserId,

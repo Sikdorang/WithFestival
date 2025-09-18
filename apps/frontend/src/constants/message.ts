@@ -15,4 +15,8 @@ export const SUCCESS_MESSAGES = {
   waitingCancelSuccess: '대기가 취소되었습니다.',
   storeNameUpdateSuccess: '가게 이름이 수정되었습니다.',
   storeAccountUpdateSuccess: '가게 계좌번호가 수정되었습니다.',
+  createMenuSuccess: '메뉴가 생성되었습니다.',
+  updateMenuSuccess: '메뉴가 수정되었습니다.',
+  deleteMenuSuccess: '메뉴가 삭제되었습니다.',
+  deleteMenuImageSuccess: '메뉴 이미지가 삭제되었습니다.',
 };
