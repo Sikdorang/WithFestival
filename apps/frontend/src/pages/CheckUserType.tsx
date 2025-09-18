@@ -41,7 +41,6 @@ export default function CheckUserType() {
           });
         }
       } catch (error) {
-        console.error('Failed to decode or decrypt path:', error);
         navigate('/not-found', { replace: true });
       }
     };

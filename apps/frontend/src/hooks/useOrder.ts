@@ -60,7 +60,6 @@ export const useOrder = () => {
         error.response?.data?.message || '주문 중 오류가 발생했습니다.';
       setOrderError(errorMessage);
       toast.error(errorMessage);
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +69,6 @@ export const useOrder = () => {
     try {
       const response = await orderAPI.getPendingOrders();
       setPendingOrders(response);
-      console.log('set');
     } catch (error) {
       handelError(error);
     }
