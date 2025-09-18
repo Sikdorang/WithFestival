@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { OrderGateway } from '../websocket/order.gateway';
 
 interface OrderItemDto {
   menu: string;
@@ -19,7 +20,11 @@ interface CreateOrderDto {
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => OrderGateway))
+    private orderGateway: OrderGateway,
+  ) {}
 
   async createOrder(data: CreateOrderDto) {
     // 트랜잭션을 사용하여 주문과 주문 상세를 함께 생성
@@ -54,10 +59,21 @@ export class OrderService {
         ),
       );
 
-      return {
+      const result = {
         order,
         orderUsers,
       };
+
+      // WebSocket 이벤트 발송
+      if (this.orderGateway) {
+        this.orderGateway.server.emit('orderCreated', {
+          roomId: `user_${data.userId}`,
+          orderData: result,
+        });
+        this.orderGateway.server.emit('refreshScreen');
+      }
+
+      return result;
     });
   }
 
@@ -153,10 +169,22 @@ export class OrderService {
       throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
     }
 
-    return this.prisma.order.update({
+    const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
       data: { send: true },
     });
+
+    // WebSocket 이벤트 발송
+    if (this.orderGateway) {
+      this.orderGateway.server.emit('orderSendUpdated', {
+        roomId: `user_${userId}`,
+        orderId: orderId,
+        send: true,
+      });
+      this.orderGateway.server.emit('refreshScreen');
+    }
+
+    return updatedOrder;
   }
 
   async updateOrderCooked(orderId: number, userId: number) {
@@ -172,10 +200,22 @@ export class OrderService {
       throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
     }
 
-    return this.prisma.order.update({
+    const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
       data: { cooked: true },
     });
+
+    // WebSocket 이벤트 발송
+    if (this.orderGateway) {
+      this.orderGateway.server.emit('orderCookedUpdated', {
+        roomId: `user_${userId}`,
+        orderId: orderId,
+        cooked: true,
+      });
+      this.orderGateway.server.emit('refreshScreen');
+    }
+
+    return updatedOrder;
   }
 
   async getUserInfo(userId: number) {
