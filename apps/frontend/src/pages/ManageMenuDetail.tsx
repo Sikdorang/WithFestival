@@ -203,7 +203,7 @@ export default function ManageMenuDetail() {
                 <img
                   src={image}
                   alt="메뉴 이미지"
-                  className="aspect-square w-full rounded-2xl object-cover"
+                  className="flex aspect-square w-full rounded-2xl object-cover"
                 />
               ) : (
                 <div className="flex aspect-square w-full flex-col items-center justify-center gap-2 text-gray-400">

@@ -78,7 +78,10 @@ function MenuItem({
         <p className="text-st-1 text-gray-800">{price.toLocaleString()}원</p>
       </div>
       {image ? (
-        <img className="h-20 w-20 rounded-md bg-gray-100" src={image} />
+        <img
+          className="flex aspect-square flex-1 rounded-2xl bg-gray-100"
+          src={image}
+        />
       ) : (
         <div className="flex aspect-square flex-1 items-center justify-center rounded-3xl bg-gray-100">
           <EmptyImage />
