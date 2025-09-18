@@ -30,7 +30,7 @@ export default function MenuDetail({ menu, onClose }: Props) {
     <BaseResponsiveLayout>
       <Navigator
         left={<GoBackIcon />}
-        center={<div className="text-st-2">메뉴 상세</div>}
+        center={<div className="text-st-1">메뉴 상세</div>}
         onLeftPress={onClose}
       />
 

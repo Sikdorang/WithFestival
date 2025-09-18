@@ -27,6 +27,22 @@ export const useStore = () => {
     }
   };
 
+  const getUserInfoByUserId = async (userId: number) => {
+    setIsLoading(true);
+    setLoginError(null);
+    try {
+      const response = await storeAPI.getUserInfoByUserId(userId);
+      setName(response.data.name);
+      setAccount(response.data.account);
+      console.log(response.data);
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const updateStoreAccount = async (account: string) => {
     setIsLoading(true);
     setLoginError(null);
@@ -65,6 +81,7 @@ export const useStore = () => {
     name,
     account,
     getUserInfo,
+    getUserInfoByUserId,
     updateStoreAccount,
     updateStoreName,
     isLoading,

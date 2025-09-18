@@ -15,11 +15,11 @@ export const useOrder = () => {
   const [orderError, setOrderError] = useState<string | null>(null);
 
   const navigate = useNavigate();
-  const { orderItems, depositorName, clearOrder } = useOrderStore();
+  const { orderItems, clearOrder } = useOrderStore();
 
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
 
-  const createOrder = async () => {
+  const createOrder = async (depositorName: string) => {
     setIsLoading(true);
     setOrderError(null);
 

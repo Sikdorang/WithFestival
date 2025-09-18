@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+type NewOrderItem = Omit<OrderItem, 'quantity'>;
+
 interface OrderItem {
   id: number;
   name: string;
@@ -11,8 +13,9 @@ interface OrderItem {
 interface OrderState {
   orderItems: OrderItem[];
   depositorName: string;
-  addItem: (newItem: Omit<OrderItem, 'quantity'>) => void;
+  addItem: (newItem: NewOrderItem) => void;
   removeItem: (itemId: number) => void;
+  decreaseItemQuantity: (itemId: number) => void;
   clearOrder: () => void;
   setDepositorName: (name: string) => void;
 }
@@ -41,6 +44,15 @@ export const useOrderStore = create<OrderState>((set) => ({
         };
       }
     }),
+
+  decreaseItemQuantity: (itemId: number) =>
+    set((state) => ({
+      orderItems: state.orderItems
+        .map((item) =>
+          item.id === itemId ? { ...item, quantity: item.quantity - 1 } : item,
+        )
+        .filter((item) => item.quantity > 0),
+    })),
 
   removeItem: (itemId) =>
     set((state) => ({
