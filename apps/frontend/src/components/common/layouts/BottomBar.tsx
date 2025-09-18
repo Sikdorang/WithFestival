@@ -1,15 +1,18 @@
 import ClockIcon from '@/assets/icons/ic_clock.svg?react';
 import FoodIcon from '@/assets/icons/ic_food.svg?react';
-import ListIcon from '@/assets/icons/ic_list.svg?react';
-
+import {
+  default as AllListIcon,
+  default as ListIcon,
+} from '@/assets/icons/ic_list.svg?react';
 export interface Props {
-  activeTab: 'timer' | 'list' | 'food';
-  onTabClick: (tabName: 'timer' | 'list' | 'food') => void;
+  activeTab: 'timer' | 'list' | 'food' | 'allList';
+  onTabClick: (tabName: 'timer' | 'list' | 'food' | 'allList') => void;
 }
 
 const TABS = [
   { name: 'timer', Icon: ClockIcon },
   { name: 'list', Icon: ListIcon },
+  { name: 'allList', Icon: AllListIcon },
   { name: 'food', Icon: FoodIcon },
 ] as const;
 

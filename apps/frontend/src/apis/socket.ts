@@ -16,4 +16,17 @@ socket.on('error', (error: unknown) => {
   console.error('Socket.IO error:', error);
 });
 
+socket.on('joinedRoom', (data) => {
+  console.log('🏠 방 입장:', data);
+});
+
+socket.onAny((eventName, ...args) => {
+  console.log(`📩 이벤트 수신 [${eventName}]:`, args);
+});
+
+setTimeout(() => {
+  console.log('연결 상태:', socket.connected);
+  console.log('소켓 ID:', socket.id);
+}, 5000);
+
 export default socket;

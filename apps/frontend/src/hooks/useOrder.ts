@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 export const useOrder = () => {
+  const [allOrders, setAllOrders] = useState<OrderListApiResponse>();
   const [pendingOrders, setPendingOrders] = useState<OrderListApiResponse>();
   const [sentOrders, setSentOrders] = useState<OrderListApiResponse>();
   const [isLoading, setIsLoading] = useState(false);
@@ -65,6 +66,15 @@ export const useOrder = () => {
     }
   };
 
+  const getAllOrders = useCallback(async () => {
+    try {
+      const response = await orderAPI.getAllOrders();
+      setAllOrders(response);
+    } catch (error) {
+      handelError(error);
+    }
+  }, []);
+
   const getPendingOrders = useCallback(async () => {
     try {
       const response = await orderAPI.getPendingOrders();
@@ -102,9 +112,11 @@ export const useOrder = () => {
   };
 
   return {
+    allOrders,
     pendingOrders,
     sentOrders,
     createOrder,
+    getAllOrders,
     getPendingOrders,
     getSentOrders,
     setOrderSent,
