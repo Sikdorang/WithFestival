@@ -12,9 +12,17 @@ import Order from '@/pages/Order';
 import Ordering from '@/pages/Ordering';
 import Store from '@/pages/Store';
 import Waiting from '@/pages/Waiting';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 
 const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to={ROUTES.LOGIN} replace />,
+  },
   {
     path: '/check/:encryptedParam?',
     element: <CheckUserType />,
