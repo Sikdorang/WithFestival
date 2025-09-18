@@ -10,6 +10,11 @@ export const orderAPI = {
     return response.data;
   },
 
+  getAllOrders: async () => {
+    const response = await axiosInstance.get('/order');
+    return response.data;
+  },
+
   getPendingOrders: async () => {
     const response = await axiosInstance.get('/order/pending');
     return response.data;

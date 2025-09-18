@@ -4,6 +4,7 @@ import { TabBarLayout } from '@/components/common/layouts/TabBarLayout';
 import { ROUTES } from '@/constants/routes';
 import CheckUserType from '@/pages/CheckUserType';
 import Games from '@/pages/Games';
+import History from '@/pages/History';
 import Login from '@/pages/Login';
 import ManageMenuDetail from '@/pages/ManageMenuDetail';
 import ManageWaiting from '@/pages/ManageWaiting';
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.STORE,
         element: <Store />,
+      },
+      {
+        path: ROUTES.HISTORY,
+        element: <History />,
       },
     ],
   },

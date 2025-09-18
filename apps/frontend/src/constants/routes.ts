@@ -21,6 +21,7 @@ export const ROUTES = {
   LOGIN: '/login',
   MANAGE_WAITING: '/manage-waiting',
   ORDER: '/order',
+  HISTORY: '/history',
   STORE: '/store',
   WAITING: '/waiting',
   MENU_BOARD: '/board',
