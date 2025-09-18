@@ -1,4 +1,5 @@
 import { unlink } from 'fs/promises';
+import { userInfo } from 'os';
 import { extname } from 'path';
 
 import {
@@ -58,9 +59,9 @@ export class MenuController {
 
   @Get('menus')
   @UseGuards(AuthGuard)
-  async getMenus() {
+  async getMenus(@CurrentUser() user: any) {
     try {
-      const menus = await this.menuService.getMenus();
+      const menus = await this.menuService.getMenus(user.id);
       return {
         success: true,
         data: menus,

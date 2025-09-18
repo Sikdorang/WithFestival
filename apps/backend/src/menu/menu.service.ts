@@ -19,10 +19,13 @@ interface UpdateMenuDto {
 export class MenuService {
   constructor(private prisma: PrismaService) {}
 
-  async getMenus() {
+  async getMenus(userId: number) {
     return this.prisma.menu.findMany({
       orderBy: {
         id: 'asc',
+      },
+      where: {
+        userid: userId,
       },
     });
   }
