@@ -177,4 +177,14 @@ export class OrderService {
       data: { cooked: true },
     });
   }
+
+  async getUserInfo(userId: number) {
+    return this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        name: true,
+        account: true,
+      },
+    });
+  }
 }

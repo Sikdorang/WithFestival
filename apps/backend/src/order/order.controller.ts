@@ -149,6 +149,34 @@ export class OrderController {
     }
   }
 
+  @Get('user/:userId/info')
+  async getUserInfo(@Param('userId') userId: string) {
+    try {
+      const userInfo = await this.orderService.getUserInfo(parseInt(userId));
+
+      if (!userInfo) {
+        return {
+          success: false,
+          message: '사용자 정보를 찾을 수 없습니다.',
+        };
+      }
+
+      return {
+        success: true,
+        data: {
+          name: userInfo.name,
+          account: userInfo.account,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '사용자 정보 조회에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
   @Patch(':orderId/send')
   @UseGuards(AuthGuard)
   async updateOrderSend(
