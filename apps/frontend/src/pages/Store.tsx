@@ -158,7 +158,7 @@ function MenuItem({
       </div>
       {image ? (
         <img
-          className="flex aspect-square max-w-[200px] flex-1 rounded-2xl bg-gray-100"
+          className="flex aspect-square max-w-[180px] flex-1 rounded-2xl bg-gray-100"
           src={`${IMAGE_PREFIX}${image}`}
         />
       ) : (
@@ -195,27 +195,27 @@ function MenuList() {
   );
 }
 
-function AddMenuButton() {
-  const navigate = useNavigate();
-  return (
-    <div className="fixed right-4 bottom-24 rounded-xl shadow-lg">
-      <CtaButton
-        text="메뉴 추가"
-        radius="xl"
-        onClick={() => {
-          navigate(ROUTES.MANAGE_MENUS.DETAIL('0'));
-        }}
-      />
-    </div>
-  );
-}
+// function AddMenuButton() {
+//   const navigate = useNavigate();
+//   return (
+//     <div className="fixed right-4 bottom-24 rounded-xl shadow-lg">
+//       <CtaButton
+//         text="메뉴 추가"
+//         radius="xl"
+//         onClick={() => {
+//           navigate(ROUTES.MANAGE_MENUS.DETAIL('0'));
+//         }}
+//       />
+//     </div>
+//   );
+// }
 
 export default function Store() {
   return (
     <div className="relative min-h-screen space-y-4 bg-white p-4">
       <AccountSection />
       <MenuList />
-      <AddMenuButton />
+      {/* <AddMenuButton /> */}
     </div>
   );
 }
