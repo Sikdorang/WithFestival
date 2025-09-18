@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   Patch,
+  Delete,
 } from '@nestjs/common';
 
 import { CurrentUser } from '../auth/auth.decorator';
@@ -224,6 +225,32 @@ export class OrderController {
       return {
         success: false,
         message: '조리 상태 변경에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Delete(':orderId')
+  @UseGuards(AuthGuard)
+  async deleteOrder(
+    @Param('orderId') orderId: string,
+    @CurrentUser() user: any,
+  ) {
+    try {
+      const result = await this.orderService.deleteOrder(
+        parseInt(orderId),
+        user.id,
+      );
+
+      return {
+        success: true,
+        message: '주문이 삭제되었습니다.',
+        data: result,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '주문 삭제에 실패했습니다.',
         error: error.message,
       };
     }

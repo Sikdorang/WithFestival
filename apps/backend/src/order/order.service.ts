@@ -187,4 +187,36 @@ export class OrderService {
       },
     });
   }
+
+  async deleteOrder(orderId: number, userId: number) {
+    // 해당 주문이 현재 사용자의 것인지 확인
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+        userid: userId,
+      },
+    });
+
+    if (!order) {
+      throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
+    }
+
+    // 트랜잭션을 사용하여 주문과 관련된 모든 데이터 삭제
+    return this.prisma.$transaction(async (prisma) => {
+      // 1. order_users 테이블에서 해당 orderId와 관련된 모든 레코드 삭제
+      await prisma.orderUser.deleteMany({
+        where: { orderId: orderId },
+      });
+
+      // 2. order 테이블에서 해당 주문 삭제
+      const deletedOrder = await prisma.order.delete({
+        where: { id: orderId },
+      });
+
+      return {
+        deletedOrder,
+        message: '주문과 관련된 모든 데이터가 삭제되었습니다.',
+      };
+    });
+  }
 }
