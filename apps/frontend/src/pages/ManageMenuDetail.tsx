@@ -8,6 +8,7 @@ import Navigator from '@/components/common/layouts/Navigator';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
+import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 import { ROUTES } from '../constants/routes';
 import { useMenu } from '../hooks/useMenu';
 
@@ -15,8 +16,14 @@ const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 export default function ManageMenuDetail() {
   const navigate = useNavigate();
-  const { menus, createMenu, uploadMenuImage, deleteMenuImage, fetchMenu } =
-    useMenu();
+  const {
+    menus,
+    createMenu,
+    uploadMenuImage,
+    deleteMenuImage,
+    fetchMenu,
+    deleteMenu,
+  } = useMenu();
 
   const menuId = Number(useParams().menuId);
   const isEditMode = menuId !== 0;
@@ -239,7 +246,7 @@ export default function ManageMenuDetail() {
           )}
         </main>
 
-        {/* <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
+        <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
           <DeleteConfirmModal
             title={'메뉴 삭제를 할까요 ?'}
             description={'메뉴 삭제 후에는 복구할 수 없어요.'}
@@ -252,7 +259,7 @@ export default function ManageMenuDetail() {
             <CtaButton text="삭제하기" radius="xl" color="red" width="fit" />
           </DeleteConfirmModal>
 
-          <div className="flex-1">
+          {/* <div className="flex-1">
             <CtaButton
               text={isEditingMode ? '수정완료' : '수정하기'}
               radius="xl"
@@ -265,8 +272,8 @@ export default function ManageMenuDetail() {
                 }
               }}
             />
-          </div>
-        </footer> */}
+          </div> */}
+        </footer>
       </BaseResponsiveLayout>
     );
   }
