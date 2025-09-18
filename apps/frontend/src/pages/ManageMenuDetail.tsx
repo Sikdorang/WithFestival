@@ -91,7 +91,6 @@ export default function ManageMenuDetail() {
       try {
         await deleteMenuImage(menuId);
       } catch (error) {
-        console.error('기존 이미지 삭제 실패:', error);
         // 여기서 사용자에게 알림을 주거나 로직을 중단할 수 있습니다.
       }
 

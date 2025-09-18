@@ -23,7 +23,7 @@ export default function Login() {
           <TextInput
             label="인증 번호"
             placeholder="인증 번호를 입력해주세요"
-            maxLength={6}
+            maxLength={20}
             value={code}
             onChange={(e) => setCode(e.target.value)}
             limitHide

@@ -14,6 +14,4 @@ export const handelError = (error: unknown) => {
       toast.error(ERROR_MESSAGES.unexpectedError);
     }
   }
-
-  console.error(error);
 };

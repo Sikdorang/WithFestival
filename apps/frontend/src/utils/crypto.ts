@@ -20,15 +20,10 @@ export const encryptJson = (jsonObject: object) => {
 export const decryptJson = (encryptedString: string) => {
   if (!encryptedString) return null;
   try {
-    console.log('SECRET_KEY', SECRET_KEY);
-    console.log('encryptedString', encryptedString);
     const bytes = CryptoJS.AES.decrypt(encryptedString, SECRET_KEY);
-    console.log('bytes', bytes);
     const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
-    console.log('decryptedString', decryptedString);
     return JSON.parse(decryptedString);
   } catch (error) {
-    console.error('복호화에 실패했습니다:', error);
     return null;
   }
 };

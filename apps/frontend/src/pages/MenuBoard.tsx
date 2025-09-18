@@ -14,6 +14,7 @@ import { KEYS } from '../constants/storage';
 import { useMenu } from '../hooks/useMenu';
 import { useStore } from '../hooks/useStore';
 
+const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 interface StoreInfoSectionProps {
   boothName: string;
   isPreview: boolean;
@@ -80,7 +81,7 @@ function MenuItem({
       {image ? (
         <img
           className="flex aspect-square flex-1 rounded-2xl bg-gray-100"
-          src={image}
+          src={`${IMAGE_PREFIX}${image}`}
         />
       ) : (
         <div className="flex aspect-square flex-1 items-center justify-center rounded-3xl bg-gray-100">
