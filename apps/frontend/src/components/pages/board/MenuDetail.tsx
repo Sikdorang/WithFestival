@@ -11,6 +11,8 @@ interface Props {
   onClose: () => void;
 }
 
+const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
+
 export default function MenuDetail({ menu, onClose }: Props) {
   const { addItem } = useOrderStore();
 
@@ -39,7 +41,7 @@ export default function MenuDetail({ menu, onClose }: Props) {
           <div className="relative flex w-full flex-col items-center justify-center gap-2 rounded-3xl border-2 border-gray-200 transition-all duration-200 hover:bg-gray-100">
             {menu.image ? (
               <img
-                src={menu.image ?? ''}
+                src={`${IMAGE_PREFIX}${menu.image}`}
                 alt="미리보기"
                 className="aspect-square h-full w-full object-cover"
               />

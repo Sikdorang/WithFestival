@@ -80,7 +80,7 @@ function MenuItem({
       </div>
       {image ? (
         <img
-          className="flex aspect-square flex-1 rounded-2xl bg-gray-100"
+          className="flex aspect-square max-w-[200px] flex-1 rounded-2xl bg-gray-100"
           src={`${IMAGE_PREFIX}${image}`}
         />
       ) : (

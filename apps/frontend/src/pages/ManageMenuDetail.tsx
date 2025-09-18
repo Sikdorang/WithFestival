@@ -12,6 +12,8 @@ import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 import { ROUTES } from '../constants/routes';
 import { useMenu } from '../hooks/useMenu';
 
+const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
+
 export default function ManageMenuDetail() {
   const navigate = useNavigate();
   const {
@@ -200,7 +202,7 @@ export default function ManageMenuDetail() {
                 )
               ) : image ? (
                 <img
-                  src={image}
+                  src={`${IMAGE_PREFIX}${image}`}
                   alt="메뉴 이미지"
                   className="flex aspect-square w-full rounded-2xl object-cover"
                 />
@@ -302,7 +304,7 @@ export default function ManageMenuDetail() {
             {imagePreview ? (
               <>
                 <img
-                  src={imagePreview}
+                  src={`${IMAGE_PREFIX}${imagePreview}`}
                   alt="미리보기"
                   className="h-full w-full rounded-2xl object-cover"
                 />

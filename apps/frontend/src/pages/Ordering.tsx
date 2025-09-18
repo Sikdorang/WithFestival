@@ -17,6 +17,8 @@ import Navigator from '../components/common/layouts/Navigator';
 import { ROUTES } from '../constants/routes';
 import { useStore } from '../hooks/useStore';
 
+const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
+
 interface OrderItem {
   id: number;
   name: string;
@@ -142,8 +144,8 @@ function MenuItem({
     <div className="flex justify-between py-4">
       {image ? (
         <img
-          className="flex aspect-square flex-1 rounded-2xl bg-gray-100"
-          src={image}
+          className="flex aspect-square max-w-[200px] flex-1 rounded-2xl bg-gray-100"
+          src={`${IMAGE_PREFIX}${image}`}
         />
       ) : (
         <div className="flex aspect-square flex-1 items-center justify-center rounded-3xl bg-gray-100">

@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { useMenu } from '../hooks/useMenu';
 import { useStore } from '../hooks/useStore';
 
+const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
+
 function AccountSection() {
   const { updateStoreName, updateStoreAccount, getUserInfo, account, name } =
     useStore();
@@ -148,8 +150,8 @@ function MenuItem({
       </div>
       {image ? (
         <img
-          className="flex aspect-square flex-1 rounded-2xl bg-gray-100"
-          src={image}
+          className="flex aspect-square max-w-[200px] flex-1 rounded-2xl bg-gray-100"
+          src={`${IMAGE_PREFIX}${image}`}
         />
       ) : (
         <div className="flex aspect-square flex-1 items-center justify-center rounded-3xl bg-gray-100">
