@@ -35,6 +35,9 @@ interface UpdateMenuDto {
 // Multer 설정
 const multerOptions = {
   dest: './uploads',
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB 제한
+  },
   fileFilter: (req: any, file: any, callback: any) => {
     if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
       callback(null, true);
