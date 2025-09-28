@@ -13,7 +13,7 @@ export default function Banner({
   isFinishJoinWaitlist,
 }: Props) {
   return (
-    <div className="text-t-1 flex flex-col items-center gap-4 py-40 pb-20">
+    <div className="text-t-1 flex flex-col items-center gap-4 pt-20">
       {isFinishJoinWaitlist && (
         <div className="flex flex-col items-center gap-3">
           <Lottie

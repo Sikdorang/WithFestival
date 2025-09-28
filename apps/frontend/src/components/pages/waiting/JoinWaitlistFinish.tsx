@@ -4,6 +4,7 @@ import Banner from '@/components/pages/waiting/Banner';
 import { ROUTES } from '@/constants/routes';
 import { KEYS } from '@/constants/storage';
 import { useNavigate } from 'react-router-dom';
+import NoticeView from '../board/NoticeView';
 
 interface Props {
   waitingNumber: number;
@@ -12,6 +13,7 @@ interface Props {
   phone: string;
   partySize: number;
   waitingListNumber: number;
+  notice: string;
 }
 
 export default function JoinWaitlistFinish({
@@ -21,6 +23,7 @@ export default function JoinWaitlistFinish({
   phone,
   partySize,
   waitingListNumber,
+  notice,
 }: Props) {
   const navigate = useNavigate();
 
@@ -37,6 +40,7 @@ export default function JoinWaitlistFinish({
           waitingListLength={waitingListNumber + 1}
           isFinishJoinWaitlist={true}
         />
+        <NoticeView notice={notice} />
         <TextInput
           label="대기번호"
           placeholder="대기번호를 입력해주세요."

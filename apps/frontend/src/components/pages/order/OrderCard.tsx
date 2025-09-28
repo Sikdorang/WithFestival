@@ -71,9 +71,7 @@ export function OrderCard({
           <p>총 금액</p>
           <div className="text-right">
             <p>{order.totalPrice.toLocaleString()}원</p>
-            <span className="text-sm font-medium text-gray-400">
-              {/* 총 {order.orderUsers.reduce((acc, item) => acc + item.count, 0)}개 */}
-            </span>
+            <span className="text-sm font-medium text-gray-400"></span>
           </div>
         </div>
 

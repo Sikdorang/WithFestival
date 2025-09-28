@@ -66,3 +66,11 @@ export interface OrderListApiResponse {
   data: OrderSummary[];
   count: number;
 }
+
+export interface IInquiry {
+  id: number;
+  completed: boolean;
+  message: string;
+  tableNumber: string;
+  time: string;
+}

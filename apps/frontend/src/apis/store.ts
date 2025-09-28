@@ -20,4 +20,14 @@ export const storeAPI = {
     const response = await axiosInstance.patch('/user/name', { name });
     return response.data;
   },
+
+  updateStoreNotice: async (notice: string) => {
+    const response = await axiosInstance.patch('/user/notice', { notice });
+    return response.data;
+  },
+
+  updateStoreEvent: async (event: string) => {
+    const response = await axiosInstance.patch('/user/event', { event });
+    return response.data;
+  },
 };

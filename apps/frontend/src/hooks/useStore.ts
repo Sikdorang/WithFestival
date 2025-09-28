@@ -7,6 +7,8 @@ import { toast } from 'react-hot-toast';
 export const useStore = () => {
   const [name, setName] = useState<string>('');
   const [account, setAccount] = useState<string>('');
+  const [notice, setNotice] = useState<string>('');
+  const [event, setEvent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
@@ -33,6 +35,8 @@ export const useStore = () => {
       const response = await storeAPI.getUserInfoByUserId(userId);
       setName(response.data.name);
       setAccount(response.data.account);
+      setNotice(response.data.notice);
+      setEvent(response.data.event);
     } catch (error) {
       handelError(error);
       return false;
@@ -75,13 +79,50 @@ export const useStore = () => {
     }
   };
 
+  const updateStoreNotice = async (notice: string) => {
+    setIsLoading(true);
+    setLoginError(null);
+
+    try {
+      await storeAPI.updateStoreNotice(notice);
+      setNotice(notice);
+      toast.success(SUCCESS_MESSAGES.storeNoticeUpdateSuccess);
+      return true;
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateStoreEvent = async (event: string) => {
+    setIsLoading(true);
+    setLoginError(null);
+    try {
+      await storeAPI.updateStoreEvent(event);
+      setEvent(event);
+      toast.success(SUCCESS_MESSAGES.storeEventUpdateSuccess);
+      return true;
+    } catch (error) {
+      handelError(error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     name,
     account,
+    notice,
+    event,
     getUserInfo,
     getUserInfoByUserId,
     updateStoreAccount,
     updateStoreName,
+    updateStoreNotice,
+    updateStoreEvent,
     isLoading,
     loginError,
   };
