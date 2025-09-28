@@ -21,4 +21,6 @@ export const SUCCESS_MESSAGES = {
   deleteMenuSuccess: '메뉴가 삭제되었습니다.',
   deleteMenuImageSuccess: '메뉴 이미지가 삭제되었습니다.',
   waitingCreateSuccess: '대기열에 등록되었습니다 !',
+  storeNoticeUpdateSuccess: '공지사항이 수정되었습니다.',
+  storeEventUpdateSuccess: '이벤트가 수정되었습니다.',
 };

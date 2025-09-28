@@ -37,7 +37,7 @@ export default function TextInput({
       )}
 
       <div
-        className={`relative flex items-center rounded-2xl border px-6 py-4 transition-colors ${
+        className={`relative flex items-center rounded-2xl border bg-white px-6 py-4 transition-colors ${
           error
             ? 'border-red-500'
             : disabled
@@ -48,7 +48,7 @@ export default function TextInput({
         }`}
       >
         {!isLoading ? (
-          <>
+          <div>
             <input
               value={value}
               onChange={onChange}
@@ -68,7 +68,7 @@ export default function TextInput({
                 <CancelIcon />
               </button>
             )}
-          </>
+          </div>
         ) : (
           <div className="flex w-full items-center justify-center">
             <Spinner />

@@ -6,12 +6,16 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMenu } from '../hooks/useMenu';
 import { useStore } from '../hooks/useStore';
+import * as Dialog from '@radix-ui/react-dialog';
+import ManageBooth from '@/components/pages/store/ManageBooth';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 function AccountSection() {
   const { updateStoreName, updateStoreAccount, getUserInfo, account, name } =
     useStore();
+
+  const [showManageBooth, setShowManageBooth] = useState(false);
 
   const [isWriteAccount, setIsWriteAccount] = useState(false);
   const [isWriteStoreName, setIsWriteStoreName] = useState(false);
@@ -49,93 +53,33 @@ function AccountSection() {
   };
 
   return (
-    <div>
-      <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
-        <h2 className="text-st-2 mb-3">부스 이름</h2>
+    <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
+      <div>
+        <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
+          <h2 className="text-st-2 mb-3">부스 관리하기</h2>
 
-        {isWriteStoreName ? (
           <div className="space-y-3">
-            <TextInput
-              placeholder="부스 이름을 입력해주세요."
-              value={storeNameInput}
-              onChange={(e) => setStoreNameInput(e.target.value)}
-              limitHide
+            <CtaButton
+              text="메뉴 관리"
+              color="white"
+              size="small"
+              onClick={() => setShowManageBooth(true)}
             />
-            <div className="flex justify-end gap-2">
-              <CtaButton
-                text="취소"
-                color="white"
-                size="small"
-                onClick={handleCancelName}
-              />
-              <CtaButton
-                text="저장"
-                color="green"
-                size="small"
-                onClick={handleSaveName}
-              />
-            </div>
           </div>
-        ) : (
-          <div>
-            <div className="text-b-1">{name || '등록된 이름이 없습니다.'}</div>
-            <div className="absolute top-3 right-4">
-              <CtaButton
-                text={name ? '수정하기' : '등록하기'}
-                color="white"
-                size="small"
-                width="fit"
-                onClick={() => setIsWriteStoreName(true)}
-              />
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
 
-      <div className="relative rounded-2xl bg-gray-100 p-4 shadow-sm">
-        <h2 className="text-st-2 mb-3">계좌번호</h2>
-
-        {isWriteAccount ? (
-          <div className="space-y-3">
-            <TextInput
-              placeholder="ex. 은행이름 계좌번호"
-              value={accountInput}
-              onChange={(e) => setAccountInput(e.target.value)}
-              limitHide
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/30" />
+          <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
+            <ManageBooth
+              onClose={() => {
+                setShowManageBooth(false);
+              }}
             />
-            <div className="flex justify-end gap-2">
-              <CtaButton
-                text="취소"
-                color="white"
-                size="small"
-                onClick={handleCancelAccount}
-              />
-              <CtaButton
-                text="저장"
-                color="green"
-                size="small"
-                onClick={handleSaveAccount}
-              />
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div className="text-b-1">
-              {account || '등록된 계좌가 없습니다.'}
-            </div>
-            <div className="absolute top-3 right-4">
-              <CtaButton
-                text={account ? '수정하기' : '등록하기'}
-                color="white"
-                size="small"
-                width="fit"
-                onClick={() => setIsWriteAccount(true)}
-              />
-            </div>
-          </div>
-        )}
+          </Dialog.Content>
+        </Dialog.Portal>
       </div>
-    </div>
+    </Dialog.Root>
   );
 }
 
