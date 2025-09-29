@@ -13,14 +13,27 @@ const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 function AccountSection() {
   const [showManageBooth, setShowManageBooth] = useState(false);
+  const [showManageBooth, setShowManageBooth] = useState(false);
 
   return (
     <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
       <div>
         <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
           <h2 className="text-st-2 mb-3">부스 관리하기</h2>
+    <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
+      <div>
+        <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
+          <h2 className="text-st-2 mb-3">부스 관리하기</h2>
 
           <div className="space-y-3">
+            <CtaButton
+              text="메뉴 관리"
+              color="white"
+              size="small"
+              onClick={() => setShowManageBooth(true)}
+            />
+          </div>
+        </div>
             <CtaButton
               text="메뉴 관리"
               color="white"
@@ -40,7 +53,18 @@ function AccountSection() {
             />
           </Dialog.Content>
         </Dialog.Portal>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/30" />
+          <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
+            <ManageBooth
+              onClose={() => {
+                setShowManageBooth(false);
+              }}
+            />
+          </Dialog.Content>
+        </Dialog.Portal>
       </div>
+    </Dialog.Root>
     </Dialog.Root>
   );
 }
