@@ -1,18 +1,14 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import EventIcon from '@/assets/icons/ic_eventbox.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
-// import { useStore } from '@/hooks/useStore';
 
 interface Props {
+  event: string;
   open: boolean;
   onClose: () => void;
 }
 
-export default function EventModal({ open, onClose }: Props) {
-  // const { event } = useStore();
-  const event =
-    '주문해주시는 모든 분들께 시원한 음료수를 서비스로 드립니다!\n 주문하시는 모든 분들께 시원한 음료수를 서비스로 드립니다!';
-
+export default function EventModal({ open, onClose, event }: Props) {
   const eventLines = event.split('\n');
   return (
     <Dialog.Root open={open}>

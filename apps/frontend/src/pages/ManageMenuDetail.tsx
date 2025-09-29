@@ -20,11 +20,11 @@ export default function ManageMenuDetail() {
   const {
     menus,
     createMenu,
-    uploadMenuImage,
     deleteMenuImage,
     fetchMenu,
     deleteMenu,
     updateMenu,
+    updateMenuImage,
   } = useMenu();
 
   const menuId = Number(useParams().menuId);
@@ -78,7 +78,17 @@ export default function ManageMenuDetail() {
     }
   };
 
-  const currentImage = imagePreview || image;
+  const getCurrentImageUrl = () => {
+    if (imagePreview) {
+      return imagePreview;
+    }
+    if (image) {
+      return `${IMAGE_PREFIX}${image}`;
+    }
+    return null;
+  };
+
+  const currentImage = getCurrentImageUrl();
 
   const handleUpdateMenu = async () => {
     await updateMenu(menuId, {
@@ -88,25 +98,12 @@ export default function ManageMenuDetail() {
       margin: Number(margin),
     });
 
-    // 2. 새로운 이미지 파일이 선택되었는지 확인합니다.
     if (imageFile) {
-      // 2-1. (요청사항) 기존 이미지를 먼저 삭제합니다.
-      //       오류가 발생해도 다음 로직이 실행되도록 try-catch를 사용할 수 있습니다.
-      try {
-        await deleteMenuImage(menuId);
-      } catch (error) {
-        return false;
-      }
-
-      // 2-2. 새로운 이미지를 업로드합니다.
-      await uploadMenuImage(menuId, imageFile);
-      return true;
+      await updateMenuImage(menuId, imageFile);
     }
 
-    // 3. 모든 과정이 끝난 후, 최신 정보로 UI를 동기화합니다.
     await fetchMenu();
 
-    // 4. 수정 모드를 종료하고, 파일 상태를 초기화합니다.
     setIsEditingMode(false);
     setImageFile(null);
     setImagePreview(null);
@@ -133,7 +130,7 @@ export default function ManageMenuDetail() {
     });
 
     if (newMenu && imageFile) {
-      await uploadMenuImage(newMenu.id, imageFile);
+      await updateMenuImage(newMenu.id, imageFile);
     }
     navigate(ROUTES.STORE);
   };
@@ -149,6 +146,50 @@ export default function ManageMenuDetail() {
     setImage(menus.find((menu) => menu.id === menuId)?.image ?? null);
     setMargin(menus.find((menu) => menu.id === menuId)?.margin ?? '');
   }, [menus]);
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setPrice(value);
+    }
+  };
+
+  const handleMarginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    // 사용자가 입력 필드를 완전히 비울 수 있도록 허용
+    if (value === '') {
+      setMargin('');
+      return;
+    }
+
+    // 숫자 이외의 문자는 입력되지 않도록 방지
+    if (!/^\d*$/.test(value)) {
+      return;
+    }
+
+    const numValue = parseInt(value, 10);
+
+    // 0 ~ 100 사이의 값으로 보정
+    if (numValue > 100) {
+      setMargin(100); // 100을 초과하면 100으로 고정
+    } else {
+      // 0 미만은 입력될 수 없으므로, 그 외의 경우는 그대로 설정
+      // (parseInt가 '05' 같은 값을 5로 바꿔주므로 바로 state에 넣어도 안전)
+      setMargin(numValue);
+    }
+  };
+
+  const handlePriceBlur = () => {
+    const numericValue = Number(price) || 0;
+    setPrice(numericValue);
+  };
+
+  const handleMarginBlur = () => {
+    if (margin === '') {
+      setMargin(0);
+    }
+  };
 
   if (isEditMode) {
     return (
@@ -226,6 +267,8 @@ export default function ManageMenuDetail() {
               <p className="text-st-2 px-10 text-black">
                 {Number(price).toLocaleString()}원
               </p>
+
+              <p className="text-b-1 mt-4 px-10">마진 {margin}%</p>
             </>
           ) : (
             <div className="flex flex-col gap-2 px-8">
@@ -248,14 +291,16 @@ export default function ManageMenuDetail() {
                 placeholder="메뉴 가격을 입력해주세요."
                 limitHide
                 value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                onChange={handlePriceChange}
+                onBlur={handlePriceBlur}
               />
               <TextInput
                 label="마진율"
                 placeholder="메뉴 마진율을 입력해주세요."
                 limitHide
                 value={margin}
-                onChange={(e) => setMargin(Number(e.target.value))}
+                onChange={handleMarginChange}
+                onBlur={handleMarginBlur}
               />
             </div>
           )}
@@ -316,7 +361,7 @@ export default function ManageMenuDetail() {
             {imagePreview ? (
               <>
                 <img
-                  src={`${IMAGE_PREFIX}${imagePreview}`}
+                  src={`${imagePreview}`}
                   alt="미리보기"
                   className="h-full w-full rounded-2xl object-cover"
                 />
@@ -367,14 +412,16 @@ export default function ManageMenuDetail() {
           placeholder="메뉴 가격을 입력해주세요."
           limitHide
           value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
+          onChange={handlePriceChange}
+          onBlur={handlePriceBlur}
         />
         <TextInput
           label="마진율"
           placeholder="메뉴 마진율을 입력해주세요."
           limitHide
           value={margin}
-          onChange={(e) => setMargin(Number(e.target.value))}
+          onChange={handleMarginChange}
+          onBlur={handleMarginBlur}
         />
         <BottomSpace />
       </main>

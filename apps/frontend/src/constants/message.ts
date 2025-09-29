@@ -23,4 +23,8 @@ export const SUCCESS_MESSAGES = {
   waitingCreateSuccess: '대기열에 등록되었습니다 !',
   storeNoticeUpdateSuccess: '공지사항이 수정되었습니다.',
   storeEventUpdateSuccess: '이벤트가 수정되었습니다.',
+  uploadMenuImageSuccess: '메뉴 이미지가 업로드되었습니다.',
+  serviceRequestCancelSuccess: '요청이 취소되었습니다 !',
+  serviceRequestSuccess: '요청이 확인되었습니다 !',
+  serviceRequestCompleteSuccess: '요청을 처리했습니다 !',
 };

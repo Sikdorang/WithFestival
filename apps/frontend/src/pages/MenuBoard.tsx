@@ -162,9 +162,7 @@ function MenuList({
 export default function MenuBoard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { getUserInfoByUserId, name } = useStore();
-  const notice =
-    '본 부스는 미리보기 모드입니다.\n 주문 시 주문하기 버튼을 눌러주세요. \n 최대 6인까지 앉을수 있음니다';
+  const { getUserInfoByUserId, name, notice, event } = useStore();
   const { orderItems } = useOrderStore();
   const isPreview = localStorage.getItem(KEYS.IS_PREVIEW);
 
@@ -199,6 +197,7 @@ export default function MenuBoard() {
       <EventModal
         open={isEventModalOpen}
         onClose={() => setIsEventModalOpen(false)}
+        event={event || ''}
       />
 
       <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>

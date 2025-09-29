@@ -1,72 +1,21 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import Navigator from '@/components/common/layouts/Navigator';
 import CustomerInquiryItem from './CustomerInquiryItem';
-import { IInquiry } from '@/types/global';
+import { IMessage } from '@/types/global';
+import { useOrder } from '@/hooks/useOrder';
+import { useEffect } from 'react';
 
 interface Props {
   onClose: () => void;
 }
 
-const inquiry: IInquiry[] = [
-  {
-    id: 1,
-    message: '안녕하세요',
-    tableNumber: '1',
-    time: '12:01',
-    completed: false,
-  },
-  {
-    id: 2,
-    message: '버즈의 가시 틀어줘요',
-    tableNumber: '2',
-    time: '12:02',
-    completed: false,
-  },
-  {
-    id: 3,
-    message: '물티슈 주세요',
-    tableNumber: '3',
-    time: '12:03',
-    completed: true,
-  },
-  {
-    id: 4,
-    message: '인생이 힘들어요',
-    tableNumber: '4',
-    time: '12:04',
-    completed: true,
-  },
-  {
-    id: 5,
-    message: '안녕하세요',
-    tableNumber: '1',
-    time: '12:01',
-    completed: true,
-  },
-  {
-    id: 6,
-    message: '버즈의 가시 틀어줘요',
-    tableNumber: '2',
-    time: '12:02',
-    completed: true,
-  },
-  {
-    id: 7,
-    message: '물티슈 주세요',
-    tableNumber: '3',
-    time: '12:03',
-    completed: true,
-  },
-  {
-    id: 8,
-    message: '인생이 힘들어요',
-    tableNumber: '4',
-    time: '12:04',
-    completed: true,
-  },
-];
-
 export default function CustomerInquiry({ onClose }: Props) {
+  const { getMessages, messages, checkMessage } = useOrder();
+
+  useEffect(() => {
+    getMessages();
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       <Navigator
@@ -76,8 +25,12 @@ export default function CustomerInquiry({ onClose }: Props) {
       />
 
       <main className="flex flex-grow flex-col gap-3 p-4">
-        {inquiry.map((item: IInquiry) => (
-          <CustomerInquiryItem key={item.id} inquiry={item} />
+        {(messages || []).map((item: IMessage) => (
+          <CustomerInquiryItem
+            key={item.id}
+            inquiry={item}
+            checkMessage={checkMessage}
+          />
         ))}
       </main>
     </div>

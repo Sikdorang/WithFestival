@@ -1,5 +1,10 @@
 import axiosInstance from '.';
 import { CreateMenuDto } from '../types/payload/menu';
+import axios from 'axios';
+
+export type PresignedResponse = {
+  url: string;
+};
 
 export const menuAPI = {
   getMenu: async () => {
@@ -17,21 +22,6 @@ export const menuAPI = {
     return response.data;
   },
 
-  uploadMenuImage: async (menuId: number, imageFile: File) => {
-    const formData = new FormData();
-    formData.append('image', imageFile);
-    const response = await axiosInstance.post(
-      `/menu/${menuId}/image`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
-    );
-    return response.data;
-  },
-
   deleteMenuImage: async (menuId: number) => {
     const response = await axiosInstance.delete(`/menu/${menuId}/image`);
     return response.data;
@@ -45,5 +35,17 @@ export const menuAPI = {
   deleteMenu: async (menuId: number) => {
     const response = await axiosInstance.delete(`/menu/${menuId}`);
     return response.data;
+  },
+
+  getImageUploadUrl: async (menuId: number, body: { fileName: string }) => {
+    return axiosInstance.patch(`/menu/${menuId}/image`, body);
+  },
+
+  uploadToS3: async (uploadUrl: string, file: File) => {
+    return axios.put(uploadUrl, file, {
+      headers: {
+        'Content-Type': file.type,
+      },
+    });
   },
 };

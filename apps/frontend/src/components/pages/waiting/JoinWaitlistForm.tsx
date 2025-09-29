@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
 import { IWaitingListItem } from '../../../types/global';
 import NoticeView from '../board/NoticeView';
+import { useStore } from '@/hooks/useStore';
 
 const waitlistSchema = z.object({
   name: z.string().min(1, '예약자 이름은 필수입니다.'),
@@ -19,13 +20,11 @@ const waitlistSchema = z.object({
 
 export default function JoinWaitlistForm() {
   const { createWaiting, getWaitingByUserId } = useWaiting();
+  const { notice, getUserInfoByUserId } = useStore();
   const location = useLocation();
   const userData =
     location.state?.userData ||
     JSON.parse(sessionStorage.getItem('userData') || '{}');
-
-  const notice =
-    '본 부스는 미리보기 모드입니다.\n 주문 시 주문하기 버튼을 눌러주세요. \n 최대 6인까지 앉을수 있음니다';
 
   useEffect(() => {
     const fetchWaitingInfos = async () => {
@@ -33,6 +32,7 @@ export default function JoinWaitlistForm() {
       setWaitingInfos(waitingInfos);
     };
     fetchWaitingInfos();
+    getUserInfoByUserId(userData.userId);
   }, []);
 
   const [waitingInfos, setWaitingInfos] = useState<{
