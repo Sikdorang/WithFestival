@@ -16,6 +16,7 @@ import { useStore } from '../hooks/useStore';
 import NoticeView from '@/components/pages/board/NoticeView';
 import CtaButton from '@/components/common/buttons/CtaButton';
 import EventModal from '@/components/pages/board/EventModal';
+import RequestModal from '@/components/pages/board/RequestModal';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 interface StoreInfoSectionProps {
@@ -31,8 +32,17 @@ function StoreInfoSection({
   tableNumber,
   notice,
 }: StoreInfoSectionProps) {
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [requestType, setRequestType] = useState<'message' | 'call'>('message');
+
   return (
     <div>
+      <RequestModal
+        open={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
+        type={requestType}
+      />
+
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
           <div className="text-b-2 text-gray-300">{boothName}</div>
@@ -54,6 +64,10 @@ function StoreInfoSection({
               color="white"
               className="text-c-1"
               radius="_2xl"
+              onClick={() => {
+                setRequestType('message');
+                setIsRequestModalOpen(true);
+              }}
             />
             <CtaButton
               text="직원 호출"
@@ -62,6 +76,10 @@ function StoreInfoSection({
               color="white"
               className="text-c-1"
               radius="_2xl"
+              onClick={() => {
+                setRequestType('call');
+                setIsRequestModalOpen(true);
+              }}
             />
           </div>
         )}
@@ -70,22 +88,6 @@ function StoreInfoSection({
     </div>
   );
 }
-
-// function RussianRoulette() {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div
-//       className="bg-primary-100 mt-4 flex items-center justify-center gap-2 rounded-xl py-4"
-//       onClick={() => {
-//         navigate(ROUTES.GAMES.DETAIL('1'));
-//       }}
-//     >
-//       <BombIcon />
-//       <div className="text-b-1">결제할 사람 룰렛 돌리기</div>
-//     </div>
-//   );
-// }
 
 function MenuItem({
   name,

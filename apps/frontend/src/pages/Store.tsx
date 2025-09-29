@@ -7,19 +7,14 @@ import { useMenu } from '../hooks/useMenu';
 import * as Dialog from '@radix-ui/react-dialog';
 import ManageBooth from '@/components/pages/store/ManageBooth';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
-import EmptyMenusIcon from '@/assets/icons/ic_empty_paper.svg?react';
+import EmptyMenusIcon from '@/assets/icons/ic_empty_board.svg?react';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 function AccountSection() {
   const [showManageBooth, setShowManageBooth] = useState(false);
-  const [showManageBooth, setShowManageBooth] = useState(false);
 
   return (
-    <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
-      <div>
-        <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
-          <h2 className="text-st-2 mb-3">부스 관리하기</h2>
     <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
       <div>
         <div className="relative mb-4 rounded-2xl bg-gray-100 p-4 shadow-sm">
@@ -34,14 +29,6 @@ function AccountSection() {
             />
           </div>
         </div>
-            <CtaButton
-              text="메뉴 관리"
-              color="white"
-              size="small"
-              onClick={() => setShowManageBooth(true)}
-            />
-          </div>
-        </div>
 
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/30" />
@@ -53,18 +40,7 @@ function AccountSection() {
             />
           </Dialog.Content>
         </Dialog.Portal>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/30" />
-          <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
-            <ManageBooth
-              onClose={() => {
-                setShowManageBooth(false);
-              }}
-            />
-          </Dialog.Content>
-        </Dialog.Portal>
       </div>
-    </Dialog.Root>
     </Dialog.Root>
   );
 }
@@ -111,11 +87,13 @@ function MenuList() {
   return (
     <div className="rounded-lg bg-white p-4">
       {menus.length === 0 ? (
-        <EmptyPlaceHolder
-          image={<EmptyMenusIcon />}
-          text="메뉴가 없습니다."
-          textClassName="text-black"
-        />
+        <div className="flex min-h-[300px] items-center justify-center">
+          <EmptyPlaceHolder
+            image={<EmptyMenusIcon />}
+            text="메뉴가 없습니다."
+            textClassName="text-gray-300"
+          />
+        </div>
       ) : (
         menus.map((item) => (
           <MenuItem

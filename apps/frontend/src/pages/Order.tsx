@@ -1,7 +1,7 @@
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import { OrderCard } from '@/components/pages/order/OrderCard';
-import { TopBar } from '@/components/pages/order/TopBar';
+import OrderTopBar from '@/components/pages/order/OrderTopBar';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect, useState } from 'react';
 import EmptyPendingIcon from '@/assets/icons/ic_empty_paper.svg?react';
@@ -27,7 +27,7 @@ export default function Order() {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-400">
-      <TopBar
+      <OrderTopBar
         orderCount={
           orderType === 'pending'
             ? pendingOrders?.count || 0

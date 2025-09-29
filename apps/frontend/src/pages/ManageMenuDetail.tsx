@@ -5,6 +5,7 @@ import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import Navigator from '@/components/common/layouts/Navigator';
+import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CtaButton from '../components/common/buttons/CtaButton';
@@ -23,11 +24,12 @@ export default function ManageMenuDetail() {
     deleteMenuImage,
     fetchMenu,
     deleteMenu,
+    updateMenu,
   } = useMenu();
 
   const menuId = Number(useParams().menuId);
   const isEditMode = menuId !== 0;
-  const [isEditingMode] = useState(false);
+  const [isEditingMode, setIsEditingMode] = useState(false);
 
   const [menu, setMenu] = useState<string>(
     menus.find((menu) => menu.id === menuId)?.menu ?? '',
@@ -41,7 +43,9 @@ export default function ManageMenuDetail() {
   const [image, setImage] = useState<string | null>(
     menus.find((menu) => menu.id === menuId)?.image ?? null,
   );
-
+  const [margin, setMargin] = useState<number | string>(
+    menus.find((menu) => menu.id === menuId)?.margin ?? '',
+  );
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -76,36 +80,38 @@ export default function ManageMenuDetail() {
 
   const currentImage = imagePreview || image;
 
-  // const handleUpdateMenu = async () => {
-  //   await updateMenu(menuId, {
-  //     menu,
-  //     description,
-  //     price: Number(price),
-  //   });
+  const handleUpdateMenu = async () => {
+    await updateMenu(menuId, {
+      menu,
+      description,
+      price: Number(price),
+      margin: Number(margin),
+    });
 
-  //   // 2. 새로운 이미지 파일이 선택되었는지 확인합니다.
-  //   if (imageFile) {
-  //     // 2-1. (요청사항) 기존 이미지를 먼저 삭제합니다.
-  //     //       오류가 발생해도 다음 로직이 실행되도록 try-catch를 사용할 수 있습니다.
-  //     try {
-  //       await deleteMenuImage(menuId);
-  //     } catch (error) {
-  //       // 여기서 사용자에게 알림을 주거나 로직을 중단할 수 있습니다.
-  //     }
+    // 2. 새로운 이미지 파일이 선택되었는지 확인합니다.
+    if (imageFile) {
+      // 2-1. (요청사항) 기존 이미지를 먼저 삭제합니다.
+      //       오류가 발생해도 다음 로직이 실행되도록 try-catch를 사용할 수 있습니다.
+      try {
+        await deleteMenuImage(menuId);
+      } catch (error) {
+        return false;
+      }
 
-  //     // 2-2. 새로운 이미지를 업로드합니다.
-  //     await uploadMenuImage(menuId, imageFile);
-  //   }
+      // 2-2. 새로운 이미지를 업로드합니다.
+      await uploadMenuImage(menuId, imageFile);
+      return true;
+    }
 
-  //   // 3. 모든 과정이 끝난 후, 최신 정보로 UI를 동기화합니다.
-  //   await fetchMenu();
+    // 3. 모든 과정이 끝난 후, 최신 정보로 UI를 동기화합니다.
+    await fetchMenu();
 
-  //   // 4. 수정 모드를 종료하고, 파일 상태를 초기화합니다.
-  //   setIsEditingMode(false);
-  //   setImageFile(null);
-  //   setImagePreview(null);
-  // };
-  // 2. 이미지 삭제 핸들러 수정: API 호출 후 상태를 직접 업데이트합니다.
+    // 4. 수정 모드를 종료하고, 파일 상태를 초기화합니다.
+    setIsEditingMode(false);
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleDeleteImage = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     const success = await deleteMenuImage(menuId);
@@ -123,6 +129,7 @@ export default function ManageMenuDetail() {
       menu,
       description,
       price: Number(price),
+      margin: Number(margin),
     });
 
     if (newMenu && imageFile) {
@@ -140,6 +147,7 @@ export default function ManageMenuDetail() {
     setDescription(menus.find((menu) => menu.id === menuId)?.description ?? '');
     setPrice(menus.find((menu) => menu.id === menuId)?.price ?? '');
     setImage(menus.find((menu) => menu.id === menuId)?.image ?? null);
+    setMargin(menus.find((menu) => menu.id === menuId)?.margin ?? '');
   }, [menus]);
 
   if (isEditMode) {
@@ -242,8 +250,16 @@ export default function ManageMenuDetail() {
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
               />
+              <TextInput
+                label="마진율"
+                placeholder="메뉴 마진율을 입력해주세요."
+                limitHide
+                value={margin}
+                onChange={(e) => setMargin(Number(e.target.value))}
+              />
             </div>
           )}
+          <BottomSpace />
         </main>
 
         <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">
@@ -259,7 +275,7 @@ export default function ManageMenuDetail() {
             <CtaButton text="삭제하기" radius="xl" color="red" width="fit" />
           </DeleteConfirmModal>
 
-          {/* <div className="flex-1">
+          <div className="flex-1">
             <CtaButton
               text={isEditingMode ? '수정완료' : '수정하기'}
               radius="xl"
@@ -272,7 +288,7 @@ export default function ManageMenuDetail() {
                 }
               }}
             />
-          </div> */}
+          </div>
         </footer>
       </BaseResponsiveLayout>
     );
@@ -353,6 +369,14 @@ export default function ManageMenuDetail() {
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
         />
+        <TextInput
+          label="마진율"
+          placeholder="메뉴 마진율을 입력해주세요."
+          limitHide
+          value={margin}
+          onChange={(e) => setMargin(Number(e.target.value))}
+        />
+        <BottomSpace />
       </main>
 
       <footer className="fixed right-0 bottom-0 left-0 flex justify-end gap-2 p-4">

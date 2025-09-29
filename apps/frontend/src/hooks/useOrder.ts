@@ -1,11 +1,9 @@
 import { handelError } from '@/apis/errorhandler';
 import { orderAPI } from '@/apis/order';
-import { ROUTES } from '@/constants/routes';
 import { useOrderStore } from '@/stores/orderStore';
 import { OrderListApiResponse } from '@/types/global';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 
 export const useOrder = () => {
   const [allOrders, setAllOrders] = useState<OrderListApiResponse>();
@@ -14,7 +12,6 @@ export const useOrder = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
-  const navigate = useNavigate();
   const { orderItems, clearOrder } = useOrderStore();
 
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
@@ -51,10 +48,7 @@ export const useOrder = () => {
       };
 
       await orderAPI.createOrder(payload);
-
-      toast.success('주문이 성공적으로 완료되었습니다!');
       clearOrder();
-      navigate(ROUTES.MENU_BOARD);
       return true;
     } catch (error: any) {
       const errorMessage =
@@ -78,6 +72,7 @@ export const useOrder = () => {
   const deleteOrder = useCallback(async (orderId: number) => {
     try {
       await orderAPI.deleteOrder(orderId);
+      await Promise.all([getPendingOrders()]);
     } catch (error) {
       handelError(error);
     }

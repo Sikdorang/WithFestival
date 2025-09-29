@@ -1,7 +1,9 @@
-import EmptyImage from '@/assets/icons/ic_circle_plus.svg?react';
+import EmptyImage from '@/assets/icons/ic_empty_paper.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import OrderDashBoard from '@/components/pages/history/OrderDashBoard';
 import { OrderBill } from '@/components/pages/order/OrderBill';
+import TopBar from '@/components/pages/waiting/TopBar';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect } from 'react';
 
@@ -14,14 +16,11 @@ export default function History() {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-400">
-      <header className="bg-white p-4">
-        <h1 className="text-st-2">
-          전체 주문 내역{' '}
-          <span className="text-primary-300">{allOrders?.count || 0}</span>
-        </h1>
-      </header>
+      <TopBar title="전체 주문 내역" value={allOrders?.count || 0} />
 
       <div className="relative flex flex-1 flex-col gap-4 p-4">
+        <OrderDashBoard allOrders={allOrders || null} />
+
         {allOrders?.count && allOrders.count > 0 ? (
           allOrders.data.map((order) => (
             <OrderBill key={order.id} order={order} />

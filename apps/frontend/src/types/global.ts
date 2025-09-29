@@ -4,6 +4,7 @@ export interface Menu {
   price: number;
   description: string;
   image: string;
+  margin: number;
 }
 
 export interface Order {
@@ -46,6 +47,7 @@ export interface orderUsers {
   price: number;
   count: number;
   orderId: number;
+  margin: number;
 }
 
 export interface OrderSummary {

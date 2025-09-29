@@ -1,5 +1,4 @@
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
-import BombIcon from '@/assets/icons/ic_bomb.svg?react';
 import CancelIcon from '@/assets/icons/ic_cancel.svg?react';
 import CopyIcon from '@/assets/icons/ic_copy.svg?react';
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
@@ -19,6 +18,8 @@ import { ROUTES } from '../constants/routes';
 import { useStore } from '../hooks/useStore';
 import Lottie from 'lottie-react';
 import CheckAnimation from '@/assets/lotties/lottie_check.json';
+import FingerSnapIcon from '@/assets/icons/ic_finger_snapping.svg?react';
+import GoNextIcon from '@/assets/icons/ic_arrow_right.svg?react';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -35,13 +36,21 @@ function RussianRoulette() {
 
   return (
     <div
-      className="bg-primary-100 mt-4 flex items-center justify-center gap-2 rounded-xl py-4"
+      className="bg-primary-100 mt-5 flex items-center justify-between gap-2 rounded-xl px-4 py-4"
       onClick={() => {
         navigate(ROUTES.GAMES.DETAIL('1'));
       }}
     >
-      <BombIcon />
-      <div className="text-b-1">결제할 사람 룰렛 돌리기</div>
+      <div className="flex items-center gap-2">
+        <FingerSnapIcon width={45} height={45} />
+        <div className="flex flex-col gap-1">
+          <div className="text-st-2 text-black">오늘 누가 결제할래 ?</div>
+          <div className="text-b-2 text-gray-400">
+            지금 담은 메뉴 쏠 사람 정하러 가기
+          </div>
+        </div>
+      </div>
+      <GoNextIcon color="#20E988" />
     </div>
   );
 }
@@ -128,13 +137,52 @@ function DepositorStep({
         <CtaButton
           text="입력 완료"
           onClick={() => {
-            setDepositorName(depositorName);
-            setDepositorName('');
             onSubmit();
           }}
           disabled={depositorName.trim() === ''}
           radius="_2xl"
         />
+      </footer>
+    </div>
+  );
+}
+
+function CompleteStep() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center pb-35 text-center">
+      <div className="flex w-full flex-col items-center px-8">
+        <Lottie
+          animationData={CheckAnimation}
+          loop={false}
+          style={{ width: 64, height: 64 }}
+        />
+        <div className="text-t-1 mb-1">주문이 완료됐어요</div>
+        <div className="text-b-1">
+          음식이 조리될 때 까지
+          <br />
+          잠시 기다려주세요 !
+        </div>
+      </div>
+      <footer className="fixed right-0 bottom-0 left-0 z-10 flex flex-col items-center gap-4 bg-white p-4">
+        <div className="flex items-center gap-2">
+          <FingerSnapIcon />
+          <div className="text-c-1">다음 메뉴 쏠 사람 뽑아보자 !</div>
+        </div>
+        <CtaButton
+          text="러시안 룰렛 돌리러 가기"
+          color="green"
+          onClick={() => navigate(ROUTES.GAMES.DETAIL('1'))}
+          radius="_3xl"
+        />
+
+        <div
+          className="text-b-1 py-1 text-gray-200"
+          onClick={() => navigate(ROUTES.MENU_BOARD)}
+        >
+          홈으로 가기
+        </div>
       </footer>
     </div>
   );
@@ -200,28 +248,10 @@ function MenuList({ items }: { items: OrderItem[] }) {
   );
 }
 
-function CompleteStep() {
-  const navigate = useNavigate();
-
-  return (
-    <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
-      <div className="flex w-full flex-col items-center gap-4 px-8">
-        <Lottie
-          animationData={CheckAnimation}
-          loop={false}
-          style={{ width: 64, height: 64 }}
-        />
-        <div className="text-t-1 mb-2">주문이 완료되었습니다.</div>
-        <CtaButton text="확인" onClick={() => navigate(ROUTES.MENU_BOARD)} />
-      </div>
-    </div>
-  );
-}
-
 export default function Ordering() {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
   const navigate = useNavigate();
-  const { orderItems, clearOrder } = useOrderStore();
+  const { orderItems } = useOrderStore();
   const { createOrder } = useOrder();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<
@@ -235,14 +265,9 @@ export default function Ordering() {
   );
 
   const handleFinalSubmit = async () => {
-    const success = await createOrder(depositorName);
-
-    if (success) {
-      clearOrder();
-      setIsModalOpen(false);
-      setModalStep('complete');
-      navigate(ROUTES.MENU_BOARD);
-    }
+    await createOrder(depositorName);
+    setModalStep('complete');
+    setDepositorName('');
   };
 
   if (userData.userId === undefined) {
@@ -257,6 +282,7 @@ export default function Ordering() {
           onLeftPress={() => navigate(ROUTES.MENU_BOARD)}
           center={<div className="text-st-1">주문하기</div>}
         />
+
         <main className="pb-24">
           <RussianRoulette />
           <h2 className="text-st-2 mt-6 mb-2">주문 내역</h2>
@@ -288,23 +314,23 @@ export default function Ordering() {
           <Dialog.Description className="sr-only">
             송금하기 또는 입금자명 입력
           </Dialog.Description>
-          <Navigator
-            left={<GoBackIcon />}
-            onLeftPress={() => {
-              if (modalStep === 'depositor') setModalStep('remit');
-              else if (modalStep === 'complete') setModalStep('remit');
-              else setIsModalOpen(false);
-            }}
-            center={
-              <div className="text-st-1">
-                {modalStep === 'remit'
-                  ? '송금하기'
-                  : modalStep === 'depositor'
-                    ? '입금자명 입력'
-                    : '주문 완료'}
-              </div>
-            }
-          />
+          {modalStep === 'complete' ? (
+            <Navigator center={<div className="text-st-1">주문 완료</div>} />
+          ) : (
+            <Navigator
+              left={<GoBackIcon />}
+              onLeftPress={() => {
+                if (modalStep === 'depositor') setModalStep('remit');
+                else setIsModalOpen(false);
+              }}
+              center={
+                <div className="text-st-1">
+                  {modalStep === 'remit' ? '송금하기' : '입금자명 입력'}
+                </div>
+              }
+            />
+          )}
+
           {modalStep === 'remit' ? (
             <RemitStep
               totalAmount={totalAmount}
