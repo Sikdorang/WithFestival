@@ -10,6 +10,14 @@ interface UpdateBoothNameDto {
   name: string;
 }
 
+interface UpdateNoticeDto {
+  notice: string;
+}
+
+interface UpdateEventDto {
+  event: string;
+}
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
@@ -22,6 +30,8 @@ export class UserService {
         code: true,
         name: true,
         account: true,
+        notice: true,
+        event: true,
       },
     });
   }
@@ -37,6 +47,8 @@ export class UserService {
         code: true,
         name: true,
         account: true,
+        notice: true,
+        event: true,
       },
     });
   }
@@ -52,6 +64,42 @@ export class UserService {
         code: true,
         name: true,
         account: true,
+        notice: true,
+        event: true,
+      },
+    });
+  }
+
+  async updateNotice(userId: number, data: UpdateNoticeDto) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        notice: data.notice,
+      },
+      select: {
+        id: true,
+        code: true,
+        name: true,
+        account: true,
+        notice: true,
+        event: true,
+      },
+    });
+  }
+
+  async updateEvent(userId: number, data: UpdateEventDto) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        event: data.event,
+      },
+      select: {
+        id: true,
+        code: true,
+        name: true,
+        account: true,
+        notice: true,
+        event: true,
       },
     });
   }

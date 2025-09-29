@@ -6,6 +6,7 @@ interface CreateMenuDto {
   menu: string;
   price: number;
   description?: string;
+  margin?: number;
   userId: number;
 }
 
@@ -13,6 +14,7 @@ interface UpdateMenuDto {
   menu?: string;
   price?: number;
   description?: string;
+  margin?: number;
 }
 
 @Injectable()
@@ -48,6 +50,7 @@ export class MenuService {
         price: data.price,
         image: null, // 이미지는 별도 API로 등록
         description: data.description || null,
+        margin: data.margin || null,
         userid: data.userId,
       },
     });
@@ -87,6 +90,9 @@ export class MenuService {
     }
     if (data.description !== undefined) {
       updateData.description = data.description;
+    }
+    if (data.margin !== undefined) {
+      updateData.margin = data.margin;
     }
 
     return this.prisma.menu.update({

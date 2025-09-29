@@ -13,6 +13,14 @@ interface UpdateBoothNameDto {
   name: string;
 }
 
+interface UpdateNoticeDto {
+  notice: string;
+}
+
+interface UpdateEventDto {
+  event: string;
+}
+
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -90,6 +98,58 @@ export class UserController {
       return {
         success: false,
         message: '부스이름 수정에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Patch('notice')
+  @UseGuards(AuthGuard)
+  async updateNotice(
+    @Body() updateNoticeDto: UpdateNoticeDto,
+    @CurrentUser() user: any,
+  ) {
+    try {
+      const updatedUser = await this.userService.updateNotice(
+        user.id,
+        updateNoticeDto,
+      );
+
+      return {
+        success: true,
+        message: '공지사항이 수정되었습니다.',
+        data: updatedUser,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '공지사항 수정에 실패했습니다.',
+        error: error.message,
+      };
+    }
+  }
+
+  @Patch('event')
+  @UseGuards(AuthGuard)
+  async updateEvent(
+    @Body() updateEventDto: UpdateEventDto,
+    @CurrentUser() user: any,
+  ) {
+    try {
+      const updatedUser = await this.userService.updateEvent(
+        user.id,
+        updateEventDto,
+      );
+
+      return {
+        success: true,
+        message: '이벤트가 수정되었습니다.',
+        data: updatedUser,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: '이벤트 수정에 실패했습니다.',
         error: error.message,
       };
     }
