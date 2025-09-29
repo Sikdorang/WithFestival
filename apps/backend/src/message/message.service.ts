@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { MessageSenderGateway } from '../websocket/message/message-sender.gateway';
 
 interface CreateMessageDto {
   userid: number;
@@ -10,19 +11,46 @@ interface CreateMessageDto {
 
 @Injectable()
 export class MessageService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly messageSenderGateway: MessageSenderGateway,
+  ) {}
 
   async createMessage(createMessageDto: CreateMessageDto) {
     // 현재 시간을 시:분 형태로 가공
     const now = new Date();
     const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-    return this.prisma.message.create({
+    const message = await this.prisma.message.create({
       data: {
         ...createMessageDto,
         time: time,
       },
     });
+
+    // WebSocket으로 메시지 생성 이벤트 발송
+    try {
+      await this.messageSenderGateway.emitMessageCreated(
+        `user-${createMessageDto.userid}`,
+        {
+          messageId: message.id,
+          message: message.message,
+          tableNumber: message.tableNumber,
+          time: message.time,
+          check: message.check,
+        },
+      );
+      console.log(
+        `[MessageService] WebSocket message created event sent for message: ${message.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[MessageService] Failed to send WebSocket message created event:`,
+        error,
+      );
+    }
+
+    return message;
   }
 
   async getMessages(userId: number) {
@@ -37,7 +65,7 @@ export class MessageService {
   }
 
   async updateMessageCheck(messageId: number) {
-    return this.prisma.message.update({
+    const message = await this.prisma.message.update({
       where: {
         id: messageId,
       },
@@ -45,6 +73,30 @@ export class MessageService {
         check: true,
       },
     });
+
+    // WebSocket으로 메시지 체크 이벤트 발송
+    try {
+      await this.messageSenderGateway.emitMessageChecked(
+        `user-${message.userid}`,
+        {
+          messageId: message.id,
+          message: message.message,
+          tableNumber: message.tableNumber,
+          time: message.time,
+          check: message.check,
+        },
+      );
+      console.log(
+        `[MessageService] WebSocket message checked event sent for message: ${message.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[MessageService] Failed to send WebSocket message checked event:`,
+        error,
+      );
+    }
+
+    return message;
   }
 
   async toggleMessageCheck(messageId: number) {

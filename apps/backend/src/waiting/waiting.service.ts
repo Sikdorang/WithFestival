@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { WaitingSenderGateway } from '../websocket/waiting/waiting-sender.gateway';
 
 interface CreateWaitingDto {
   name: string;
@@ -11,10 +12,13 @@ interface CreateWaitingDto {
 
 @Injectable()
 export class WaitingService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly waitingSenderGateway: WaitingSenderGateway,
+  ) {}
 
   async createWaiting(data: CreateWaitingDto) {
-    return this.prisma.waiting.create({
+    const waiting = await this.prisma.waiting.create({
       data: {
         name: data.name,
         people: data.people,
@@ -24,6 +28,31 @@ export class WaitingService {
         processed: false,
       },
     });
+
+    // WebSocket으로 웨이팅 생성 이벤트 발송
+    try {
+      await this.waitingSenderGateway.emitWaitingCreated(
+        `user-${data.userId}`,
+        {
+          waitingId: waiting.id,
+          name: waiting.name,
+          people: waiting.people,
+          phoneNumber: waiting.phoneNumber,
+          time: waiting.time,
+          processed: waiting.processed,
+        },
+      );
+      console.log(
+        `[WaitingService] WebSocket waiting created event sent for waiting: ${waiting.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[WaitingService] Failed to send WebSocket waiting created event:`,
+        error,
+      );
+    }
+
+    return waiting;
   }
 
   async getUserWaitingInfo(userId: number) {
@@ -66,10 +95,32 @@ export class WaitingService {
     }
 
     // processed를 true로 업데이트
-    return this.prisma.waiting.update({
+    const updatedWaiting = await this.prisma.waiting.update({
       where: { id: waitingId },
       data: { processed: true },
     });
+
+    // WebSocket으로 웨이팅 처리 이벤트 발송
+    try {
+      await this.waitingSenderGateway.emitWaitingProcessed(`user-${userId}`, {
+        waitingId: updatedWaiting.id,
+        name: updatedWaiting.name,
+        people: updatedWaiting.people,
+        phoneNumber: updatedWaiting.phoneNumber,
+        time: updatedWaiting.time,
+        processed: updatedWaiting.processed,
+      });
+      console.log(
+        `[WaitingService] WebSocket waiting processed event sent for waiting: ${updatedWaiting.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[WaitingService] Failed to send WebSocket waiting processed event:`,
+        error,
+      );
+    }
+
+    return updatedWaiting;
   }
 
   async getUnprocessedWaitings(userId: number) {
