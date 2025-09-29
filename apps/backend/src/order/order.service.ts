@@ -184,6 +184,8 @@ export class OrderService {
       select: {
         name: true,
         account: true,
+        notice: true,
+        event: true,
       },
     });
   }
