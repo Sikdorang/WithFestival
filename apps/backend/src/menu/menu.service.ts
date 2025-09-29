@@ -107,6 +107,8 @@ export class MenuService {
       select: {
         name: true,
         account: true,
+        notice: true,
+        event: true,
       },
     });
   }

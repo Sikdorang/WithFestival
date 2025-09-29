@@ -113,6 +113,8 @@ export class MenuController {
         data: {
           name: userInfo.name,
           account: userInfo.account,
+          notice: userInfo.notice,
+          event: userInfo.event,
         },
       };
     } catch (error) {

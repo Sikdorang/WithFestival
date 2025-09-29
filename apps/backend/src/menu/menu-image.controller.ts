@@ -13,7 +13,7 @@ export class MenuImageController {
     private readonly uploadService: UploadService,
   ) {}
 
-  @Patch(':menuId/image/upload-url')
+  @Patch(':menuId/image')
   @UseGuards(AuthGuard)
   async getImageUploadUrl(
     @Param('menuId') menuId: string,
