@@ -1,4 +1,4 @@
-import BombIcon from '@/assets/icons/ic_bomb.svg?react';
+// import BombIcon from '@/assets/icons/ic_bomb.svg?react';
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import MenuDetail from '@/components/pages/board/MenuDetail';
 import { ROUTES } from '@/constants/routes';
@@ -71,21 +71,21 @@ function StoreInfoSection({
   );
 }
 
-function RussianRoulette() {
-  const navigate = useNavigate();
+// function RussianRoulette() {
+//   const navigate = useNavigate();
 
-  return (
-    <div
-      className="bg-primary-100 mt-4 flex items-center justify-center gap-2 rounded-xl py-4"
-      onClick={() => {
-        navigate(ROUTES.GAMES.DETAIL('1'));
-      }}
-    >
-      <BombIcon />
-      <div className="text-b-1">결제할 사람 룰렛 돌리기</div>
-    </div>
-  );
-}
+//   return (
+//     <div
+//       className="bg-primary-100 mt-4 flex items-center justify-center gap-2 rounded-xl py-4"
+//       onClick={() => {
+//         navigate(ROUTES.GAMES.DETAIL('1'));
+//       }}
+//     >
+//       <BombIcon />
+//       <div className="text-b-1">결제할 사람 룰렛 돌리기</div>
+//     </div>
+//   );
+// }
 
 function MenuItem({
   name,

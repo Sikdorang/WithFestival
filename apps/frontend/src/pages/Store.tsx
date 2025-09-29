@@ -1,56 +1,17 @@
 import EmptyImage from '@/assets/images/img_empty_image.svg?react';
 import CtaButton from '@/components/common/buttons/CtaButton';
-import TextInput from '@/components/common/inputs/TextInput';
 import { ROUTES } from '@/constants/routes';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMenu } from '../hooks/useMenu';
-import { useStore } from '../hooks/useStore';
+
 import * as Dialog from '@radix-ui/react-dialog';
 import ManageBooth from '@/components/pages/store/ManageBooth';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
 function AccountSection() {
-  const { updateStoreName, updateStoreAccount, getUserInfo, account, name } =
-    useStore();
-
   const [showManageBooth, setShowManageBooth] = useState(false);
-
-  const [isWriteAccount, setIsWriteAccount] = useState(false);
-  const [isWriteStoreName, setIsWriteStoreName] = useState(false);
-
-  const [storeNameInput, setStoreNameInput] = useState('');
-  const [accountInput, setAccountInput] = useState('');
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
-  useEffect(() => {
-    if (name) setStoreNameInput(name);
-    if (account) setAccountInput(account);
-  }, [name, account]);
-
-  const handleSaveName = () => {
-    updateStoreName(storeNameInput);
-    setIsWriteStoreName(false);
-  };
-
-  const handleCancelName = () => {
-    setStoreNameInput(name);
-    setIsWriteStoreName(false);
-  };
-
-  const handleSaveAccount = () => {
-    updateStoreAccount(accountInput);
-    setIsWriteAccount(false);
-  };
-
-  const handleCancelAccount = () => {
-    setAccountInput(account);
-    setIsWriteAccount(false);
-  };
 
   return (
     <Dialog.Root open={showManageBooth} onOpenChange={setShowManageBooth}>
