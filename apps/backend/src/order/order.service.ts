@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
-//import { OrderSenderGateway } from '../websocket/order-sender.gateway';
+import { OrderSenderGateway } from '../websocket/order-sender.gateway';
 
 interface OrderItemDto {
   menu: string;
@@ -22,7 +22,7 @@ interface CreateOrderDto {
 export class OrderService {
   constructor(
     private prisma: PrismaService,
-    //    private readonly orderSenderGateway: OrderSenderGateway,
+    private readonly orderSenderGateway: OrderSenderGateway,
   ) {}
 
   async createOrder(data: CreateOrderDto) {
