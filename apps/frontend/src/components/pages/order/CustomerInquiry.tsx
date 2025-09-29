@@ -71,7 +71,7 @@ export default function CustomerInquiry({ onClose }: Props) {
     <div className="flex h-full flex-col">
       <Navigator
         left={<GoBackIcon />}
-        center={<div className="text-st-1">고객 문의</div>}
+        center={<div className="text-st-1">고객 메세지</div>}
         onLeftPress={onClose}
       />
 

@@ -4,9 +4,10 @@ import { ROUTES } from '@/constants/routes';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMenu } from '../hooks/useMenu';
-
 import * as Dialog from '@radix-ui/react-dialog';
 import ManageBooth from '@/components/pages/store/ManageBooth';
+import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
+import EmptyMenusIcon from '@/assets/icons/ic_empty_board.svg?react';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -85,42 +86,52 @@ function MenuList() {
   }, []);
   return (
     <div className="rounded-lg bg-white p-4">
-      {menus.map((item) => (
-        <MenuItem
-          key={item.id}
-          name={item.menu}
-          price={item.price}
-          image={item.image}
-          onClick={() => {
-            navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
-          }}
-        />
-      ))}
+      {menus.length === 0 ? (
+        <div className="flex min-h-[300px] items-center justify-center">
+          <EmptyPlaceHolder
+            image={<EmptyMenusIcon />}
+            text="메뉴가 없습니다."
+            textClassName="text-gray-300"
+          />
+        </div>
+      ) : (
+        menus.map((item) => (
+          <MenuItem
+            key={item.id}
+            name={item.menu}
+            price={item.price}
+            image={item.image}
+            onClick={() => {
+              navigate(ROUTES.MANAGE_MENUS.DETAIL(item.id.toString()));
+            }}
+          />
+        ))
+      )}
     </div>
   );
 }
 
-// function AddMenuButton() {
-//   const navigate = useNavigate();
-//   return (
-//     <div className="fixed right-4 bottom-24 rounded-xl shadow-lg">
-//       <CtaButton
-//         text="메뉴 추가"
-//         radius="xl"
-//         onClick={() => {
-//           navigate(ROUTES.MANAGE_MENUS.DETAIL('0'));
-//         }}
-//       />
-//     </div>
-//   );
-// }
+function AddMenuButton() {
+  const navigate = useNavigate();
+  return (
+    <div className="fixed right-4 bottom-24 rounded-xl shadow-lg">
+      <CtaButton
+        text="메뉴 추가"
+        radius="xl"
+        onClick={() => {
+          navigate(ROUTES.MANAGE_MENUS.DETAIL('0'));
+        }}
+      />
+    </div>
+  );
+}
 
 export default function Store() {
   return (
     <div className="relative min-h-screen space-y-4 bg-white p-4">
       <AccountSection />
       <MenuList />
-      {/* <AddMenuButton /> */}
+      <AddMenuButton />
     </div>
   );
 }

@@ -26,13 +26,15 @@ export default function EventModal({ open, onClose }: Props) {
                 <div>이벤트에 참여해보세요 !</div>
               </div>
             </Dialog.Title>
-            <Dialog.Description className="text-b-2 items-start text-gray-600">
-              {eventLines.map((line, index) => (
-                <div key={index} className="flex items-start">
-                  <span className="mr-2">・</span>
-                  <span className="flex-1">{line}</span>
-                </div>
-              ))}
+            <Dialog.Description asChild>
+              <div className="text-b-2 items-start text-gray-600">
+                {eventLines.map((line, index) => (
+                  <div key={index} className="flex items-start">
+                    <span className="mr-2">・</span>
+                    <span className="flex-1">{line}</span>
+                  </div>
+                ))}
+              </div>
             </Dialog.Description>
           </div>
           <div className="mt-6 flex justify-center">
