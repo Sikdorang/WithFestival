@@ -6,6 +6,7 @@ import Navigator from '@/components/common/layouts/Navigator';
 import GoBackIcon from '@/assets/icons/ic_arrow_left.svg?react';
 import TextInput from '@/components/common/inputs/TextInput';
 import { useState } from 'react';
+import { useOrder } from '@/hooks/useOrder';
 
 interface Props {
   type: 'message' | 'call';
@@ -14,9 +15,15 @@ interface Props {
 }
 
 export default function RequestModal({ open, onClose, type }: Props) {
+  const { createMessage, createServiceRequestOrder } = useOrder();
+
   const [inputValue, setInputValue] = useState('');
   const handleSubmit = () => {
-    console.log(`전송할 내용 (${type}):`, inputValue);
+    if (type === 'message') {
+      createMessage(inputValue);
+    } else {
+      createServiceRequestOrder(inputValue);
+    }
 
     onClose();
     setInputValue('');
@@ -35,7 +42,9 @@ export default function RequestModal({ open, onClose, type }: Props) {
             <Navigator
               left={<GoBackIcon onClick={onClose} />}
               center={
-                <Dialog.Title className="text-st-1">요청사항</Dialog.Title>
+                <Dialog.Title className="text-st-1">
+                  {type === 'message' ? '메세지' : '호출하기'}
+                </Dialog.Title>
               }
             />
           </header>

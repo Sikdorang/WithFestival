@@ -96,6 +96,44 @@ export default function Games() {
     setBulletsFound(0);
   };
 
+  const handleChamberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setChamberCount(Number(value));
+    }
+  };
+
+  const handleChamberBlur = () => {
+    let value = Number(chamberCount);
+    if (isNaN(value) || value < 2) {
+      value = 2;
+    }
+    if (value > 10) {
+      value = 10;
+    }
+    setChamberCount(Number(value));
+  };
+
+  const handleBulletChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setBulletCount(Number(value));
+    }
+  };
+
+  const handleBulletBlur = () => {
+    let value = Number(bulletCount);
+    const maxBullet = Number(chamberCount) - 1;
+
+    if (isNaN(value) || value < 1) {
+      value = 1;
+    }
+    if (value > maxBullet) {
+      value = maxBullet;
+    }
+    setBulletCount(Number(value));
+  };
+
   useEffect(() => {
     if (!gameOver && isGameStarted && currentIndex === chamberCount) {
       setMessage('모든 기회를 소진했습니다!');
@@ -120,10 +158,11 @@ export default function Games() {
                 id="chamberInput"
                 type="number"
                 min="2"
-                max="10"
+                max="20"
                 placeholder="탄창 수를 입력해주세요."
                 value={chamberCount}
-                onChange={(e) => setChamberCount(Number(e.target.value))}
+                onChange={handleChamberChange}
+                onBlur={handleChamberBlur}
                 limitHide
               />
               <CtaButton
@@ -151,7 +190,8 @@ export default function Games() {
                 min="1"
                 max={chamberCount - 1}
                 value={bulletCount}
-                onChange={(e) => setBulletCount(Number(e.target.value))}
+                onChange={handleBulletChange}
+                onBlur={handleBulletBlur}
                 limitHide
               />
               <DeleteConfirmModal

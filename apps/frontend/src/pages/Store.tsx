@@ -76,7 +76,6 @@ function MenuItem({
   );
 }
 
-// 메뉴 리스트 섹션
 function MenuList() {
   const navigate = useNavigate();
   const { menus, fetchMenu } = useMenu();
