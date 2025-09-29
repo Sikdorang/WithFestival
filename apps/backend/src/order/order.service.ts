@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { OrderSenderGateway } from '../websocket/order-sender.gateway';
 
 interface OrderItemDto {
   menu: string;
@@ -19,11 +20,14 @@ interface CreateOrderDto {
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly orderSenderGateway: OrderSenderGateway,
+  ) {}
 
   async createOrder(data: CreateOrderDto) {
     // 트랜잭션을 사용하여 주문과 주문 상세를 함께 생성
-    return this.prisma.$transaction(async (prisma) => {
+    const result = await this.prisma.$transaction(async (prisma) => {
       // 1. 주문 생성
       const now = new Date();
       const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
@@ -59,6 +63,26 @@ export class OrderService {
         orderUsers,
       };
     });
+
+    // WebSocket으로 주문 생성 이벤트 발송
+    try {
+      await this.orderSenderGateway.emitOrderCreated(`user-${data.userId}`, {
+        orderId: result.order.id,
+        tableNumber: data.tableNumber,
+        totalPrice: data.totalPrice,
+        name: data.name,
+        time: result.order.time,
+        items: data.items,
+      });
+      console.log(
+        `[OrderService] WebSocket event sent for order: ${result.order.id}`,
+      );
+    } catch (error) {
+      console.error(`[OrderService] Failed to send WebSocket event:`, error);
+      // WebSocket 실패해도 주문은 정상 처리됨
+    }
+
+    return result;
   }
 
   async getOrdersByUserId(userId: number) {
@@ -77,9 +101,23 @@ export class OrderService {
         const orderUsers = await this.prisma.orderUser.findMany({
           where: { orderId: order.id },
         });
+
+        // 각 주문 항목에 대해 메뉴 정보(마진 포함) 조회
+        const orderUsersWithMenuInfo = await Promise.all(
+          orderUsers.map(async (orderUser) => {
+            const menuInfo = await this.prisma.menu.findFirst({
+              where: { menu: orderUser.menu },
+            });
+            return {
+              ...orderUser,
+              margin: menuInfo?.margin || 0,
+            };
+          }),
+        );
+
         return {
           ...order,
-          orderUsers,
+          orderUsers: orderUsersWithMenuInfo,
         };
       }),
     );
