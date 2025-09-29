@@ -17,6 +17,8 @@ import Navigator from '../components/common/layouts/Navigator';
 import DeleteConfirmModal from '../components/common/modals/DeleteConfirmModal';
 import { ROUTES } from '../constants/routes';
 import { useStore } from '../hooks/useStore';
+import Lottie from 'lottie-react';
+import CheckAnimation from '@/assets/lotties/lottie_check.json';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -198,13 +200,33 @@ function MenuList({ items }: { items: OrderItem[] }) {
   );
 }
 
+function CompleteStep() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center pb-15 text-center">
+      <div className="flex w-full flex-col items-center gap-4 px-8">
+        <Lottie
+          animationData={CheckAnimation}
+          loop={false}
+          style={{ width: 64, height: 64 }}
+        />
+        <div className="text-t-1 mb-2">주문이 완료되었습니다.</div>
+        <CtaButton text="확인" onClick={() => navigate(ROUTES.MENU_BOARD)} />
+      </div>
+    </div>
+  );
+}
+
 export default function Ordering() {
   const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
   const navigate = useNavigate();
   const { orderItems, clearOrder } = useOrderStore();
   const { createOrder } = useOrder();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalStep, setModalStep] = useState<'remit' | 'depositor'>('remit');
+  const [modalStep, setModalStep] = useState<
+    'remit' | 'depositor' | 'complete'
+  >('remit');
   const [depositorName, setDepositorName] = useState('');
 
   const totalAmount = orderItems.reduce(
@@ -218,7 +240,7 @@ export default function Ordering() {
     if (success) {
       clearOrder();
       setIsModalOpen(false);
-      setModalStep('remit');
+      setModalStep('complete');
       navigate(ROUTES.MENU_BOARD);
     }
   };
@@ -270,11 +292,16 @@ export default function Ordering() {
             left={<GoBackIcon />}
             onLeftPress={() => {
               if (modalStep === 'depositor') setModalStep('remit');
+              else if (modalStep === 'complete') setModalStep('remit');
               else setIsModalOpen(false);
             }}
             center={
               <div className="text-st-1">
-                {modalStep === 'remit' ? '송금하기' : '입금자명 입력'}
+                {modalStep === 'remit'
+                  ? '송금하기'
+                  : modalStep === 'depositor'
+                    ? '입금자명 입력'
+                    : '주문 완료'}
               </div>
             }
           />
@@ -283,12 +310,14 @@ export default function Ordering() {
               totalAmount={totalAmount}
               onNext={() => setModalStep('depositor')}
             />
-          ) : (
+          ) : modalStep === 'depositor' ? (
             <DepositorStep
               onSubmit={handleFinalSubmit}
               depositorName={depositorName}
               setDepositorName={setDepositorName}
             />
+          ) : (
+            <CompleteStep />
           )}
         </Dialog.Content>
       </Dialog.Portal>

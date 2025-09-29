@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import TextInput from '@/components/common/inputs/TextInput';
 import CtaButton from '@/components/common/buttons/CtaButton';
+import TextArea from '@/components/common/inputs/TextArea';
 
 interface Props {
   title: string;
   value: string;
   placeholder?: string;
   onSave: (newName: string) => void;
+  isTextArea?: boolean;
 }
 
 export default function ManageBoothItem({
@@ -14,6 +16,7 @@ export default function ManageBoothItem({
   value,
   placeholder = '내용을 입력해주세요.',
   onSave,
+  isTextArea = false,
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
@@ -40,12 +43,21 @@ export default function ManageBoothItem({
 
       {isEditing ? (
         <div className="space-y-3">
-          <TextInput
-            placeholder={placeholder}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            limitHide
-          />
+          {isTextArea ? (
+            <TextArea
+              placeholder={placeholder}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              limitHide
+            />
+          ) : (
+            <TextInput
+              placeholder={placeholder}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              limitHide
+            />
+          )}
           <div className="flex justify-end gap-2">
             <CtaButton
               text="취소"

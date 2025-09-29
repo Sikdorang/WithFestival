@@ -66,6 +66,7 @@ export default function ManageBooth({ onClose }: Props) {
           title="공지사항"
           value={noticeInput || '등록된 공지사항이 없습니다.'}
           placeholder="공지사항을 입력해주세요."
+          isTextArea
           onSave={() => {
             updateStoreNotice(noticeInput);
           }}
@@ -74,6 +75,7 @@ export default function ManageBooth({ onClose }: Props) {
           title="이벤트"
           value={eventInput || '등록된 이벤트가 없습니다.'}
           placeholder="이벤트를 입력해주세요."
+          isTextArea
           onSave={() => {
             updateStoreEvent(eventInput);
           }}

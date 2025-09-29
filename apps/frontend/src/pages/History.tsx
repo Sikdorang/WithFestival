@@ -1,5 +1,6 @@
 import EmptyImage from '@/assets/icons/ic_circle_plus.svg?react';
 import BottomSpace from '@/components/common/exceptions/BottomSpace';
+import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import { OrderBill } from '@/components/pages/order/OrderBill';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect } from 'react';
@@ -26,10 +27,10 @@ export default function History() {
             <OrderBill key={order.id} order={order} />
           ))
         ) : (
-          <div className="absolute top-2/5 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-4 text-white">
-            <EmptyImage color="white" />
-            <div className="text-st-2">주문 내역이 없습니다.</div>
-          </div>
+          <EmptyPlaceHolder
+            image={<EmptyImage color="white" />}
+            text="주문 이력이 없습니다."
+          />
         )}
 
         <BottomSpace />
