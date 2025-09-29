@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { OrderSenderGateway } from '../websocket/order-sender.gateway';
+//import { OrderSenderGateway } from '../websocket/order-sender.gateway';
 
 interface OrderItemDto {
   menu: string;
