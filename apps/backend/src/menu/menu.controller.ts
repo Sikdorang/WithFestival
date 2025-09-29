@@ -25,12 +25,14 @@ interface CreateMenuDto {
   menu: string;
   price: number;
   description?: string;
+  margin?: number;
 }
 
 interface UpdateMenuDto {
   menu?: string;
   price?: number;
   description?: string;
+  margin?: number;
 }
 
 // Multer 설정

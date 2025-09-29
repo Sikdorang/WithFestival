@@ -35,7 +35,7 @@ export class AuthController {
     // 세션에 사용자 정보 저장
     session.userId = user.id;
     session.userCode = user.code;
-    session.userName = user.name;
+    session.userName = user.name || undefined;
     session.userAccount = user.account || undefined;
     session.isAuthenticated = true;
 
