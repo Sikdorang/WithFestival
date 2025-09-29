@@ -26,43 +26,40 @@ export class OrderService {
   ) {}
 
   async createOrder(data: CreateOrderDto) {
-    // 트랜잭션을 사용하여 주문과 주문 상세를 함께 생성
-    const result = await this.prisma.$transaction(async (prisma) => {
-      // 1. 주문 생성
-      const now = new Date();
-      const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    // 1. 주문 생성
+    const now = new Date();
+    const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-      const order = await prisma.order.create({
-        data: {
-          time: timeString,
-          send: false,
-          cooked: false,
-          totalPrice: data.totalPrice,
-          name: data.name,
-          tableNumber: data.tableNumber,
-          userid: data.userId,
-        },
-      });
-
-      // 2. 주문 상세 항목들 생성
-      const orderUsers = await Promise.all(
-        data.items.map((item) =>
-          prisma.orderUser.create({
-            data: {
-              menu: item.menu,
-              price: item.price,
-              count: item.count,
-              orderId: order.id,
-            },
-          }),
-        ),
-      );
-
-      return {
-        order,
-        orderUsers,
-      };
+    const order = await this.prisma.order.create({
+      data: {
+        time: timeString,
+        send: false,
+        cooked: false,
+        totalPrice: data.totalPrice,
+        name: data.name,
+        tableNumber: data.tableNumber,
+        userid: data.userId,
+      },
     });
+
+    // 2. 주문 상세 항목들 생성
+    const orderUsers = await Promise.all(
+      data.items.map((item) =>
+        this.prisma.orderUser.create({
+          data: {
+            menu: item.menu,
+            price: item.price,
+            count: item.count,
+            orderId: order.id,
+          },
+        }),
+      ),
+    );
+
+    const result = {
+      order,
+      orderUsers,
+    };
 
     // WebSocket으로 주문 생성 이벤트 발송
     try {

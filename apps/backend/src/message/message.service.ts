@@ -36,13 +36,13 @@ export class MessageService {
     });
   }
 
-  async updateMessageCheck(messageId: number, check: boolean) {
+  async updateMessageCheck(messageId: number) {
     return this.prisma.message.update({
       where: {
         id: messageId,
       },
       data: {
-        check: check,
+        check: true,
       },
     });
   }

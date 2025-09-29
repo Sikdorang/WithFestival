@@ -70,21 +70,11 @@ export class MessageController {
 
   @Patch(':messageId/check')
   @UseGuards(AuthGuard)
-  async updateMessageCheck(
-    @Param('messageId') messageId: string,
-    @CurrentUser() user: { id: number },
-  ) {
+  async updateMessageCheck(@Param('messageId') messageId: string) {
     try {
-      // messageId 유효성 검사
-      const id = parseInt(messageId);
-      if (isNaN(id)) {
-        return {
-          success: false,
-          message: '유효하지 않은 메시지 ID입니다.',
-        };
-      }
-
-      const result = await this.messageService.toggleMessageCheck(id);
+      const result = await this.messageService.updateMessageCheck(
+        parseInt(messageId),
+      );
 
       return {
         success: true,
@@ -92,11 +82,10 @@ export class MessageController {
         data: result,
       };
     } catch (error) {
-      console.error('updateMessageCheck error:', error);
       return {
         success: false,
         message: '메시지 체크 상태 변경에 실패했습니다.',
-        error: error instanceof Error ? error.message : '알 수 없는 오류',
+        error: error.message,
       };
     }
   }
