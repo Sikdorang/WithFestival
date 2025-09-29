@@ -24,6 +24,7 @@ export default function TextInput({
   error = false,
   limitHide = false,
   isLoading = false,
+  onBlur,
   ...rest
 }: Props) {
   return (
@@ -55,10 +56,11 @@ export default function TextInput({
               maxLength={maxLength}
               disabled={disabled}
               placeholder={placeholder}
+              onBlur={onBlur}
               className={`text-b-2 w-full border-none bg-transparent text-gray-800 outline-none placeholder:text-gray-300 ${disabled ? 'bg-primary-100 text-gray-300' : ''} `}
               {...rest}
             />
-            {!disabled && value && onClear && (
+            {!disabled && value && onClear ? (
               <button
                 type="button"
                 onClick={onClear}
@@ -67,7 +69,7 @@ export default function TextInput({
               >
                 <CancelIcon />
               </button>
-            )}
+            ) : null}
           </div>
         ) : (
           <div className="flex w-full items-center justify-center">

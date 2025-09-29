@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { SUCCESS_MESSAGES } from '../constants/message';
 import { ROUTES } from '../constants/routes';
 import { CreateMenuDto } from '../types/payload/menu';
+import imageCompression from 'browser-image-compression';
 
 export const useMenu = () => {
   const navigate = useNavigate();
@@ -20,7 +21,6 @@ export const useMenu = () => {
 
     try {
       const response = await menuAPI.getMenu();
-      console.log(response.data);
       setMenus(response.data);
       return true;
     } catch (error) {
@@ -42,22 +42,6 @@ export const useMenu = () => {
     } catch (error) {
       handelError(error);
       return null;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const uploadMenuImage = async (menuId: number, imageFile: File) => {
-    setIsLoading(true);
-    setLoginError(null);
-
-    try {
-      await menuAPI.uploadMenuImage(menuId, imageFile);
-
-      return true;
-    } catch (error) {
-      handelError(error);
-      return false;
     } finally {
       setIsLoading(false);
     }
@@ -129,13 +113,55 @@ export const useMenu = () => {
     }
   };
 
+  const updateMenuImage = async (
+    menuId: number,
+    imageFile: File,
+  ): Promise<string | null> => {
+    setIsLoading(true);
+    setLoginError(null);
+
+    try {
+      const fileName = imageFile.name + '.webp';
+      const body = { fileName };
+
+      const response = await menuAPI.getImageUploadUrl(menuId, body);
+
+      const presignedData = response.data;
+
+      const compressedFile = await imageCompression(imageFile, {
+        maxSizeMB: 2,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: 'image/webp',
+        initialQuality: 0.75,
+      });
+
+      await menuAPI.uploadToS3(presignedData.data.uploadUrl, compressedFile);
+
+      const newImageUrl = presignedData.key;
+      setMenus((prevMenus) =>
+        prevMenus.map((menu) =>
+          menu.id === menuId ? { ...menu, image: newImageUrl } : menu,
+        ),
+      );
+
+      toast.success(SUCCESS_MESSAGES.uploadMenuImageSuccess);
+      return newImageUrl;
+    } catch (error) {
+      handelError(error);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     menus,
     fetchMenu,
     createMenu,
-    uploadMenuImage,
     deleteMenuImage,
     updateMenu,
+    updateMenuImage,
     deleteMenu,
     getMenuByUserId,
     isLoading,

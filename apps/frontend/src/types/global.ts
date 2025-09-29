@@ -69,10 +69,10 @@ export interface OrderListApiResponse {
   count: number;
 }
 
-export interface IInquiry {
+export interface IMessage {
   id: number;
-  completed: boolean;
   message: string;
   tableNumber: string;
   time: string;
+  check: boolean;
 }

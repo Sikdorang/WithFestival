@@ -1,11 +1,12 @@
-import { IInquiry } from '@/types/global';
+import { IMessage } from '@/types/global';
 import CheckIcon from '@/assets/icons/ic_check.svg?react';
 
 interface Props {
-  inquiry: IInquiry;
+  inquiry: IMessage;
+  checkMessage: (id: number) => void;
 }
 
-export default function CustomerInquiryItem({ inquiry }: Props) {
+export default function CustomerInquiryItem({ inquiry, checkMessage }: Props) {
   return (
     <div className="flex flex-col rounded-xl bg-gray-100 p-4">
       <div className="flex flex-col gap-1">
@@ -20,10 +21,13 @@ export default function CustomerInquiryItem({ inquiry }: Props) {
         </div>
         <div
           className={`${
-            inquiry.completed ? 'bg-gray-200' : 'bg-primary-300'
+            inquiry.check ? 'bg-gray-200' : 'bg-primary-300'
           } flex h-10 w-10 items-center justify-center rounded-full`}
+          onClick={() => {
+            checkMessage(inquiry.id);
+          }}
         >
-          {inquiry.completed ? (
+          {inquiry.check ? (
             <CheckIcon width={20} height={20} color="white" />
           ) : (
             <CheckIcon width={20} height={20} color="white" />

@@ -20,6 +20,8 @@ export const useStore = () => {
       const response = await storeAPI.getUserInfo();
       setName(response.data.name);
       setAccount(response.data.account);
+      setNotice(response.data.notice);
+      setEvent(response.data.event);
     } catch (error) {
       handelError(error);
       return false;

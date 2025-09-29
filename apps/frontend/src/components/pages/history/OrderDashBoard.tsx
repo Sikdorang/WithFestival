@@ -21,11 +21,28 @@ export default function OrderDashBoard({ allOrders }: Props) {
       return { totalSales: 0, netProfit: 0, menuSales: [] };
     }
 
+    const filteredOrders = allOrders.data.filter((order) => {
+      if (order.name !== '직원 호출') {
+        return true;
+      }
+
+      const singleItem = order.orderUsers?.[0];
+      if (
+        order.orderUsers?.length !== 1 ||
+        singleItem?.price !== 0 ||
+        singleItem?.count !== 0
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+
     let totalSales = 0;
     let netProfit = 0;
     const menuSalesMap = new Map<string, number>();
 
-    allOrders.data.forEach((order) => {
+    filteredOrders.forEach((order) => {
       order.orderUsers.forEach((item) => {
         const itemSales = item.price * item.count;
         totalSales += itemSales;
@@ -46,7 +63,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
 
   const chartWidth = Math.max(300, summary.menuSales.length * 60);
 
-  const CustomXAxisTick = (props: any) => {
+  const CustomXAxisTick = (props: { x: number; y: number; index: number }) => {
     const { x, y, index } = props;
 
     const dataPoint = summary.menuSales[index];
@@ -78,7 +95,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
         <text
           x={0}
           y={0}
-          dy={16 + lines.length * 15} // 기본 위치(16) + 이름 줄 수 * 줄 간격(15)
+          dy={16 + lines.length * 15}
           textAnchor="middle"
           fill="#999"
           fontSize={11}
@@ -124,7 +141,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
           >
             <XAxis
               dataKey="name"
-              tick={<CustomXAxisTick />}
+              tick={<CustomXAxisTick x={0} y={0} index={0} />}
               height={50}
               interval={0}
             />
@@ -134,7 +151,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
               formatter={(value: number) => [`${value}개`, '판매량']}
             />
             <Bar dataKey="판매량" radius={[4, 4, 0, 0]} barSize={20}>
-              {summary.menuSales.map((entry, index) => (
+              {summary.menuSales.map((_entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
