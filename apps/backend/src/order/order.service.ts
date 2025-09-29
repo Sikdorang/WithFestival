@@ -22,7 +22,7 @@ interface CreateOrderDto {
 export class OrderService {
   constructor(
     private prisma: PrismaService,
-    private readonly orderSenderGateway: OrderSenderGateway,
+    //    private readonly orderSenderGateway: OrderSenderGateway,
   ) {}
 
   async createOrder(data: CreateOrderDto) {
