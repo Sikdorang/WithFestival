@@ -13,8 +13,10 @@ datasource db {
 model User {
   id      Int     @id @default(autoincrement())
   code    String  @unique @db.VarChar(100) // 인증번호
-  name    String  @db.VarChar(50)        // 이름
+  name    String?  @db.VarChar(50)        // 이름
   account String? @db.VarChar(100)       // 계좌
+  notice  String? @db.Text      // 공지사항
+  event   String? @db.Text      // 이벤트
 
   @@map("users")
 }
@@ -26,6 +28,7 @@ model Menu {
   image       String? @db.VarChar(255)   // 이미지
   description String? @db.Text           // 설명
   userid      Int?                       // 유저 아이디 (외래키 안함)
+  margin      Int?                       // 마진
 
   @@map("menus")
 }
@@ -53,6 +56,16 @@ model Order {
   userid      Int?                       // userid (외래키 없이)
   
   @@map("orders")
+}
+
+model Message {
+  id      Int    @id @default(autoincrement())
+  message String @db.Text                 // 메시지 내용
+  tableNumber  String? @db.VarChar(10)         // 테이블번호
+  userid  Int?                            // 유저 아이디 (외래키 안함)
+  time        String  @db.VarChar(10)    // 주문 시간 (시:분)
+  
+  @@map("messages")
 }
 
 model OrderUser {
