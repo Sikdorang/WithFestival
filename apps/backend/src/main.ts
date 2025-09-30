@@ -44,7 +44,7 @@ async function bootstrap() {
   // API 프리픽스 설정
   app.setGlobalPrefix('api');
 
-  await app.listen(process.env.PORT ?? 4001);
-  console.log(`서버가 포트 ${process.env.PORT ?? 4001}에서 실행 중입니다.`);
+  await app.listen(process.env.PORT ?? 4000);
+  console.log(`서버가 포트 ${process.env.PORT ?? 4000}에서 실행 중입니다.`);
 }
 bootstrap();
