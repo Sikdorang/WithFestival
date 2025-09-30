@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { OrderSenderGateway } from '../websocket/order-sender.gateway';
+import { OrderSenderGateway } from '../websocket/order/order-sender.gateway';
 
 interface OrderItemDto {
   menu: string;
@@ -188,10 +188,31 @@ export class OrderService {
       throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
     }
 
-    return this.prisma.order.update({
+    const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
       data: { send: true },
     });
+
+    // WebSocket으로 송금 상태 변경 이벤트 발송
+    try {
+      await this.orderSenderGateway.emitOrderSendUpdated(`user-${userId}`, {
+        orderId: updatedOrder.id,
+        send: updatedOrder.send,
+        time: updatedOrder.time,
+        name: updatedOrder.name,
+        tableNumber: updatedOrder.tableNumber,
+      });
+      console.log(
+        `[OrderService] WebSocket send updated event sent for order: ${updatedOrder.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[OrderService] Failed to send WebSocket send updated event:`,
+        error,
+      );
+    }
+
+    return updatedOrder;
   }
 
   async updateOrderCooked(orderId: number, userId: number) {
@@ -207,10 +228,31 @@ export class OrderService {
       throw new Error('주문을 찾을 수 없거나 권한이 없습니다.');
     }
 
-    return this.prisma.order.update({
+    const updatedOrder = await this.prisma.order.update({
       where: { id: orderId },
       data: { cooked: true },
     });
+
+    // WebSocket으로 조리 상태 변경 이벤트 발송
+    try {
+      await this.orderSenderGateway.emitOrderCookedUpdated(`user-${userId}`, {
+        orderId: updatedOrder.id,
+        cooked: updatedOrder.cooked,
+        time: updatedOrder.time,
+        name: updatedOrder.name,
+        tableNumber: updatedOrder.tableNumber,
+      });
+      console.log(
+        `[OrderService] WebSocket cooked updated event sent for order: ${updatedOrder.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[OrderService] Failed to send WebSocket cooked updated event:`,
+        error,
+      );
+    }
+
+    return updatedOrder;
   }
 
   async getUserInfo(userId: number) {
@@ -239,7 +281,7 @@ export class OrderService {
     }
 
     // 트랜잭션을 사용하여 주문과 관련된 모든 데이터 삭제
-    return this.prisma.$transaction(async (prisma) => {
+    const result = await this.prisma.$transaction(async (prisma) => {
       // 1. order_users 테이블에서 해당 orderId와 관련된 모든 레코드 삭제
       await prisma.orderUser.deleteMany({
         where: { orderId: orderId },
@@ -255,5 +297,26 @@ export class OrderService {
         message: '주문과 관련된 모든 데이터가 삭제되었습니다.',
       };
     });
+
+    // WebSocket으로 주문 삭제 이벤트 발송
+    try {
+      await this.orderSenderGateway.emitOrderDeleted(`user-${userId}`, {
+        orderId: result.deletedOrder.id,
+        time: result.deletedOrder.time,
+        name: result.deletedOrder.name,
+        tableNumber: result.deletedOrder.tableNumber,
+        totalPrice: result.deletedOrder.totalPrice,
+      });
+      console.log(
+        `[OrderService] WebSocket deleted event sent for order: ${result.deletedOrder.id}`,
+      );
+    } catch (error) {
+      console.error(
+        `[OrderService] Failed to send WebSocket deleted event:`,
+        error,
+      );
+    }
+
+    return result;
   }
 }
