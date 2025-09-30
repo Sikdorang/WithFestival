@@ -44,16 +44,17 @@ export default function Order() {
       getPendingOrders();
       getSentOrders();
     };
+    if (socket) {
+      socket.on('orderSendUpdated', handleRefresh);
+      socket.on('orderCookedUpdated', handleRefresh);
+      socket.on('orderDeleted', handleRefresh);
 
-    socket.on('orderSendUpdated', handleRefresh);
-    socket.on('orderCookedUpdated', handleRefresh);
-    socket.on('orderDeleted', handleRefresh);
-
-    return () => {
-      socket.off('orderSendUpdated', handleRefresh);
-      socket.off('orderCookedUpdated', handleRefresh);
-      socket.off('orderDeleted', handleRefresh);
-    };
+      return () => {
+        socket.off('orderSendUpdated', handleRefresh);
+        socket.off('orderCookedUpdated', handleRefresh);
+        socket.off('orderDeleted', handleRefresh);
+      };
+    }
   }, [socket]);
 
   const renderOrderList = (orders: OrderSummary[]) => {

@@ -5,8 +5,5 @@ export const SocketContext = createContext<Socket | null>(null);
 
 export const useSocket = () => {
   const socket = useContext(SocketContext);
-  if (!socket) {
-    throw new Error('useSocket must be used within a SocketProvider');
-  }
-  return socket;
+  return socket; // Return null if not available, let components handle it
 };

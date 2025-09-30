@@ -12,6 +12,7 @@ interface AuthState {
   error: string | null;
   login: (code: string) => Promise<boolean>;
   logout: () => void;
+  checkAuthStatus: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -54,5 +55,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     // 로그아웃 API 호출 등...
     set({ user: null, isLoggedIn: false });
+  },
+
+  checkAuthStatus: async () => {
+    try {
+      const response = await authAPI.me();
+
+      if (response && response.success && response.user) {
+        set({ user: response.user, isLoggedIn: true });
+        return response.user; // ✅ 성공 시 user 데이터 반환
+      } else {
+        throw new Error('Invalid session data');
+      }
+    } catch (error) {
+      set({ user: null, isLoggedIn: false });
+      throw error; // ✅ 실패 시 에러를 던져서 loader가 잡을 수 있도록 함
+    }
   },
 }));

@@ -19,9 +19,13 @@ export default function ManageWaiting() {
     const handleRefresh = () => {
       fetchWaiting();
     };
-    socket.on('waitingProcessed', handleRefresh);
+    if (socket) {
+      socket.on('waitingProcessed', handleRefresh);
+    }
     return () => {
-      socket.off('waitingProcessed', handleRefresh);
+      if (socket) {
+        socket.off('waitingProcessed', handleRefresh);
+      }
     };
   }, [socket]);
 
