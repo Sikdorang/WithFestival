@@ -6,7 +6,14 @@ import { Server } from 'socket.io';
 import { ORDER_EVENT } from './order-event.constant';
 
 @WebSocketGateway({
-  cors: true,
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://withfestival.site',
+    ],
+    credentials: true,
+  },
   namespace: '/ws',
 })
 export class OrderSenderGateway {

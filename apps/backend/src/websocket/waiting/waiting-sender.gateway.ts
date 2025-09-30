@@ -6,7 +6,14 @@ import { Server } from 'socket.io';
 import { WAITING_EVENT } from './waiting-event.constant';
 
 @WebSocketGateway({
-  cors: true,
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://withfestival.site',
+    ],
+    credentials: true,
+  },
   namespace: '/ws',
 })
 export class WaitingSenderGateway {
