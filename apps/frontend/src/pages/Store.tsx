@@ -22,7 +22,7 @@ function AccountSection() {
 
           <div className="space-y-3">
             <CtaButton
-              text="메뉴 관리"
+              text="관리하러 가기"
               color="white"
               size="small"
               onClick={() => setShowManageBooth(true)}

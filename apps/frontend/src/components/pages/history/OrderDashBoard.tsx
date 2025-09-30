@@ -71,7 +71,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
     if (!dataPoint) return null;
 
     const { name, 판매량 } = dataPoint;
-    const MAX_CHARS_PER_LINE = 6;
+    const MAX_CHARS_PER_LINE = 8;
 
     const lines =
       name.match(new RegExp(`.{1,${MAX_CHARS_PER_LINE}}`, 'g')) || [];
@@ -83,7 +83,7 @@ export default function OrderDashBoard({ allOrders }: Props) {
           dy={16}
           textAnchor="middle"
           fill="#666"
-          fontSize={12}
+          fontSize={10}
         >
           {lines.map((line, i) => (
             <tspan x={0} dy={i === 0 ? 0 : '1.2em'} key={i}>
