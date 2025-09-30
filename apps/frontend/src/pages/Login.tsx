@@ -2,16 +2,25 @@ import CtaButton from '@/components/common/buttons/CtaButton';
 import TextInput from '@/components/common/inputs/TextInput';
 import BaseResponsiveLayout from '@/components/common/layouts/BaseResponsiveLayout';
 import { Banner } from '@/components/pages/login/Banner';
-import { useLogin } from '@/hooks/useLogin';
-import { useState } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 
 export default function Login() {
-  const { login } = useLogin();
+  const navigate = useNavigate();
+  const { login, isLoggedIn } = useAuthStore();
 
   const [code, setCode] = useState('');
 
-  const handleLogin = () => {
-    login(code);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate(ROUTES.MANAGE_WAITING);
+    }
+  }, [isLoggedIn, navigate]);
+
+  const handleLogin = async () => {
+    await login(code);
   };
 
   return (

@@ -5,13 +5,25 @@ import { useEffect } from 'react';
 import { useWaiting } from '../hooks/useWaiting';
 import EmptyPlaceHolder from '@/components/common/exceptions/EmptyPlaceHolder';
 import TopBar from '@/components/pages/waiting/TopBar';
+import { useSocket } from '@/contexts/useSocket';
 
 export default function ManageWaiting() {
+  const socket = useSocket();
   const { waitingList, fetchWaiting, setWaitingProcessed } = useWaiting();
 
   useEffect(() => {
     fetchWaiting();
   }, []);
+
+  useEffect(() => {
+    const handleRefresh = () => {
+      fetchWaiting();
+    };
+    socket.on('waitingProcessed', handleRefresh);
+    return () => {
+      socket.off('waitingProcessed', handleRefresh);
+    };
+  }, [socket]);
 
   return (
     <div>

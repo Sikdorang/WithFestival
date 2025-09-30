@@ -101,7 +101,6 @@ export const useMenu = () => {
 
     try {
       const response = await menuAPI.getMenuByUserId(userId);
-      console.log(response.data);
       setMenus(response.data);
 
       return true;

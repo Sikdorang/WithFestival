@@ -18,6 +18,7 @@ import {
   Navigate,
   RouterProvider,
 } from 'react-router-dom';
+import { ProtectedRoute } from '@/components/common/exceptions/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -35,27 +36,37 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
-    element: <TabBarLayout />,
+    element: <ProtectedRoute />,
     errorElement: <ErrorBoundary />,
     children: [
       {
-        path: ROUTES.MANAGE_WAITING,
-        element: <ManageWaiting />,
+        element: <TabBarLayout />,
+        children: [
+          {
+            path: ROUTES.MANAGE_WAITING,
+            element: <ManageWaiting />,
+          },
+          {
+            path: ROUTES.ORDER,
+            element: <Order />,
+          },
+          {
+            path: ROUTES.STORE,
+            element: <Store />,
+          },
+          {
+            path: ROUTES.HISTORY,
+            element: <History />,
+          },
+        ],
       },
       {
-        path: ROUTES.ORDER,
-        element: <Order />,
-      },
-      {
-        path: ROUTES.STORE,
-        element: <Store />,
-      },
-      {
-        path: ROUTES.HISTORY,
-        element: <History />,
+        path: ROUTES.MANAGE_MENUS.DETAIL(':menuId'),
+        element: <ManageMenuDetail />,
       },
     ],
   },
+
   {
     path: ROUTES.WAITING,
     element: <Waiting />,
@@ -64,11 +75,6 @@ const router = createBrowserRouter([
   {
     path: ROUTES.MENU_BOARD,
     element: <MenuBoard />,
-    errorElement: <ErrorBoundary />,
-  },
-  {
-    path: ROUTES.MANAGE_MENUS.DETAIL(':menuId'),
-    element: <ManageMenuDetail />,
     errorElement: <ErrorBoundary />,
   },
   {

@@ -4,17 +4,39 @@ import CustomerInquiryItem from './CustomerInquiryItem';
 import { IMessage } from '@/types/global';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect } from 'react';
+import { useSocket } from '@/contexts/useSocket';
 
 interface Props {
   onClose: () => void;
 }
 
 export default function CustomerInquiry({ onClose }: Props) {
+  const socket = useSocket();
   const { getMessages, messages, checkMessage } = useOrder();
 
   useEffect(() => {
     getMessages();
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleMessageChecked = () => {
+      getMessages();
+    };
+
+    const handleMessageCreated = () => {
+      getMessages();
+    };
+
+    socket.on('messageCreated', handleMessageCreated);
+    socket.on('messageChecked', handleMessageChecked);
+
+    return () => {
+      socket.off('messageChecked', handleMessageChecked);
+      socket.off('messageCreated', handleMessageCreated);
+    };
+  }, [socket]);
 
   return (
     <div className="flex h-full flex-col">

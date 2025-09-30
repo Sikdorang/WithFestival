@@ -2,10 +2,19 @@ import { ROUTES } from '@/constants/routes';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { BottomBar } from './BottomBar';
 import TopBar from './TopBar';
+import { useSocket } from '@/contexts/useSocket';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export function TabBarLayout() {
+  const notification = new Audio('/sounds/effect_notification.mp3');
+
+  const socket = useSocket();
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [hasNewWaiting, setHasNewWaiting] = useState(false);
 
   const getActiveTab = () => {
     switch (location.pathname) {
@@ -23,6 +32,10 @@ export function TabBarLayout() {
   };
 
   const handleTabClick = (tabName: 'timer' | 'list' | 'food' | 'allList') => {
+    if (tabName === 'timer') {
+      setHasNewWaiting(false);
+    }
+
     switch (tabName) {
       case 'timer':
         navigate(ROUTES.MANAGE_WAITING);
@@ -39,13 +52,38 @@ export function TabBarLayout() {
     }
   };
 
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleOrderCreated = () => {
+      toast.success('새 주문이 들어왔어요 !');
+      notification.play();
+    };
+
+    const handleWaitingCreated = () => {
+      setHasNewWaiting(true);
+    };
+
+    socket.on('orderCreated', handleOrderCreated);
+    socket.on('waitingCreated', handleWaitingCreated);
+
+    return () => {
+      socket.off('orderCreated', handleOrderCreated);
+      socket.off('waitingCreated', handleWaitingCreated);
+    };
+  }, [socket]);
+
   return (
     <>
       <TopBar />
       <main className="pt-12 pb-24">
         <Outlet />
       </main>
-      <BottomBar activeTab={getActiveTab()} onTabClick={handleTabClick} />
+      <BottomBar
+        activeTab={getActiveTab()}
+        onTabClick={handleTabClick}
+        hasNewWaiting={hasNewWaiting}
+      />
     </>
   );
 }

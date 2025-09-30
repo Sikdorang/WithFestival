@@ -1,8 +1,9 @@
 import ArrowRightLeftIcon from '@/assets/icons/ic_arrow_right_left.svg?react';
 import MessageIcon from '@/assets/icons/ic_letter.svg?react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import CustomerInquiry from './CustomerInquiry';
+import { useSocket } from '@/contexts/useSocket';
 
 interface Props {
   orderCount: number;
@@ -11,30 +12,24 @@ interface Props {
 }
 
 export default function OrderTopBar({ orderCount, type, onTypeChange }: Props) {
+  const socket = useSocket();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasNewMessage, setHasNewMessage] = useState(false);
 
-  // useEffect(() => {
-  //   // 실제 서버 주소로 변경해야 합니다.
-  //   const socket: Socket = io('https://your-server.com');
+  useEffect(() => {
+    if (!socket) return;
 
-  //   // 서버에 연결되었을 때
-  //   socket.on('connect', () => {
-  //     console.log('소켓 서버에 연결되었습니다.');
-  //   });
+    const handleMessageCreated = () => {
+      setHasNewMessage(true);
+    };
 
-  //   // 'newMessage' 이벤트를 수신했을 때
-  //   // (서버에서 보내는 이벤트 이름과 일치해야 합니다.)
-  //   socket.on('newMessage', (data) => {
-  //     console.log('새 메시지 수신:', data);
-  //     setHasNewMessage(true); // 새 메시지가 있음을 상태에 반영
-  //   });
+    socket.on('messageCreated', handleMessageCreated);
 
-  //   // 컴포넌트가 언마운트될 때 소켓 연결 해제
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
+    return () => {
+      socket.off('messageCreated', handleMessageCreated);
+    };
+  }, [socket]);
 
   const handleCustomerInquiryClick = () => {
     setHasNewMessage(false);
@@ -45,7 +40,7 @@ export default function OrderTopBar({ orderCount, type, onTypeChange }: Props) {
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="flex w-full items-center justify-between bg-white px-4 py-2">
         <div className="text-st-2 text-black">
-          {type === 'pending' ? '신규 주문' : '확정 주문'}{' '}
+          {type === 'pending' ? '신규 주문' : '확정 주문'}
           <span className="text-primary-300">{orderCount}</span>
         </div>
 
@@ -79,6 +74,10 @@ export default function OrderTopBar({ orderCount, type, onTypeChange }: Props) {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/30" />
           <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-white">
+            <Dialog.Title className="sr-only">고객 문의</Dialog.Title>
+            <Dialog.Description className="sr-only">
+              고객 메세지
+            </Dialog.Description>
             <CustomerInquiry
               onClose={() => {
                 setIsModalOpen(false);

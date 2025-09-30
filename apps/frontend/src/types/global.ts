@@ -76,3 +76,10 @@ export interface IMessage {
   time: string;
   check: boolean;
 }
+
+export interface IUser {
+  id: number;
+  code: string;
+  name: string;
+  account: string;
+}

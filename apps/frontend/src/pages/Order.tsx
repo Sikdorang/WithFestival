@@ -6,10 +6,9 @@ import { useOrder } from '@/hooks/useOrder';
 import { useEffect, useState } from 'react';
 import EmptyPendingIcon from '@/assets/icons/ic_empty_paper.svg?react';
 import EmptySentIcon from '@/assets/icons/ic_empty_paper.svg?react';
-// import { toast } from 'react-hot-toast';
 import { OrderSummary } from '@/types/global';
 import ServiceOrderCard from '@/components/pages/order/ServiceOrderCard';
-// const notificationSound = new Audio('/sounds/notification.mp3');
+import { useSocket } from '@/contexts/useSocket';
 
 const isServiceOrder = (order: OrderSummary): boolean => {
   const singleItem = order.orderUsers?.[0];
@@ -22,6 +21,7 @@ const isServiceOrder = (order: OrderSummary): boolean => {
 };
 
 export default function Order() {
+  const socket = useSocket();
   const [orderType, setOrderType] = useState<'pending' | 'sent'>('pending');
 
   const {
@@ -39,30 +39,22 @@ export default function Order() {
     getSentOrders();
   }, []);
 
-  // useEffect(() => {
-  //   const socket: Socket = io('https://your-server.com');
+  useEffect(() => {
+    const handleRefresh = () => {
+      getPendingOrders();
+      getSentOrders();
+    };
 
-  //   const handleNewOrder = () => {
-  //     notificationSound.play().catch((error) => {
-  //       console.error('알림음 재생 오류:', error);
-  //     });
+    socket.on('orderSendUpdated', handleRefresh);
+    socket.on('orderCookedUpdated', handleRefresh);
+    socket.on('orderDeleted', handleRefresh);
 
-  //     toast('🔔 신규 주문이 들어왔어요!', {
-  //       duration: 4000,
-  //       position: 'top-center',
-  //     });
-
-  //     getPendingOrders();
-  //     getSentOrders();
-  //   };
-
-  //   socket.on('newOrder', handleNewOrder);
-
-  //   return () => {
-  //     socket.off('newOrder', handleNewOrder);
-  //     socket.disconnect();
-  //   };
-  // }, [getPendingOrders, getSentOrders]);
+    return () => {
+      socket.off('orderSendUpdated', handleRefresh);
+      socket.off('orderCookedUpdated', handleRefresh);
+      socket.off('orderDeleted', handleRefresh);
+    };
+  }, [socket]);
 
   const renderOrderList = (orders: OrderSummary[]) => {
     return orders.map((order) =>

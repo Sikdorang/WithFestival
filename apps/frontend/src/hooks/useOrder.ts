@@ -156,7 +156,6 @@ export const useOrder = () => {
       if (response.data.success) {
         setMessages(response.data.data);
       }
-      console.log(response);
     } catch (error) {
       handelError(error);
     } finally {
@@ -184,18 +183,23 @@ export const useOrder = () => {
   };
 
   const checkMessage = async (messageId: number) => {
+    const originalMessage = messages?.find((msg) => msg.id === messageId);
+
+    if (!originalMessage) {
+      return;
+    }
+
+    if (originalMessage.check) {
+      return;
+    }
+
     try {
       const response = await messageAPI.checkMessage(messageId);
       if (response.data.success) {
         const updatedMessage = response.data.data;
-        const originalMessage = messages?.find((msg) => msg.id === messageId);
-        if (originalMessage) {
-          if (!originalMessage.check && updatedMessage.check) {
-            toast.success('고객 메세지를 확인했습니다.');
-          } else if (originalMessage.check && !updatedMessage.check) {
-            toast.success('메세지 상태를 복원했습니다.');
-          }
-        }
+
+        toast.success('고객 메세지를 확인했습니다.');
+
         setMessages((prevMessages) =>
           (prevMessages || []).map((msg) =>
             msg.id === messageId ? updatedMessage : msg,
