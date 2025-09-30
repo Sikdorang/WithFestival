@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Session } from '@nestjs/common';
+import { Controller, Post, Body, Session, Get } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 
@@ -48,6 +48,23 @@ export class AuthController {
         code: user.code,
         name: user.name,
         account: user.account,
+      },
+    };
+  }
+
+  @Get('userId')
+  async getCurrentUser(@Session() session: SessionData) {
+    if (!session.isAuthenticated || !session.userId) {
+      return {
+        success: false,
+        message: '로그인이 필요합니다.',
+      };
+    }
+
+    return {
+      success: true,
+      user: {
+        id: session.userId,
       },
     };
   }
