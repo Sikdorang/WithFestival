@@ -3,9 +3,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
 export function ProtectedRoute() {
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, user } = useAuthStore();
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn || !user) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 

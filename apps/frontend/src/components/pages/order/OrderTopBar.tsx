@@ -39,8 +39,8 @@ export default function OrderTopBar({ orderCount, type, onTypeChange }: Props) {
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="flex w-full items-center justify-between bg-white px-4 py-2">
-        <div className="text-st-2 text-black">
-          {type === 'pending' ? '신규 주문' : '확정 주문'}
+        <div className="text-st-2 flex gap-1 text-black">
+          <div>{type === 'pending' ? '신규 주문' : '확정 주문'}</div>
           <span className="text-primary-300">{orderCount}</span>
         </div>
 
