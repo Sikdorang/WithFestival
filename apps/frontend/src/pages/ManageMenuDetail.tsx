@@ -268,7 +268,10 @@ export default function ManageMenuDetail() {
                 {Number(price).toLocaleString()}원
               </p>
 
-              <p className="text-b-1 mt-4 px-10">마진 {margin}%</p>
+              <p className="text-c-1 mt-4 px-10 text-gray-400">
+                마진은 손님 메뉴판에 표시되지 않습니다
+              </p>
+              <p className="text-b-1 px-10">마진 {margin}%</p>
             </>
           ) : (
             <div className="flex flex-col gap-2 px-8">
