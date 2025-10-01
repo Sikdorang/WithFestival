@@ -31,10 +31,8 @@ export default function ManageBoothItem({
   };
 
   const handleSave = () => {
-    if (inputValue.trim()) {
-      onSave(inputValue);
-      setIsEditing(false);
-    }
+    onSave(inputValue);
+    setIsEditing(false);
   };
 
   return (
