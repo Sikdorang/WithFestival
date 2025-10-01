@@ -21,10 +21,12 @@ export default function ManageWaiting() {
     };
     if (socket) {
       socket.on('waitingProcessed', handleRefresh);
+      socket.on('waitingCreated', handleRefresh);
     }
     return () => {
       if (socket) {
         socket.off('waitingProcessed', handleRefresh);
+        socket.off('waitingCreated', handleRefresh);
       }
     };
   }, [socket]);

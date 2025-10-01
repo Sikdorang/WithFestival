@@ -102,7 +102,7 @@ function MenuItem({
 }) {
   return (
     <div className="w-fullitems-center flex py-4" onClick={onClick}>
-      <div className="flex-1 text-left">
+      <div className="mr-2 flex-1 text-left">
         <h3 className="text-b-1 text-gray-400">{name}</h3>
         <p className="text-st-1 text-gray-800">{price.toLocaleString()}원</p>
       </div>
@@ -194,11 +194,13 @@ export default function MenuBoard() {
 
   return (
     <>
-      <EventModal
-        open={isEventModalOpen}
-        onClose={() => setIsEventModalOpen(false)}
-        event={event || ''}
-      />
+      {event !== '' && (
+        <EventModal
+          open={isEventModalOpen}
+          onClose={() => setIsEventModalOpen(false)}
+          event={event || ''}
+        />
+      )}
 
       <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
         <div className="relative min-h-screen space-y-4 bg-white p-4">

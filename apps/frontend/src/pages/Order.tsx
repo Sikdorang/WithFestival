@@ -48,11 +48,13 @@ export default function Order() {
       socket.on('orderSendUpdated', handleRefresh);
       socket.on('orderCookedUpdated', handleRefresh);
       socket.on('orderDeleted', handleRefresh);
+      socket.on('orderCreated', handleRefresh);
 
       return () => {
         socket.off('orderSendUpdated', handleRefresh);
         socket.off('orderCookedUpdated', handleRefresh);
         socket.off('orderDeleted', handleRefresh);
+        socket.off('orderCreated', handleRefresh);
       };
     }
   }, [socket]);

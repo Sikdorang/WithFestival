@@ -15,6 +15,7 @@ export function TabBarLayout() {
   const location = useLocation();
 
   const [hasNewWaiting, setHasNewWaiting] = useState(false);
+  const [hasNewOrder, setHasNewOrder] = useState(false);
 
   const getActiveTab = () => {
     switch (location.pathname) {
@@ -34,6 +35,7 @@ export function TabBarLayout() {
   const handleTabClick = (tabName: 'timer' | 'list' | 'food' | 'allList') => {
     if (tabName === 'timer') {
       setHasNewWaiting(false);
+      setHasNewOrder(false);
     }
 
     switch (tabName) {
@@ -58,6 +60,7 @@ export function TabBarLayout() {
     const handleOrderCreated = () => {
       toast.success('새 주문이 들어왔어요 !');
       notification.play();
+      setHasNewOrder(true);
     };
 
     const handleWaitingCreated = () => {
@@ -83,6 +86,7 @@ export function TabBarLayout() {
         activeTab={getActiveTab()}
         onTabClick={handleTabClick}
         hasNewWaiting={hasNewWaiting}
+        hasNewOrder={hasNewOrder}
       />
     </>
   );

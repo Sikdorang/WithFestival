@@ -5,6 +5,7 @@ import { IMessage } from '@/types/global';
 import { useOrder } from '@/hooks/useOrder';
 import { useEffect } from 'react';
 import { useSocket } from '@/contexts/useSocket';
+import EmptyImage from '@/assets/images/img_bell.png';
 
 interface Props {
   onClose: () => void;
@@ -47,13 +48,22 @@ export default function CustomerInquiry({ onClose }: Props) {
       />
 
       <main className="flex flex-grow flex-col gap-3 p-4">
-        {(messages || []).map((item: IMessage) => (
-          <CustomerInquiryItem
-            key={item.id}
-            inquiry={item}
-            checkMessage={checkMessage}
-          />
-        ))}
+        {(messages || []).length === 0 ? (
+          <div className="flex flex-grow flex-col items-center justify-center gap-2">
+            <img src={EmptyImage} alt="empty" className="h-16 w-16" />
+            <div className="text-b-1 text-gray-400">
+              도착한 메세지가 없어요 !
+            </div>
+          </div>
+        ) : (
+          (messages || []).map((item: IMessage) => (
+            <CustomerInquiryItem
+              key={item.id}
+              inquiry={item}
+              checkMessage={checkMessage}
+            />
+          ))
+        )}
       </main>
     </div>
   );
