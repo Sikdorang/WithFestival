@@ -81,7 +81,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://withfestival.site',
+        // target: 'https://withfestival.site',
+        target: 'http://localhost:4000',
         changeOrigin: true,
       },
     },

@@ -113,7 +113,7 @@ function MenuList() {
 function AddMenuButton() {
   const navigate = useNavigate();
   return (
-    <div className="fixed right-4 bottom-24 rounded-xl shadow-lg">
+    <div className="fixed right-4 bottom-30 rounded-xl">
       <CtaButton
         text="메뉴 추가"
         radius="xl"

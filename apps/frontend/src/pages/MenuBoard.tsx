@@ -14,8 +14,6 @@ import { KEYS } from '../constants/storage';
 import { useMenu } from '../hooks/useMenu';
 import { useStore } from '../hooks/useStore';
 import NoticeView from '@/components/pages/board/NoticeView';
-import CtaButton from '@/components/common/buttons/CtaButton';
-import EventModal from '@/components/pages/board/EventModal';
 import RequestModal from '@/components/pages/board/RequestModal';
 
 const IMAGE_PREFIX = import.meta.env.VITE_IMAGE_PREFIX;
@@ -55,34 +53,6 @@ function StoreInfoSection({
             </div>
           )}
         </div>
-        {!isPreview && (
-          <div className="flex items-center gap-2">
-            <CtaButton
-              text="메세지"
-              width="fit"
-              size="small"
-              color="white"
-              className="text-c-1"
-              radius="_2xl"
-              onClick={() => {
-                setRequestType('message');
-                setIsRequestModalOpen(true);
-              }}
-            />
-            <CtaButton
-              text="직원 호출"
-              width="fit"
-              size="small"
-              color="white"
-              className="text-c-1"
-              radius="_2xl"
-              onClick={() => {
-                setRequestType('call');
-                setIsRequestModalOpen(true);
-              }}
-            />
-          </div>
-        )}
       </div>
       <NoticeView notice={notice} />
     </div>
@@ -194,14 +164,6 @@ export default function MenuBoard() {
 
   return (
     <>
-      {event !== '' && (
-        <EventModal
-          open={isEventModalOpen}
-          onClose={() => setIsEventModalOpen(false)}
-          event={event || ''}
-        />
-      )}
-
       <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
         <div className="relative min-h-screen space-y-4 bg-white p-4">
           <TopBar />

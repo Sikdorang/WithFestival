@@ -27,7 +27,7 @@ export default function History() {
   }, [getAllOrders]);
 
   return (
-    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-400">
+    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-500-10">
       <TopBar title="전체 주문 내역" value={allOrders?.count || 0} />
 
       <div className="relative flex flex-1 flex-col gap-4 p-4">

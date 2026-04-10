@@ -35,7 +35,7 @@ export default function ManageWaiting() {
     <div>
       <TopBar title="현재 웨이팅" value={waitingList.length} />
 
-      <main className="flex min-h-screen flex-col gap-4 bg-gray-400 p-4">
+      <main className="flex min-h-screen flex-col gap-4 bg-gray-500-5 p-4">
         {waitingList.length === 0 ? (
           <EmptyPlaceHolder
             image={<EmptyImage color="white" />}

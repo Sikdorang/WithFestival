@@ -79,7 +79,7 @@ function RemitStep({
           입금해주세요!
         </div>
         <div className="flex w-full flex-col items-center gap-2 rounded-xl bg-gray-100 px-15 py-5">
-          <span className="text-b-2 rounded-xl bg-green-100 px-3 py-1 text-green-500">
+          <span className="text-b-2 rounded-sm bg-primary-300-80 px-1.5 py-1 text-gray-500-80">
             계좌번호
           </span>
           <div className="flex items-center gap-2">
@@ -166,23 +166,12 @@ function CompleteStep() {
         </div>
       </div>
       <footer className="fixed right-0 bottom-0 left-0 z-10 flex flex-col items-center gap-4 bg-white p-4">
-        <div className="flex items-center gap-2">
-          <FingerSnapIcon />
-          <div className="text-c-1">다음 메뉴 쏠 사람 뽑아보자 !</div>
-        </div>
         <CtaButton
-          text="러시안 룰렛 돌리러 가기"
-          color="green"
-          onClick={() => navigate(ROUTES.GAMES.DETAIL('1'))}
-          radius="_3xl"
-        />
-
-        <div
-          className="text-b-1 py-1 text-gray-200"
+          text="홈으로 가기"
+          color="yellow"
           onClick={() => navigate(ROUTES.MENU_BOARD)}
-        >
-          홈으로 가기
-        </div>
+          radius="_2xl"
+        />  
       </footer>
     </div>
   );
@@ -284,7 +273,6 @@ export default function Ordering() {
         />
 
         <main className="pb-24">
-          <RussianRoulette />
           <h2 className="text-st-2 mt-6 mb-2">주문 내역</h2>
           <MenuList items={orderItems} />
           <BottomSpace />

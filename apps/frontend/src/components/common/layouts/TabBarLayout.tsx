@@ -22,17 +22,17 @@ export function TabBarLayout() {
       case ROUTES.MANAGE_WAITING:
         return 'timer';
       case ROUTES.ORDER:
-        return 'list';
-      case ROUTES.STORE:
         return 'food';
+      case ROUTES.STORE:
+        return 'settings';
       case ROUTES.HISTORY:
-        return 'allList';
+        return 'history';
       default:
         return 'timer';
     }
   };
 
-  const handleTabClick = (tabName: 'timer' | 'list' | 'food' | 'allList') => {
+  const handleTabClick = (tabName: 'timer' | 'settings' | 'food' | 'history') => {
     if (tabName === 'timer') {
       setHasNewWaiting(false);
       setHasNewOrder(false);
@@ -42,13 +42,13 @@ export function TabBarLayout() {
       case 'timer':
         navigate(ROUTES.MANAGE_WAITING);
         break;
-      case 'list':
-        navigate(ROUTES.ORDER);
-        break;
-      case 'food':
+      case 'settings':
         navigate(ROUTES.STORE);
         break;
-      case 'allList':
+      case 'food':
+        navigate(ROUTES.ORDER);
+        break;
+      case 'history':
         navigate(ROUTES.HISTORY);
         break;
     }

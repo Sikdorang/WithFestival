@@ -29,46 +29,50 @@ export function OrderCard({
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <div className="space-y-3 rounded-lg bg-white p-4">
         <div className="flex flex-col">
-          <div className="mb-2 flex items-center gap-1">
-            <span className="text-b-2 text-black">주문번호</span>
-            <span className="text-b-2 text-black">
-              {String(order.id).padStart(3, '0')}
-            </span>
-          </div>
           <div className="flex justify-between">
-            <div className="flex flex-col">
-              <span className="text-b-2 text-gray-400">테이블 번호</span>
-              <span className="text-b-2 inline-flex self-start rounded-lg bg-black px-3 py-1 text-white">
-                {order.tableNumber}번
+            <div className="mb-2 flex items-center gap-1">
+              <span className="bg-gray-500-10 text-gray-500-90 rounded-md px-1.5 py-1 text-[12px]">
+                테이블 번호 {order.tableNumber}
               </span>
             </div>
-
-            <div className="flex flex-col items-center">
-              <span className="text-gray-400">{order.time}</span>
+            <div className="flex items-center gap-1">
+              <span className="text-gray-500-30 text-[12px]">
+                주문번호 {String(order.id).padStart(3, '0')}
+              </span>
+              <span className="text-gray-500-30 text-[12px]">·</span>
+              <span className="text-gray-500-30 text-[12px]">{order.time}</span>
             </div>
           </div>
         </div>
 
-        <div className="space-y-2 border-b border-gray-200 py-3">
-          <p className="text-c-1 text-gray-400">주문내역</p>
+        <div className="space-y-2 border-t border-b border-gray-200 py-3">
+          <div className="flex justify-between">
+            <p className="text-c-1 text-gray-400">메뉴명</p>
+            <p className="text-c-1 text-gray-400">수량</p>
+          </div>
+
           {order.orderUsers.map((item) => (
             <div
               key={`${order.id}-${item.id}`}
               className="flex justify-between"
             >
-              <p className="text-gray-black">{item.menu} </p>
+              <p className="text-gray-500-90 text-[14px] font-bold">
+                {item.menu}{' '}
+              </p>
               <div className="text-right">
-                <p className="text-gray-black">
+                <span className="text-gray-500-90 text-[14px] font-bold">
+                  {item.count}개
+                </span>
+                <p className="text-gray-500-50 text-[12px] font-bold">
                   {(item.price * item.count).toLocaleString()}원
                 </p>
-                <span className="text-sm text-gray-300">{item.count}개</span>
               </div>
             </div>
           ))}
         </div>
 
         <div className="flex justify-between font-bold text-black">
-          <p>총 금액</p>
+          <p>입금자명: {order.name}</p>
           <div className="text-right">
             <p>{order.totalPrice.toLocaleString()}원</p>
             <span className="text-sm font-medium text-gray-400"></span>
@@ -76,15 +80,15 @@ export function OrderCard({
         </div>
 
         {order.send ? (
-          <div className="flex flex-col gap-2">
-            <button
+          <div className="mt-6 flex flex-col gap-2">
+            {/* <button
               className="rounded-2xl bg-gray-100 py-3 text-black"
               onClick={() => handleOrderCardClick()}
             >
               전체 보기
-            </button>
+            </button> */}
             <button
-              className="bg-primary-300 rounded-2xl py-3 text-black"
+              className="bg-primary-300 text-gray-500-90 rounded-xl py-3 text-[14px]"
               onClick={() => {
                 setOrderCooked(order.id);
                 toast.success(SUCCESS_MESSAGES.orderCookingComplete);
@@ -95,7 +99,7 @@ export function OrderCard({
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            <div className="grid grid-cols-2 gap-2 pt-2">
+            <div className="flex gap-3 pt-2">
               <DeleteConfirmModal
                 title={'주문을 취소할까요 ?'}
                 description={'주문 취소 후에는 복구할 수 없어요.'}
@@ -106,25 +110,21 @@ export function OrderCard({
                   toast.success(SUCCESS_MESSAGES.orderCancelSuccess);
                 }}
               >
-                <button className="w-full rounded-2xl bg-red-500 py-3 font-bold text-white">
-                  취소
+                <button className="rounded-xl bg-red-100 px-6 py-4 text-[14px] text-red-200 transition-colors active:bg-red-100">
+                  취소하기
                 </button>
               </DeleteConfirmModal>
+
               <button
-                className="bg-primary-300 rounded-2xl py-3 font-bold text-black"
+                className="flex-1 rounded-xl bg-[#F5C754] py-4 text-[14px] text-gray-900 transition-colors active:bg-yellow-500"
                 onClick={() => {
-                  toast.success('송금이 확인되었습니다. 조리를 시작하세요 !');
+                  toast.success('입금이 확인되었습니다. 조리를 시작하세요 !');
                   notification.play();
                   setOrderSent(order.id);
                 }}
               >
-                송금 확인
+                입금 확인
               </button>
-            </div>
-
-            <div className="flex items-center gap-4 rounded-xl bg-gray-100 p-3 px-8">
-              <span className="text-sm text-gray-400">입금자명</span>
-              <p className="text-gray-black">{order.name}</p>
             </div>
           </div>
         )}

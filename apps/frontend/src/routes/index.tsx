@@ -22,8 +22,6 @@ import {
 import { authLoader } from './authLoader';
 
 function ProtectedLayout() {
-  // loader가 인증 검사를 통과시킨 후에만 이 컴포넌트가 렌더링됩니다.
-  // 따라서 별도의 로직 없이 자식 경로를 렌더링하는 <Outlet />만 반환하면 됩니다.
   return <Outlet />;
 }
 
@@ -43,10 +41,9 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
-    // 3. 보호할 모든 경로들의 부모가 될 경로
-    id: 'root', // loader 데이터에 접근하기 위한 ID
-    element: <ProtectedLayout />, // 새로운 레이아웃
-    loader: authLoader, // 4. 여기에 loader를 연결!
+    id: 'root', 
+    element: <ProtectedLayout />, 
+    loader: authLoader, 
     errorElement: <ErrorBoundary />,
     children: [
       {

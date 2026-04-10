@@ -82,7 +82,7 @@ export default function Order() {
   };
 
   return (
-    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-400">
+    <div className="flex min-h-screen flex-1 flex-col gap-4 bg-gray-500-5">
       <OrderTopBar
         orderCount={
           orderType === 'pending'

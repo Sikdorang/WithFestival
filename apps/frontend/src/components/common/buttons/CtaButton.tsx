@@ -7,7 +7,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   isLoading?: boolean;
   size?: 'small' | 'medium' | 'large';
-  color?: 'green' | 'gray' | 'red' | 'white' | 'black';
+  color?: 'yellow' | 'gray' | 'red' | 'white' | 'black';
   width?: 'full' | 'fit';
   radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '_2xl' | '_3xl' | 'full';
   className?: string;
@@ -20,7 +20,7 @@ export default function CtaButton({
   isLoading = false,
   size = 'medium',
   className = '',
-  color = 'green',
+  color = 'yellow',
   width = 'full',
   radius = 'lg',
   disabled,
@@ -42,7 +42,7 @@ export default function CtaButton({
   };
 
   const textColorStyles = {
-    green: 'text-black',
+    yellow: 'text-black',
     gray: 'text-gray-700',
     red: 'text-white',
     white: 'text-gray-700',
@@ -51,7 +51,7 @@ export default function CtaButton({
   };
 
   const backgroundColorStyles = {
-    green: 'bg-primary-300',
+    yellow: 'bg-primary-300',
     gray: 'bg-gray-100',
     red: 'bg-red-500',
     white: 'bg-white',
@@ -60,7 +60,7 @@ export default function CtaButton({
   };
 
   const hoverColorStyles = {
-    green: 'hover:bg-primary-300',
+    yellow: 'hover:bg-primary-300',
     gray: 'hover:bg-gray-200',
     red: 'hover:bg-red-400',
     white: 'hover:bg-gray-100',
@@ -69,7 +69,7 @@ export default function CtaButton({
   };
 
   const borderColorStyles = {
-    green: 'border-primary-300',
+    yellow: 'border-primary-300',
     gray: 'border-gray-100',
     red: 'border-none',
     white: 'border-gray-200',
