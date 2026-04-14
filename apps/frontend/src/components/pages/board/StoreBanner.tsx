@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CtaButton from '../../common/buttons/CtaButton';
 import NoticeView from './NoticeView';
 import RequestModal from './RequestModal';
 
@@ -15,6 +17,7 @@ export default function StoreBanner({
   tableNumber,
   notice,
 }: Props) {
+  const navigate = useNavigate();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [requestType, setRequestType] = useState<'message' | 'call'>('message');
 
@@ -27,10 +30,21 @@ export default function StoreBanner({
       />
 
       <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-2">
-          <div className="text-b-2 text-gray-300">{boothName}</div>
-          <div className="text-st-2 text-black">
-            {isPreview ? '메뉴판 미리보기' : `테이블 번호 ${tableNumber}`}
+        <div className="flex w-full flex-col gap-2">
+          <div className="flex w-full justify-between">
+            <div>
+              <div className="text-b-2 text-gray-300">{boothName}</div>
+              <div className="text-st-2 text-black">
+                {isPreview ? '메뉴판 미리보기' : `테이블 번호 ${tableNumber}`}
+              </div>
+            </div>
+            <CtaButton
+              width="fit"
+              color="red"
+              text="좋아하면 울리는"
+              size="small"
+              onClick={() => navigate('/alarm')}
+            />
           </div>
           {isPreview && (
             <div className="text-c-1 flex text-gray-200">

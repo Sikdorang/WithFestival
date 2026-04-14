@@ -107,15 +107,6 @@ export default function OrderDashBoard({ allOrders }: Props) {
           </div>
         </div>
         <div className="flex items-center justify-between gap-1 rounded-xl p-1">
-          <div className="text-b-1 text-gray-400">총 직원 호출</div>
-          <div className="text-st-2 text-gray-800">
-            {(Array.isArray(allOrders?.data)
-              ? allOrders.data.length - summary.totalOrders
-              : 0) || 0}
-            건
-          </div>
-        </div>
-        <div className="flex items-center justify-between gap-1 rounded-xl p-1">
           <div className="text-b-1 text-gray-400">총 판매액</div>
           <div className="text-st-2 text-gray-800">
             {summary.totalSales.toLocaleString()}원

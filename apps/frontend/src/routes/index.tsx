@@ -19,6 +19,9 @@ import {
   Outlet,
   RouterProvider,
 } from 'react-router-dom';
+import LoveAlarm from '../pages/LoveAlarm';
+import ManageMissionDetail from '../pages/ManageMissionDetail';
+import ManageQr from '../pages/ManageQr';
 import { authLoader } from './authLoader';
 
 function ProtectedLayout() {
@@ -41,9 +44,9 @@ const router = createBrowserRouter([
     errorElement: <ErrorBoundary />,
   },
   {
-    id: 'root', 
-    element: <ProtectedLayout />, 
-    loader: authLoader, 
+    id: 'root',
+    element: <ProtectedLayout />,
+    loader: authLoader,
     errorElement: <ErrorBoundary />,
     children: [
       {
@@ -71,6 +74,14 @@ const router = createBrowserRouter([
         path: ROUTES.MANAGE_MENUS.DETAIL(':menuId'),
         element: <ManageMenuDetail />,
       },
+      {
+        path: ROUTES.MANAGE_MISSIONS.DETAIL(':missionId'),
+        element: <ManageMissionDetail />,
+      },
+      {
+        path: ROUTES.MANAGE_QR,
+        element: <ManageQr />,
+      },
     ],
   },
 
@@ -92,6 +103,11 @@ const router = createBrowserRouter([
   {
     path: ROUTES.ORDERING,
     element: <Ordering />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: ROUTES.LOVE_ALARM,
+    element: <LoveAlarm />,
     errorElement: <ErrorBoundary />,
   },
   {
